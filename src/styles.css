@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* Tema, kök öğedeki data-theme ile sürülüyor (uiStore tarafından yazılır). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Profesyonel belge uygulaması paleti: soğuk nötrler + güven veren mavi vurgu. */
+:root {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #eef2f7;
+  --sidebar-header: #f8fafc;
+  --panel-active: #f8fbff;
+  --border: #d8e0ea;
+  --text: #172033;
+  --text-dim: #64748b;
+  --accent: #2563eb;
+  --accent-soft: #e8f0ff;
+  --accent-text: #ffffff;
+  --danger: #dc2626;
+  --ok: #059669;
+  --shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 12px 30px rgb(15 23 42 / 0.08);
+}
+
+[data-theme="dark"] {
+  --bg: #0b1120;
+  --surface: #111827;
+  --surface-2: #192235;
+  --sidebar-header: #0f172a;
+  --panel-active: #111d33;
+  --border: #263247;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --accent: #60a5fa;
+  --accent-soft: #172b4d;
+  --accent-text: #07111f;
+  --danger: #fb7185;
+  --ok: #34d399;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 14px 34px rgb(0 0 0 / 0.32);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-sidebar-header: var(--sidebar-header);
+  --color-panel-active: var(--panel-active);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  /* Masaüstü uygulaması hissi: metin seçimi ve taşma davranışı web sayfası gibi olmasın. */
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+select {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* İnce, zemine karışan kaydırma çubuğu. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+@utility panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* Odak halkası: klavyeyle gezinme görünür kalsın ama fareyle tıklamada çıkmasın. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

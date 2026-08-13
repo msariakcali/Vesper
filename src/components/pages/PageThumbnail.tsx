@@ -206,7 +206,7 @@ export const PageThumbnail = memo(function PageThumbnail({
       </div>
 
       <div className="flex min-w-0 items-center justify-between gap-2 px-0.5">
-        <span className={selected ? "text-[10px] font-bold text-brand" : "text-[10px] font-semibold text-text-dim"}>
+        <span className={selected ? "text-[11px] font-bold text-brand" : "text-[11px] font-semibold text-text-dim"}>
           Sayfa {number}
         </span>
         {showSourceName && (

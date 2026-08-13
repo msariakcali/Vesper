@@ -12,14 +12,14 @@ export function ToolSidebar() {
         <div>
           <div className="flex items-center gap-2 text-text">
             <Files size={16} className="text-brand" />
-            <h1 className="text-sm font-semibold tracking-[-0.015em]">Açık belgeler</h1>
+            <h1 className="text-base font-semibold tracking-[-0.015em]">Açık belgeler</h1>
           </div>
-          <p className="mt-1 text-[10px] text-text-dim">Bu tarayıcı oturumunda</p>
+          <p className="mt-1 text-[11px] text-text-dim">Bu tarayıcı oturumunda</p>
         </div>
         <button
           type="button"
           onClick={() => void openDialog()}
-          className="grid h-8 w-8 place-items-center rounded-full bg-brand text-accent-text shadow-sm transition hover:bg-brand-strong"
+          className="grid h-9 w-9 place-items-center rounded-full bg-brand text-accent-text shadow-sm transition hover:bg-brand-strong"
           title="PDF ekle"
           aria-label="PDF ekle"
         >
@@ -33,7 +33,7 @@ export function ToolSidebar() {
       </div>
 
       <div className="border-t border-border px-4 py-3">
-        <div className="flex items-center gap-2 text-[10px] text-text-dim">
+        <div className="flex items-center gap-2 text-[11px] text-text-dim">
           <span className="h-1.5 w-1.5 rounded-full bg-ok" />
           Dosyalar yalnızca bu cihazda
         </div>

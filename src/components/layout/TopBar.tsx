@@ -24,14 +24,14 @@ export function TopBar() {
   const firstSource = Object.values(sources)[0];
 
   return (
-    <header className="topbar flex h-14 shrink-0 items-center gap-2 px-3 text-text sm:px-4">
+    <header className="topbar flex h-16 shrink-0 items-center gap-2 px-3 text-text sm:px-4">
       <div className="mr-2 flex shrink-0 items-center gap-3 sm:mr-4 sm:w-[15rem]">
-        <span className="brand-mark grid h-8 w-8 place-items-center rounded-[0.65rem] text-white">
-          <Layers3 size={18} strokeWidth={2.2} />
+        <span className="brand-mark grid h-9 w-9 place-items-center rounded-[0.7rem] text-white">
+          <Layers3 size={19} strokeWidth={2.2} />
         </span>
         <span className="min-w-0">
-          <span className="block text-[15px] font-semibold leading-none tracking-[-0.025em]">Forma</span>
-          <span className="mt-1 block text-[8px] font-medium tracking-[0.15em] text-text-soft uppercase">
+          <span className="block text-base font-semibold leading-none tracking-[-0.025em]">Forma</span>
+          <span className="mt-1 block text-[9px] font-medium tracking-[0.15em] text-text-soft uppercase">
             PDF Studio
           </span>
         </span>
@@ -39,11 +39,11 @@ export function TopBar() {
 
       <div className="hidden min-w-0 items-center gap-2 md:flex">
         <div className="min-w-0">
-          <p className="max-w-[22rem] truncate text-xs font-medium text-text">
+          <p className="max-w-[22rem] truncate text-[13px] font-medium text-text">
             {firstSource?.name ?? "İsimsiz çalışma"}
             {dirty && <span className="ml-1.5 text-brand">●</span>}
           </p>
-          <p className="mt-0.5 text-[10px] text-text-soft">
+          <p className="mt-0.5 text-[11px] text-text-soft">
             {hasPages ? `${pages.length} sayfalık çalışma` : "Yeni PDF projesi"}
           </p>
         </div>

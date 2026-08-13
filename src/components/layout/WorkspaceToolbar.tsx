@@ -79,10 +79,10 @@ export function WorkspaceToolbar() {
 
   return (
     <div ref={rootRef} className="relative z-30 shrink-0 border-b border-border bg-surface/90 backdrop-blur-xl">
-      <div className="flex h-[3.5rem] items-center gap-1 overflow-x-auto px-3 py-2">
+      <div className="flex h-16 items-center gap-1 overflow-x-auto px-3 py-2">
         <div className="hidden w-[4.5rem] shrink-0 flex-col justify-center pl-1 xl:flex">
-          <span className="text-[8px] font-bold tracking-[0.16em] text-text-dim uppercase">Araçlar</span>
-          <span className="mt-0.5 text-[9px] leading-tight text-text-soft">Düzenle</span>
+          <span className="text-[9px] font-bold tracking-[0.16em] text-text-dim uppercase">Araçlar</span>
+          <span className="mt-0.5 text-[10px] leading-tight text-text-soft">Düzenle</span>
         </div>
         <div className="mx-1 hidden w-px shrink-0 bg-border xl:block" />
 
@@ -96,7 +96,7 @@ export function WorkspaceToolbar() {
               aria-pressed={selected}
               onClick={() => setActiveTool(selected ? "pages" : tool.id)}
               className={[
-                "group/tool relative flex h-9 min-w-max shrink-0 items-center justify-center gap-1.5 rounded-lg px-2.5 text-center transition",
+                "group/tool relative flex h-10 min-w-max shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-center transition",
                 selected
                   ? "bg-accent-soft text-brand"
                   : "text-text-dim hover:bg-surface-2 hover:text-text",
@@ -104,7 +104,7 @@ export function WorkspaceToolbar() {
             >
               <span
                 className={[
-                  "grid h-6 w-6 place-items-center rounded-md transition",
+                  "grid h-7 w-7 place-items-center rounded-lg transition",
                   selected
                     ? "bg-brand text-white shadow-sm"
                     : "bg-surface-2 text-text-dim group-hover/tool:bg-surface-3 group-hover/tool:text-text",
@@ -112,7 +112,7 @@ export function WorkspaceToolbar() {
               >
                 <Icon size={16} strokeWidth={1.9} />
               </span>
-              <span className="whitespace-nowrap text-[9px] font-semibold">{tool.label}</span>
+              <span className="whitespace-nowrap text-[10px] font-semibold">{tool.label}</span>
               {selected && <ChevronDown size={9} className="text-brand/65" />}
             </button>
           );
@@ -175,17 +175,17 @@ export function CanvasHeader() {
   const readerPageId = ids[0] ?? pages[0]?.id;
 
   return (
-    <div className="flex h-[3.35rem] shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-4">
+    <div className="flex h-16 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-xs font-bold tracking-[-0.01em]">Sayfalar</h2>
+          <h2 className="text-sm font-semibold tracking-[-0.01em]">Sayfalar</h2>
           {pages.length > 0 && (
-            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[9px] font-semibold text-text-dim tabular-nums">
+            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-text-dim tabular-nums">
               {pages.length}
             </span>
           )}
         </div>
-        <p className="mt-0.5 text-[9px] text-text-soft">
+        <p className="mt-0.5 text-[10px] text-text-soft">
           {sourceCount > 1 ? `${sourceCount} belge tek çalışma içinde` : "Kutuyla çoklu seç · sürükleyerek sırala"}
         </p>
       </div>
@@ -205,7 +205,7 @@ export function CanvasHeader() {
         type="button"
         disabled={pages.length === 0}
         onClick={() => (hasSelection ? clearSelection() : setSelection(pages.map((page) => page.id)))}
-        className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[10px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
+        className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
       >
         <Check size={13} />
         {hasSelection ? `${ids.length} seçili` : "Tümünü seç"}
@@ -233,7 +233,7 @@ export function CanvasHeader() {
           className="w-20 accent-[var(--brand)]"
           aria-label="Sayfa kartı boyutu"
         />
-        <span className="w-9 text-right text-[9px] text-text-soft tabular-nums">{thumbnailSize}</span>
+        <span className="w-9 text-right text-[10px] text-text-soft tabular-nums">{thumbnailSize}</span>
       </div>
     </div>
   );

@@ -1,18 +1,6 @@
-import {
-  Cloud,
-  CloudCheck,
-  FolderOpen,
-  Layers3,
-  Moon,
-  Redo2,
-  Save,
-  Sparkles,
-  Sun,
-  Undo2,
-} from "lucide-react";
+import { Download, FilePlus2, Layers3, Moon, Redo2, Sparkles, Sun, Undo2 } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useSaveAll } from "../../hooks/useActions";
-import { platform } from "../../platform";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
@@ -31,14 +19,13 @@ export function TopBar() {
 
   const theme = useUiStore((state) => state.theme);
   const toggleTheme = useUiStore((state) => state.toggleTheme);
-  const autoSaveStatus = useUiStore((state) => state.autoSaveStatus);
 
   const hasPages = pages.length > 0;
   const firstSource = Object.values(sources)[0];
 
   return (
     <header className="topbar flex h-16 shrink-0 items-center gap-2 px-4 text-white">
-      <div className="mr-4 flex w-[15rem] shrink-0 items-center gap-3">
+      <div className="mr-2 flex shrink-0 items-center gap-3 sm:mr-4 sm:w-[15rem]">
         <span className="brand-mark grid h-9 w-9 place-items-center rounded-xl text-white">
           <Layers3 size={18} strokeWidth={2.2} />
         </span>
@@ -50,7 +37,7 @@ export function TopBar() {
         </span>
       </div>
 
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="hidden min-w-0 items-center gap-2 md:flex">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white/7 text-white/65">
           <Sparkles size={15} />
         </span>
@@ -65,7 +52,7 @@ export function TopBar() {
         </div>
       </div>
 
-      <div className="ml-3 h-6 w-px bg-white/10" />
+      <div className="ml-1 hidden h-6 w-px bg-white/10 sm:block md:ml-3" />
       <Button
         variant="topbar"
         compact
@@ -87,28 +74,6 @@ export function TopBar() {
 
       <div className="flex-1" />
 
-      {hasPages && platform.kind === "tauri" && (
-        <span
-          className={[
-            "mr-1 flex h-8 items-center gap-1.5 rounded-full px-3 text-[10px] font-semibold",
-            autoSaveStatus === "error"
-              ? "bg-danger/15 text-red-200"
-              : autoSaveStatus === "saving"
-                ? "bg-white/10 text-white/70"
-                : "bg-white/7 text-white/55",
-          ].join(" ")}
-        >
-          {autoSaveStatus === "saved" ? <CloudCheck size={14} /> : <Cloud size={14} />}
-          {autoSaveStatus === "saving"
-            ? "Kaydediliyor…"
-            : autoSaveStatus === "pending"
-              ? "Değişiklik var"
-              : autoSaveStatus === "error"
-                ? "Kayıt hatası"
-                : "Kaydedildi"}
-        </span>
-      )}
-
       <Button
         variant="topbar"
         compact
@@ -119,20 +84,20 @@ export function TopBar() {
       />
       <Button
         variant="topbar"
-        icon={<FolderOpen size={15} />}
+        icon={<FilePlus2 size={15} />}
         onClick={() => void openDialog()}
         title="PDF içe aktar (Ctrl+O)"
       >
-        İçe aktar
+        <span className="hidden sm:inline">PDF ekle</span>
       </Button>
       <Button
         variant="brand"
-        icon={<Save size={15} />}
+        icon={<Download size={15} />}
         disabled={!hasPages}
         onClick={() => void saveAll()}
-        title="Dışa aktar (Ctrl+S)"
+        title="PDF'i indir (Ctrl+S)"
       >
-        Dışa aktar
+        <span className="hidden sm:inline">PDF'i indir</span>
       </Button>
     </header>
   );

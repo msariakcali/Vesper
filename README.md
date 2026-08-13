@@ -1,7 +1,18 @@
-# Tauri + React + Typescript
+# Forma — PDF Studio
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Tarayıcı içinde çalışan, dosyaları sunucuya göndermeden PDF düzenleme ve okuma uygulaması.
 
-## Recommended IDE Setup
+## Akış
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+1. PDF dosyasını yükle veya sayfaya sürükle.
+2. Sayfaları düzenle, birleştir, böl, oku ya da içerik ekle.
+3. Hazırlanan PDF'i doğrudan cihazına indir.
+
+## Geliştirme
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Üretim çıktısı `pnpm build` ile `dist` klasörüne hazırlanır.

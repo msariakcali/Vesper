@@ -50,7 +50,7 @@ export function StatusBar() {
       )}
 
       <div className="flex-1" />
-      <span>{platform.kind === "tauri" ? "Forma · Yerel çalışma" : "Forma · Tarayıcı önizlemesi"}</span>
+      <span>{platform.kind === "tauri" ? "Forma · Yerel çalışma" : "Forma · Tarayıcıda güvenli işlem"}</span>
     </footer>
   );
 }

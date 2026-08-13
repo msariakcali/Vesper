@@ -124,6 +124,52 @@ body {
   transform-origin: top center;
 }
 
+.website-home {
+  scroll-behavior: smooth;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(105deg, #7257e8 6%, #9d5ad9 52%, #dc6f92 96%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero-orb {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(1px);
+}
+
+.hero-orb-one {
+  width: 34rem;
+  height: 34rem;
+  right: -13rem;
+  top: -13rem;
+  background: radial-gradient(circle, rgb(114 87 232 / 0.16), transparent 68%);
+}
+
+.hero-orb-two {
+  width: 25rem;
+  height: 25rem;
+  left: -12rem;
+  bottom: -8rem;
+  background: radial-gradient(circle, rgb(220 111 146 / 0.1), transparent 68%);
+}
+
+.upload-stage::after {
+  content: "";
+  position: absolute;
+  width: 9rem;
+  height: 9rem;
+  right: -3rem;
+  bottom: -3rem;
+  border-radius: 999px;
+  background: rgb(114 87 232 / 0.08);
+  filter: blur(2px);
+}
+
 .reader-scroll {
   overscroll-behavior: contain;
 }
@@ -186,6 +232,10 @@ select:focus {
 }
 
 @media (max-width: 980px) {
-  .project-sidebar { width: 14.5rem; }
   .topbar > :first-child { width: 12rem; }
+}
+
+@media (max-width: 640px) {
+  .topbar > :first-child { width: auto; }
+  .website-home header .brand-mark { width: 2rem; height: 2rem; }
 }

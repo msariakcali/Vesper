@@ -1,23 +1,20 @@
-import { FolderKanban, Plus } from "lucide-react";
+import { Files, Plus } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { DocumentPanel } from "../tools/DocumentPanel";
 
-/**
- * Canva benzeri sabit proje rayı. Düzenleme araçları burada değil, çalışma
- * alanının üstündeki WorkspaceToolbar içinde bulunur.
- */
+/** Web oturumundaki açık PDF'ler. Kalıcı bulut kütüphanesi daha sonra eklenebilir. */
 export function ToolSidebar() {
   const openDialog = useOpenDialog();
 
   return (
-    <aside className="project-sidebar flex w-[17rem] shrink-0 flex-col border-r border-border bg-surface">
+    <aside className="project-sidebar hidden w-[17rem] shrink-0 flex-col border-r border-border bg-surface lg:flex">
       <div className="flex items-center justify-between px-4 pb-3 pt-5">
         <div>
           <div className="flex items-center gap-2 text-text">
-            <FolderKanban size={16} className="text-brand" />
-            <h1 className="text-sm font-bold tracking-[-0.015em]">Projelerim</h1>
+            <Files size={16} className="text-brand" />
+            <h1 className="text-sm font-bold tracking-[-0.015em]">Açık belgeler</h1>
           </div>
-          <p className="mt-1 text-[10px] text-text-dim">Belgelerin ve açık çalışmaların</p>
+          <p className="mt-1 text-[10px] text-text-dim">Bu tarayıcı oturumunda</p>
         </div>
         <button
           type="button"
@@ -38,7 +35,7 @@ export function ToolSidebar() {
       <div className="border-t border-border px-4 py-3">
         <div className="flex items-center gap-2 text-[10px] text-text-dim">
           <span className="h-1.5 w-1.5 rounded-full bg-ok" />
-          Yerel ve güvenli çalışma alanı
+          Dosyalar yalnızca bu cihazda
         </div>
       </div>
     </aside>

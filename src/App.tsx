@@ -28,19 +28,24 @@ export default function App() {
 
   return (
     <div className="app-shell flex h-full flex-col bg-bg text-text">
-      <TopBar />
-
-      <div className="flex min-h-0 flex-1">
-        <ToolSidebar />
-        <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-          <WorkspaceToolbar />
-          <CanvasHeader />
-          <main className="workspace-canvas min-h-0 min-w-0 flex-1 overflow-y-auto">
-            {pages.length === 0 ? <EmptyState /> : <PageGrid />}
-          </main>
-          <StatusBar />
-        </section>
-      </div>
+      {pages.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <TopBar />
+          <div className="flex min-h-0 flex-1">
+            <ToolSidebar />
+            <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+              <WorkspaceToolbar />
+              <CanvasHeader />
+              <main className="workspace-canvas min-h-0 min-w-0 flex-1 overflow-y-auto">
+                <PageGrid />
+              </main>
+              <StatusBar />
+            </section>
+          </div>
+        </>
+      )}
 
       <Toasts />
       <PreviewModal />

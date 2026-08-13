@@ -175,7 +175,7 @@ export function CanvasHeader() {
   const readerPageId = ids[0] ?? pages[0]?.id;
 
   return (
-    <div className="flex h-[3.35rem] shrink-0 items-center gap-2 border-b border-border bg-canvas-header px-4">
+    <div className="flex h-[3.35rem] shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <h2 className="text-xs font-bold tracking-[-0.01em]">Sayfalar</h2>

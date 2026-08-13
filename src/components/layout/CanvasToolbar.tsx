@@ -4,6 +4,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
+import { useTranslation } from "../../i18n";
 
 /** Kanvasın üstündeki sayfa araç çubuğu: seçim, döndürme, çoğaltma, silme ve küçük resim boyutu. */
 export function CanvasHeader() {
@@ -18,6 +19,7 @@ export function CanvasHeader() {
   const thumbnailSize = useUiStore((state) => state.thumbnailSize);
   const setThumbnailSize = useUiStore((state) => state.setThumbnailSize);
   const setPreviewPage = useUiStore((state) => state.setPreviewPage);
+  const { t } = useTranslation();
 
   const ids = useMemo(() => [...selected], [selected]);
   const hasSelection = ids.length > 0;
@@ -28,7 +30,7 @@ export function CanvasHeader() {
     <div className="flex h-16 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold tracking-[-0.01em]">Sayfalar</h2>
+          <h2 className="text-sm font-semibold tracking-[-0.01em]">{t("pages")}</h2>
           {pages.length > 0 && (
             <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-text-dim tabular-nums">
               {pages.length}
@@ -36,7 +38,7 @@ export function CanvasHeader() {
           )}
         </div>
         <p className="mt-0.5 text-[10px] text-text-soft">
-          {sourceCount > 1 ? `${sourceCount} belge tek çalışma içinde` : "Kutuyla çoklu seç · sürükleyerek sırala"}
+          {sourceCount > 1 ? t("documentsInWorkspace", { count: sourceCount }) : t("selectAndReorder")}
         </p>
       </div>
 
@@ -47,9 +49,9 @@ export function CanvasHeader() {
         disabled={!readerPageId}
         icon={<BookOpen size={14} />}
         onClick={() => readerPageId && setPreviewPage(readerPageId)}
-        title={hasSelection ? "Seçili sayfadan okumaya başla" : "PDF'i okumaya başla"}
+        title={hasSelection ? t("startReadingSelected") : t("startReading")}
       >
-        Oku
+        {t("read")}
       </Button>
       <button
         type="button"
@@ -58,15 +60,15 @@ export function CanvasHeader() {
         className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
       >
         <Check size={13} />
-        {hasSelection ? `${ids.length} seçili` : "Tümünü seç"}
+        {hasSelection ? t("selected", { count: ids.length }) : t("selectAll")}
       </button>
 
       {hasSelection && (
         <>
-          <Button variant="ghost" compact icon={<RotateCcw size={14} />} onClick={() => rotatePages(ids, -90)} title="Sola döndür" aria-label="Sola döndür" />
-          <Button variant="ghost" compact icon={<RotateCw size={14} />} onClick={() => rotatePages(ids, 90)} title="Sağa döndür" aria-label="Sağa döndür" />
-          <Button variant="ghost" compact icon={<Copy size={14} />} onClick={() => duplicatePages(ids)} title="Çoğalt" aria-label="Çoğalt" />
-          <Button variant="danger" compact icon={<Trash2 size={14} />} onClick={() => deletePages(ids)} title="Sil" aria-label="Sil" />
+          <Button variant="ghost" compact icon={<RotateCcw size={14} />} onClick={() => rotatePages(ids, -90)} title={t("rotateLeft")} aria-label={t("rotateLeft")} />
+          <Button variant="ghost" compact icon={<RotateCw size={14} />} onClick={() => rotatePages(ids, 90)} title={t("rotateRight")} aria-label={t("rotateRight")} />
+          <Button variant="ghost" compact icon={<Copy size={14} />} onClick={() => duplicatePages(ids)} title={t("duplicate")} aria-label={t("duplicate")} />
+          <Button variant="danger" compact icon={<Trash2 size={14} />} onClick={() => deletePages(ids)} title={t("delete")} aria-label={t("delete")} />
         </>
       )}
 
@@ -81,7 +83,7 @@ export function CanvasHeader() {
           value={thumbnailSize}
           onChange={(event) => setThumbnailSize(Number(event.target.value))}
           className="w-20 accent-[var(--brand)]"
-          aria-label="Sayfa kartı boyutu"
+          aria-label={t("pageCardSize")}
         />
         <span className="w-9 text-right text-[10px] text-text-soft tabular-nums">{thumbnailSize}</span>
       </div>

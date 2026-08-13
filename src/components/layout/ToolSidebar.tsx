@@ -28,34 +28,35 @@ import { SignaturePanel } from "../tools/SignaturePanel";
 import { SplitPanel } from "../tools/SplitPanel";
 import { TextPanel } from "../tools/TextPanel";
 import { WatermarkPanel } from "../tools/WatermarkPanel";
+import { type TranslationKey, useTranslation } from "../../i18n";
 
 interface RailItem {
   id: ToolId;
-  label: string;
-  description: string;
+  labelKey: TranslationKey;
+  descriptionKey: TranslationKey;
   icon: ComponentType<{ size?: number; strokeWidth?: number }>;
   panel: ComponentType;
 }
 
 const DOCUMENTS: RailItem = {
   id: "documents",
-  label: "Belgeler",
-  description: "Açık PDF'ler ve dosya ekle",
+  labelKey: "documents",
+  descriptionKey: "documentsDescription",
   icon: Files,
   panel: DocumentPanel,
 };
 
 const TOOLS: RailItem[] = [
-  { id: "insert", label: "Ekle", description: "PDF, görsel veya boş sayfa ekle", icon: FilePlus2, panel: InsertPanel },
-  { id: "text", label: "Metin", description: "Sayfaya metin yerleştir", icon: Type, panel: TextPanel },
-  { id: "signature", label: "İmza", description: "İmza çiz veya görsel ekle", icon: PenTool, panel: SignaturePanel },
-  { id: "watermark", label: "Filigran", description: "Belgeye filigran uygula", icon: Droplets, panel: WatermarkPanel },
-  { id: "pageNumbers", label: "Numarala", description: "Sayfaları otomatik numarala", icon: Hash, panel: PageNumberPanel },
-  { id: "crop", label: "A4'e sığdır", description: "Sayfa ölçülerini düzenle", icon: Crop, panel: CropPanel },
-  { id: "extract", label: "Ayıkla", description: "Seçili sayfaları ayrı kaydet", icon: Scissors, panel: ExtractPanel },
-  { id: "split", label: "Böl", description: "PDF'i aralıklara göre böl", icon: SplitSquareHorizontal, panel: SplitPanel },
-  { id: "merge", label: "Birleştir", description: "Açık PDF'leri tek dosya yap", icon: Combine, panel: MergePanel },
-  { id: "convert", label: "Dönüştür", description: "PDF ve görsel dönüşümleri", icon: FileImage, panel: ConvertPanel },
+  { id: "insert", labelKey: "insert", descriptionKey: "insertDescription", icon: FilePlus2, panel: InsertPanel },
+  { id: "text", labelKey: "text", descriptionKey: "textDescription", icon: Type, panel: TextPanel },
+  { id: "signature", labelKey: "signature", descriptionKey: "signatureDescription", icon: PenTool, panel: SignaturePanel },
+  { id: "watermark", labelKey: "watermark", descriptionKey: "watermarkDescription", icon: Droplets, panel: WatermarkPanel },
+  { id: "pageNumbers", labelKey: "pageNumbers", descriptionKey: "pageNumbersDescription", icon: Hash, panel: PageNumberPanel },
+  { id: "crop", labelKey: "crop", descriptionKey: "cropDescription", icon: Crop, panel: CropPanel },
+  { id: "extract", labelKey: "extract", descriptionKey: "extractDescription", icon: Scissors, panel: ExtractPanel },
+  { id: "split", labelKey: "split", descriptionKey: "splitDescription", icon: SplitSquareHorizontal, panel: SplitPanel },
+  { id: "merge", labelKey: "merge", descriptionKey: "mergeDescription", icon: Combine, panel: MergePanel },
+  { id: "convert", labelKey: "convert", descriptionKey: "convertDescription", icon: FileImage, panel: ConvertPanel },
 ];
 
 /** Sol araç rayı: Canva tarzı ince ikon şeridi + seçili sekmeye göre açılan sabit (docked) panel. */
@@ -64,6 +65,7 @@ export function ToolSidebar() {
   const setActiveTool = useUiStore((state) => state.setActiveTool);
   const sourceCount = useDocumentStore((state) => Object.keys(state.model.sources).length);
   const openDialog = useOpenDialog();
+  const { t } = useTranslation();
   const active = activeTool === "documents" ? DOCUMENTS : TOOLS.find((tool) => tool.id === activeTool);
 
   useEffect(() => {
@@ -97,8 +99,8 @@ export function ToolSidebar() {
         <button
           type="button"
           onClick={() => void openDialog()}
-          title="PDF ekle"
-          aria-label="PDF ekle"
+          title={t("addPdf")}
+          aria-label={t("addPdf")}
           className="mx-auto grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-dashed border-border text-text-dim transition hover:border-brand/50 hover:text-brand"
         >
           <Plus size={16} />
@@ -122,12 +124,13 @@ function RailButton({
   onClick: () => void;
 }) {
   const Icon = item.icon;
+  const { t } = useTranslation();
   return (
     <button
       type="button"
       aria-pressed={selected}
       onClick={onClick}
-      title={item.label}
+      title={t(item.labelKey)}
       className={[
         "group/rail relative flex shrink-0 flex-col items-center gap-1 rounded-xl px-1 py-2.5 text-center transition",
         selected ? "bg-accent-soft text-brand" : "text-text-dim hover:bg-surface-2 hover:text-text",
@@ -150,7 +153,7 @@ function RailButton({
           </span>
         )}
       </span>
-      <span className="text-[9px] font-semibold leading-tight tracking-tight">{item.label}</span>
+      <span className="text-[9px] font-semibold leading-tight tracking-tight">{t(item.labelKey)}</span>
     </button>
   );
 }
@@ -158,6 +161,7 @@ function RailButton({
 function ToolDock({ item, onClose }: { item: RailItem; onClose: () => void }) {
   const Icon = item.icon;
   const Panel = item.panel;
+  const { t } = useTranslation();
 
   return (
     <section className="tool-dock flex w-[20rem] shrink-0 flex-col overflow-hidden border-r border-border bg-surface">
@@ -166,14 +170,14 @@ function ToolDock({ item, onClose }: { item: RailItem; onClose: () => void }) {
           <Icon size={17} />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-bold tracking-[-0.015em]">{item.label}</h2>
-          <p className="mt-0.5 truncate text-[10px] text-text-dim">{item.description}</p>
+          <h2 className="text-sm font-bold tracking-[-0.015em]">{t(item.labelKey)}</h2>
+          <p className="mt-0.5 truncate text-[10px] text-text-dim">{t(item.descriptionKey)}</p>
         </div>
         <button
           type="button"
           onClick={onClose}
           className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-text-dim hover:bg-surface-2 hover:text-text"
-          aria-label="Paneli kapat"
+          aria-label={t("closePanel")}
         >
           <X size={15} />
         </button>

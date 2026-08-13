@@ -14,17 +14,20 @@ import {
 } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useUiStore } from "../../store/uiStore";
+import { useTranslation } from "../../i18n";
 
 const FEATURES = [
-  { icon: ScanText, title: "Düzenle", text: "Sayfaları sırala, döndür, sil ve ayıkla." },
-  { icon: Combine, title: "Birleştir", text: "Birden fazla PDF'i tek belgede topla." },
-  { icon: WandSparkles, title: "Zenginleştir", text: "Metin, imza, filigran ve numara ekle." },
-];
+  { icon: ScanText, title: "edit", text: "editFeature" },
+  { icon: Combine, title: "mergeFeatureTitle", text: "mergeFeature" },
+  { icon: WandSparkles, title: "enrich", text: "enrichFeature" },
+] as const;
 
 export function EmptyState() {
   const openDialog = useOpenDialog();
   const theme = useUiStore((state) => state.theme);
   const toggleTheme = useUiStore((state) => state.toggleTheme);
+  const setLanguage = useUiStore((state) => state.setLanguage);
+  const { language, t } = useTranslation();
 
   return (
     <div className="website-home min-h-full overflow-y-auto bg-bg text-text">
@@ -40,19 +43,24 @@ export function EmptyState() {
             </span>
           </a>
 
-          <nav className="ml-auto hidden items-center gap-7 text-[11px] font-medium text-text-dim md:flex" aria-label="Ana menü">
-            <a href="#neler-yapilir" className="transition hover:text-brand">Özellikler</a>
-            <a href="#guvenlik" className="transition hover:text-brand">Gizlilik</a>
+          <nav className="ml-auto hidden items-center gap-7 text-[11px] font-medium text-text-dim md:flex" aria-label="Main menu">
+            <a href="#neler-yapilir" className="transition hover:text-brand">{t("features")}</a>
+            <a href="#guvenlik" className="transition hover:text-brand">{t("privacy")}</a>
             <span className="rounded-full border border-brand/20 bg-brand/[0.07] px-3 py-1.5 text-brand">
-              Ücretsiz
+              {t("free")}
             </span>
           </nav>
+
+          <select value={language} onChange={(event) => setLanguage(event.target.value as "en" | "tr")} className="ml-3 h-9 rounded-full border-0 bg-surface-2 px-3 text-[11px] font-semibold text-text outline-none" aria-label="Language">
+            <option value="en">EN</option>
+            <option value="tr">TR</option>
+          </select>
 
           <button
             type="button"
             onClick={toggleTheme}
             className="ml-3 grid h-9 w-9 place-items-center rounded-full text-text-dim transition hover:bg-surface-2 hover:text-text"
-            aria-label="Temayı değiştir"
+            aria-label="Switch theme"
           >
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
@@ -61,7 +69,7 @@ export function EmptyState() {
             onClick={() => void openDialog()}
             className="ml-2 inline-flex h-9 items-center gap-2 rounded-full bg-brand px-4 text-[11px] font-medium text-white shadow-sm transition hover:bg-brand-strong"
           >
-            PDF yükle <ArrowRight size={13} />
+            {t("addPdf")} <ArrowRight size={13} />
           </button>
         </div>
       </header>
@@ -73,21 +81,21 @@ export function EmptyState() {
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[10px] font-medium text-brand">
-                <Sparkles size={12} /> Tarayıcıda çalışan PDF stüdyosu
+                <Sparkles size={12} /> {t("browserPdfStudio")}
               </span>
               <h1 className="mt-7 max-w-3xl text-[clamp(2.8rem,6.5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.065em]">
-                PDF'inle işin,
-                <span className="hero-gradient-text block">birkaç dakikada bitsin.</span>
+                {t("heroTitle")}
+                <span className="hero-gradient-text block">{t("heroAccent")}</span>
               </h1>
               <p className="mt-7 max-w-xl text-sm leading-7 text-text-dim sm:text-base">
-                Dosyanı yükle, sayfaları görsel olarak düzenle, kesintisiz oku ve tamamlandığında tek tıkla indir. Hesap açmak yok, beklemek yok.
+                {t("heroDescription")}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-text-dim">
                 {[
-                  "Kayıt gerektirmez",
-                  "Dosya sunucuya yüklenmez",
-                  "Filigransız indirme",
+                  t("noAccount"),
+                  t("noUpload"),
+                  t("noWatermark"),
                 ].map((item) => (
                   <span key={item} className="flex items-center gap-1.5">
                     <span className="grid h-4 w-4 place-items-center rounded-full bg-ok/10 text-ok">
@@ -109,14 +117,14 @@ export function EmptyState() {
                 <span className="upload-icon grid h-[4.5rem] w-[4.5rem] place-items-center rounded-[1.4rem] bg-brand text-accent-text shadow-[0_16px_38px_rgb(0_113_227/0.25)] transition duration-300 group-hover:scale-105">
                   <FilePlus2 size={29} strokeWidth={1.8} />
                 </span>
-                <span className="mt-6 text-lg font-semibold tracking-[-0.035em]">PDF'ini buraya bırak</span>
+                <span className="mt-6 text-lg font-semibold tracking-[-0.035em]">{t("dropPdf")}</span>
                 <span className="mt-2 max-w-xs text-[11px] leading-5 text-text-dim">
-                  Dosyanı sürükleyip bırak veya bilgisayarından seç. Birden fazla PDF yükleyebilirsin.
+                  {t("dropDescription")}
                 </span>
                 <span className="mt-6 inline-flex h-10 items-center gap-2 rounded-full bg-brand px-5 text-[11px] font-medium text-white shadow-sm">
-                  Dosya seç <ArrowRight size={13} />
+                  {t("chooseFile")} <ArrowRight size={13} />
                 </span>
-                <span className="mt-4 text-[10px] font-medium text-text-soft">PDF · Tarayıcında güvenle işlenir</span>
+                <span className="mt-4 text-[10px] font-medium text-text-soft">{t("secureBrowser")}</span>
               </div>
             </button>
           </div>
@@ -125,9 +133,9 @@ export function EmptyState() {
         <section id="neler-yapilir" className="border-y border-border bg-surface px-5 py-20 sm:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-2xl">
-              <span className="text-[10px] font-medium tracking-[0.08em] text-brand uppercase">Tek çalışma alanı</span>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Yükle, düzenle, oku, indir.</h2>
-              <p className="mt-4 text-sm leading-6 text-text-dim">Karmaşık menüler arasında kaybolmadan PDF işlerinin tamamını aynı yerde bitir.</p>
+              <span className="text-[10px] font-medium tracking-[0.08em] text-brand uppercase">{t("oneWorkspace")}</span>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{t("uploadEditReadDownload")}</h2>
+              <p className="mt-4 text-sm leading-6 text-text-dim">{t("workflowDescription")}</p>
             </div>
             <div className="mt-10 grid gap-4 md:grid-cols-3">
               {FEATURES.map(({ icon: Icon, title, text }, index) => (
@@ -138,8 +146,8 @@ export function EmptyState() {
                     </span>
                     <span className="text-[10px] font-semibold text-text-soft">0{index + 1}</span>
                   </div>
-                  <h3 className="mt-7 text-base font-semibold tracking-[-0.025em]">{title}</h3>
-                  <p className="mt-2 text-[11px] leading-5 text-text-dim">{text}</p>
+                  <h3 className="mt-7 text-base font-semibold tracking-[-0.025em]">{t(title)}</h3>
+                  <p className="mt-2 text-[11px] leading-5 text-text-dim">{t(text)}</p>
                 </article>
               ))}
             </div>
@@ -152,11 +160,11 @@ export function EmptyState() {
               <LockKeyhole size={23} />
             </span>
             <div>
-              <h2 className="text-xl font-black tracking-[-0.035em]">Belgen senin cihazında kalır.</h2>
-              <p className="mt-2 max-w-2xl text-[11px] leading-5 text-white/48">Forma işlemleri tarayıcında gerçekleştirir. Dosyanı bir sunucuya göndermeden düzenler ve sonucu doğrudan cihazına indirir.</p>
+              <h2 className="text-xl font-black tracking-[-0.035em]">{t("privacyTitle")}</h2>
+              <p className="mt-2 max-w-2xl text-[11px] leading-5 text-white/48">{t("privacyDescription")}</p>
             </div>
             <button type="button" onClick={() => void openDialog()} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-[11px] font-medium text-[#1d1d1f] transition hover:-translate-y-0.5">
-              <Download size={14} /> Hemen başla
+              <Download size={14} /> {t("getStarted")}
             </button>
           </div>
         </section>
@@ -165,7 +173,7 @@ export function EmptyState() {
       <footer className="border-t border-border px-5 py-7 sm:px-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-[10px] font-medium text-text-soft sm:flex-row">
           <span>© 2026 Forma PDF Studio</span>
-          <span>Dosyanı yükle · Düzenle ve oku · İndir</span>
+          <span>{t("footerFlow")}</span>
         </div>
       </footer>
     </div>

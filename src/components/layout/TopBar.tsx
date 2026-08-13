@@ -4,6 +4,7 @@ import { useSaveAll } from "../../hooks/useActions";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
+import { useTranslation } from "../../i18n";
 
 export function TopBar() {
   const openDialog = useOpenDialog();
@@ -19,6 +20,8 @@ export function TopBar() {
 
   const theme = useUiStore((state) => state.theme);
   const toggleTheme = useUiStore((state) => state.toggleTheme);
+  const setLanguage = useUiStore((state) => state.setLanguage);
+  const { language, t } = useTranslation();
 
   const hasPages = pages.length > 0;
   const firstSource = Object.values(sources)[0];
@@ -40,11 +43,11 @@ export function TopBar() {
       <div className="hidden min-w-0 items-center gap-2 md:flex">
         <div className="min-w-0">
           <p className="max-w-[22rem] truncate text-[13px] font-medium text-text">
-            {firstSource?.name ?? "İsimsiz çalışma"}
+            {firstSource?.name ?? t("untitledProject")}
             {dirty && <span className="ml-1.5 text-brand">●</span>}
           </p>
           <p className="mt-0.5 text-[11px] text-text-soft">
-            {hasPages ? `${pages.length} sayfalık çalışma` : "Yeni PDF projesi"}
+            {hasPages ? t("pageProject", { count: pages.length }) : t("newPdfProject")}
           </p>
         </div>
       </div>
@@ -56,8 +59,8 @@ export function TopBar() {
         icon={<Undo2 size={16} />}
         disabled={past.length === 0}
         onClick={undo}
-        title="Geri al (Ctrl+Z)"
-        aria-label="Geri al"
+        title={t("undo")}
+        aria-label={t("undo")}
       />
       <Button
         variant="topbar"
@@ -65,36 +68,49 @@ export function TopBar() {
         icon={<Redo2 size={16} />}
         disabled={future.length === 0}
         onClick={redo}
-        title="İleri al (Ctrl+Y)"
-        aria-label="İleri al"
+        title={t("redo")}
+        aria-label={t("redo")}
       />
 
       <div className="flex-1" />
+
+      <label className="hidden items-center rounded-lg bg-surface-2 px-1 sm:flex" title="Language">
+        <span className="sr-only">Language</span>
+        <select
+          value={language}
+          onChange={(event) => setLanguage(event.target.value as "en" | "tr")}
+          className="h-8 cursor-pointer border-0 bg-transparent px-1.5 text-[11px] font-semibold text-text outline-none"
+          aria-label="Language"
+        >
+          <option value="en">EN</option>
+          <option value="tr">TR</option>
+        </select>
+      </label>
 
       <Button
         variant="topbar"
         compact
         icon={theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
         onClick={toggleTheme}
-        title={theme === "dark" ? "Açık temaya geç" : "Koyu temaya geç"}
-        aria-label="Temayı değiştir"
+        title={t("switchTheme")}
+        aria-label={t("switchTheme")}
       />
       <Button
         variant="topbar"
         icon={<FilePlus2 size={15} />}
         onClick={() => void openDialog()}
-        title="PDF içe aktar (Ctrl+O)"
+        title={t("importPdf")}
       >
-        <span className="hidden sm:inline">PDF ekle</span>
+        <span className="hidden sm:inline">{t("addPdf")}</span>
       </Button>
       <Button
         variant="brand"
         icon={<Download size={15} />}
         disabled={!hasPages}
         onClick={() => void saveAll()}
-        title="PDF'i indir (Ctrl+S)"
+        title={t("savePdf")}
       >
-        <span className="hidden sm:inline">PDF'i indir</span>
+        <span className="hidden sm:inline">{t("downloadPdf")}</span>
       </Button>
     </header>
   );

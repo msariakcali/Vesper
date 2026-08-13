@@ -14,6 +14,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { PageThumbnail } from "./PageThumbnail";
+import { useTranslation } from "../../i18n";
 
 /**
  * Sayfa ızgarası: seçim, sürükle-bırak sıralama ve tembel küçük resim yükleme.
@@ -36,6 +37,7 @@ export function PageGrid() {
 
   const thumbnailSize = useUiStore((s) => s.thumbnailSize);
   const setPreviewPage = useUiStore((s) => s.setPreviewPage);
+  const { t } = useTranslation();
 
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
@@ -137,8 +139,8 @@ export function PageGrid() {
             style={{ width: thumbnailSize, height: thumbnailSize * 1.414 }}
           >
             {selected.size > 1 && selected.has(draggingPage.id)
-              ? `${selected.size} sayfa`
-              : `Sayfa ${orderedIds.indexOf(draggingPage.id) + 1}`}
+              ? t("dragPages", { count: selected.size })
+              : t("readerPage", { count: orderedIds.indexOf(draggingPage.id) + 1 })}
           </div>
         ) : null}
       </DragOverlay>

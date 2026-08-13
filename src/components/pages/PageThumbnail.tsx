@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Check, Copy, Maximize2, RotateCcw, RotateCw, Trash2 } from "lucide-react";
 import { getCachedThumbnail, getThumbnail } from "../../core/render/thumbnailCache";
 import type { PageRef, SourceDocument } from "../../core/model/types";
+import { useTranslation } from "../../i18n";
 
 interface Props {
   page: PageRef;
@@ -43,6 +44,7 @@ export const PageThumbnail = memo(function PageThumbnail({
   onDuplicate,
   onDelete,
 }: Props) {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
@@ -121,7 +123,7 @@ export const PageThumbnail = memo(function PageThumbnail({
         role="button"
         tabIndex={0}
         aria-pressed={selected}
-        aria-label={`Sayfa ${number}. Okumak için çift tıklayın.`}
+        aria-label={`${t("page", { count: number })}. ${t("openReader")}.`}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
@@ -154,7 +156,7 @@ export const PageThumbnail = memo(function PageThumbnail({
 
         {failed && (
           <div className="absolute inset-0 flex items-center justify-center bg-surface-2 p-2 text-center text-xs text-danger">
-            Sayfa görüntülenemedi
+            {t("pageRenderFailed")}
           </div>
         )}
 
@@ -165,9 +167,12 @@ export const PageThumbnail = memo(function PageThumbnail({
 
         <button
           type="button"
-          aria-label={`Sayfa ${number} ${selected ? "seçimini kaldır" : "seç"}`}
+          aria-label={t("pageSelectionLabel", {
+            count: number,
+            action: selected ? t("removeSelection") : t("addToSelection"),
+          })}
           aria-pressed={selected}
-          title={selected ? "Seçimden çıkar" : "Çoklu seçime ekle"}
+          title={selected ? t("removeSelection") : t("addToSelection")}
           onPointerDown={(event) => event.stopPropagation()}
           onClick={(event) => {
             event.stopPropagation();
@@ -186,19 +191,19 @@ export const PageThumbnail = memo(function PageThumbnail({
         {/* Sayfanın üzerine gelince tek noktadan erişilen hızlı araç paleti. */}
         <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/65 via-black/30 to-transparent px-2 pb-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
           <div className="flex items-center gap-1 rounded-xl border border-white/15 bg-black/70 p-1 shadow-xl backdrop-blur-md">
-            <ThumbAction label="Okuma modunda aç" onClick={onPreview}>
+            <ThumbAction label={t("openReader")} onClick={onPreview}>
               <Maximize2 size={14} />
             </ThumbAction>
-            <ThumbAction label="Sola döndür" onClick={onRotateLeft}>
+            <ThumbAction label={t("rotateLeft")} onClick={onRotateLeft}>
               <RotateCcw size={14} />
             </ThumbAction>
-            <ThumbAction label="Sağa döndür" onClick={onRotateRight}>
+            <ThumbAction label={t("rotateRight")} onClick={onRotateRight}>
               <RotateCw size={14} />
             </ThumbAction>
-            <ThumbAction label="Çoğalt" onClick={onDuplicate}>
+            <ThumbAction label={t("duplicate")} onClick={onDuplicate}>
               <Copy size={14} />
             </ThumbAction>
-            <ThumbAction label="Sayfayı sil" danger onClick={onDelete}>
+            <ThumbAction label={t("delete")} danger onClick={onDelete}>
               <Trash2 size={14} />
             </ThumbAction>
           </div>
@@ -207,7 +212,7 @@ export const PageThumbnail = memo(function PageThumbnail({
 
       <div className="flex min-w-0 items-center justify-between gap-2 px-0.5">
         <span className={selected ? "text-[11px] font-bold text-brand" : "text-[11px] font-semibold text-text-dim"}>
-          Sayfa {number}
+          {t("page", { count: number })}
         </span>
         {showSourceName && (
           <span className="min-w-0 truncate text-right text-[9px] text-text-soft" title={source.name}>

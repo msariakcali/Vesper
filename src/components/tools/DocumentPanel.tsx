@@ -3,6 +3,7 @@ import { useOpenDialog } from "../../hooks/useFiles";
 import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { Button } from "../ui/Button";
+import { useTranslation } from "../../i18n";
 
 export function DocumentPanel() {
   const model = useDocumentStore((state) => state.model);
@@ -12,6 +13,7 @@ export function DocumentPanel() {
   const clearSelection = useSelectionStore((state) => state.clear);
   const openDialog = useOpenDialog();
   const sources = Object.values(model.sources);
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-5">
@@ -21,12 +23,12 @@ export function DocumentPanel() {
         icon={<FilePlus2 size={15} />}
         onClick={() => void openDialog()}
       >
-        Başka PDF ekle
+        {t("addAnotherPdf")}
       </Button>
 
       <section>
         <div className="mb-2 flex h-6 items-center justify-between">
-          <h3 className="text-[10px] font-bold tracking-[0.15em] text-text-soft uppercase">Belgeler</h3>
+          <h3 className="text-[10px] font-bold tracking-[0.15em] text-text-soft uppercase">{t("documents")}</h3>
           <button
             type="button"
             onClick={() => {
@@ -35,7 +37,7 @@ export function DocumentPanel() {
             }}
             className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] text-text-soft hover:bg-danger/10 hover:text-danger"
           >
-            <X size={10} /> Tümünü kapat
+            <X size={10} /> {t("closeAll")}
           </button>
         </div>
 
@@ -65,7 +67,7 @@ export function DocumentPanel() {
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[11px] font-bold text-text">{source.name}</span>
-                  <span className="mt-0.5 block text-[10px] text-text-soft">{pageIds.length} sayfa</span>
+                  <span className="mt-0.5 block text-[10px] text-text-soft">{t("pagesCount", { count: pageIds.length })}</span>
                 </span>
                 {allSelected && <Check size={13} className="text-brand" />}
               </button>
@@ -78,12 +80,12 @@ export function DocumentPanel() {
           onClick={() => selected.size > 0 ? clearSelection() : setSelection(model.pages.map((page) => page.id))}
           className="mt-2 w-full rounded-lg px-2 py-1.5 text-[10px] font-semibold text-text-dim hover:bg-surface-2 hover:text-text"
         >
-          {selected.size > 0 ? "Seçimi temizle" : "Tüm sayfaları seç"}
+          {selected.size > 0 ? t("clearSelection") : t("selectAllPages")}
         </button>
       </section>
 
       <p className="rounded-xl bg-sidebar-header px-3 py-3 text-[10px] leading-relaxed text-text-soft">
-        Bu oturum kapandığında belgeler tarayıcıdan silinir. Hazır olduğunda sağ üstten PDF'ini indir.
+        {t("sessionFilesNote")}
       </p>
     </div>
   );

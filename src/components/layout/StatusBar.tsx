@@ -2,6 +2,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { platform } from "../../platform";
+import { useTranslation } from "../../i18n";
 
 export function StatusBar() {
   const pages = useDocumentStore((s) => s.model.pages);
@@ -10,6 +11,7 @@ export function StatusBar() {
   const busy = useUiStore((s) => s.busy);
   const autoSaveStatus = useUiStore((s) => s.autoSaveStatus);
   const lastSavedPath = useUiStore((s) => s.lastSavedPath);
+  const { t } = useTranslation();
 
   const sourceCount = Object.keys(sources).length;
 
@@ -26,11 +28,11 @@ export function StatusBar() {
       ) : (
         <>
           <span className="font-medium tabular-nums">
-            {pages.length} sayfa
-            {sourceCount > 1 && ` · ${sourceCount} belge`}
+            {t("pagesCount", { count: pages.length })}
+            {sourceCount > 1 && ` · ${t("documentsInWorkspace", { count: sourceCount })}`}
           </span>
           {selected.size > 0 && (
-            <span className="tabular-nums text-accent">{selected.size} seçili</span>
+            <span className="tabular-nums text-accent">{t("selected", { count: selected.size })}</span>
           )}
           {platform.kind === "tauri" && pages.length > 0 && (
             <span
@@ -38,19 +40,19 @@ export function StatusBar() {
               title={lastSavedPath ?? undefined}
             >
               {autoSaveStatus === "saving"
-                ? "● kaydediliyor"
+                ? t("autosaving")
                 : autoSaveStatus === "pending"
-                  ? "● değişiklik algılandı"
+                  ? t("changesDetected")
                   : autoSaveStatus === "saved"
-                    ? "● otomatik kaydedildi"
-                    : "● otomatik kayıt açık"}
+                    ? t("autosaved")
+                    : t("autosaveOn")}
             </span>
           )}
         </>
       )}
 
       <div className="flex-1" />
-      <span>{platform.kind === "tauri" ? "Forma · Yerel çalışma" : "Forma · Tarayıcıda güvenli işlem"}</span>
+      <span>{platform.kind === "tauri" ? t("localMode") : t("browserMode")}</span>
     </footer>
   );
 }

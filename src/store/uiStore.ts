@@ -17,6 +17,7 @@ export type ToolId =
   | "convert";
 
 export type Theme = "light" | "dark";
+export type Language = "en" | "tr";
 export type AutoSaveStatus = "idle" | "pending" | "saving" | "saved" | "error";
 export type PlacementMode = "text" | "signature" | "image" | null;
 
@@ -33,6 +34,7 @@ export interface Toast {
 }
 
 const THEME_KEY = "pdf-editor-theme";
+const LANGUAGE_KEY = "pdf-editor-language";
 
 function initialTheme(): Theme {
   const stored = localStorage.getItem(THEME_KEY);
@@ -40,8 +42,14 @@ function initialTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
+function initialLanguage(): Language {
+  const stored = localStorage.getItem(LANGUAGE_KEY);
+  return stored === "tr" ? "tr" : "en";
+}
+
 export interface UiState {
   theme: Theme;
+  language: Language;
   activeTool: ToolId;
   /** Uzun süren işlem sırasında gösterilen açıklama; boşsa işlem yok. */
   busy: string | null;
@@ -56,6 +64,7 @@ export interface UiState {
   lastSavedPath: string | null;
 
   setTheme: (theme: Theme) => void;
+  setLanguage: (language: Language) => void;
   toggleTheme: () => void;
   setActiveTool: (tool: ToolId) => void;
   setBusy: (message: string | null) => void;
@@ -73,6 +82,7 @@ let toastId = 0;
 
 export const useUiStore = create<UiState>((set) => ({
   theme: initialTheme(),
+  language: initialLanguage(),
   activeTool: "pages",
   busy: null,
   toasts: [],
@@ -88,6 +98,12 @@ export const useUiStore = create<UiState>((set) => ({
     localStorage.setItem(THEME_KEY, theme);
     document.documentElement.dataset.theme = theme;
     set({ theme });
+  },
+
+  setLanguage: (language) => {
+    localStorage.setItem(LANGUAGE_KEY, language);
+    document.documentElement.lang = language;
+    set({ language });
   },
 
   toggleTheme: () =>

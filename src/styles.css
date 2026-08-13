@@ -11,49 +11,49 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
-  --bg: #edeef2;
-  --surface: #ffffff;
-  --surface-2: #f3f3f6;
-  --surface-3: #e8e8ee;
-  --sidebar-header: #fafafd;
-  --canvas-header: rgb(255 255 255 / 0.82);
-  --panel-active: #f7f5ff;
-  --border: #e2e2e8;
-  --text: #23232d;
-  --text-dim: #676773;
-  --text-soft: #9696a1;
-  --brand: #7257e8;
-  --brand-strong: #6145dc;
-  --accent: #7257e8;
-  --accent-soft: #efebff;
+  --bg: #e9eeec;
+  --surface: #f9fbfa;
+  --surface-2: #eef3f1;
+  --surface-3: #dfe7e4;
+  --sidebar-header: #f3f7f5;
+  --canvas-header: rgb(249 251 250 / 0.82);
+  --panel-active: #e6f1ee;
+  --border: #d6dfdc;
+  --text: #18211e;
+  --text-dim: #5f6d68;
+  --text-soft: #8c9994;
+  --brand: #32756c;
+  --brand-strong: #275f58;
+  --accent: #32756c;
+  --accent-soft: #dcece8;
   --accent-text: #ffffff;
-  --danger: #d7485f;
-  --ok: #16a276;
-  --topbar: #1f1e29;
-  --shadow: 0 2px 5px rgb(31 30 41 / 0.06), 0 18px 46px rgb(31 30 41 / 0.10);
-  --shadow-float: 0 22px 65px rgb(31 30 41 / 0.19), 0 3px 10px rgb(31 30 41 / 0.08);
+  --danger: #c84e5e;
+  --ok: #278b68;
+  --topbar: #1a2421;
+  --shadow: 0 2px 6px rgb(26 36 33 / 0.05), 0 18px 46px rgb(26 36 33 / 0.09);
+  --shadow-float: 0 22px 65px rgb(26 36 33 / 0.17), 0 3px 10px rgb(26 36 33 / 0.07);
 }
 
 [data-theme="dark"] {
-  --bg: #17171d;
-  --surface: #222229;
-  --surface-2: #2b2b34;
-  --surface-3: #34343f;
-  --sidebar-header: #26262e;
-  --canvas-header: rgb(34 34 41 / 0.88);
-  --panel-active: #2a263d;
-  --border: #393943;
-  --text: #f4f3f7;
-  --text-dim: #aaa8b4;
-  --text-soft: #777581;
-  --brand: #9580f4;
-  --brand-strong: #a794ff;
-  --accent: #9580f4;
-  --accent-soft: #312b4a;
-  --accent-text: #17141f;
-  --danger: #ff7188;
-  --ok: #4fd2a8;
-  --topbar: #111116;
+  --bg: #151b19;
+  --surface: #202725;
+  --surface-2: #29322f;
+  --surface-3: #35413d;
+  --sidebar-header: #242d2a;
+  --canvas-header: rgb(32 39 37 / 0.88);
+  --panel-active: #253b36;
+  --border: #37433f;
+  --text: #f1f5f3;
+  --text-dim: #a9b5b1;
+  --text-soft: #74817d;
+  --brand: #79b8ae;
+  --brand-strong: #91c8bf;
+  --accent: #79b8ae;
+  --accent-soft: #263e39;
+  --accent-text: #10211d;
+  --danger: #f07887;
+  --ok: #5dcaa4;
+  --topbar: #111715;
   --shadow: 0 2px 8px rgb(0 0 0 / 0.25), 0 20px 50px rgb(0 0 0 / 0.28);
   --shadow-float: 0 24px 70px rgb(0 0 0 / 0.48), 0 3px 12px rgb(0 0 0 / 0.32);
 }
@@ -99,14 +99,14 @@ body {
 
 .topbar {
   background:
-    radial-gradient(circle at 9% -90%, rgb(136 104 255 / 0.6), transparent 34%),
-    linear-gradient(105deg, var(--topbar), color-mix(in srgb, var(--topbar), #2e263d 24%));
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.06), 0 8px 22px rgb(18 16 27 / 0.12);
+    radial-gradient(circle at 12% -130%, rgb(121 184 174 / 0.28), transparent 32%),
+    linear-gradient(105deg, var(--topbar), color-mix(in srgb, var(--topbar), #293b36 24%));
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.055), 0 8px 22px rgb(12 18 16 / 0.14);
 }
 
 .brand-mark {
-  background: linear-gradient(145deg, #9e87ff, #6849dc);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), 0 7px 18px rgb(97 69 220 / 0.34);
+  background: linear-gradient(145deg, #68a89e, #2f6f66);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.24), 0 7px 18px rgb(39 95 88 / 0.28);
 }
 
 .project-sidebar {
@@ -115,8 +115,10 @@ body {
 
 .workspace-canvas {
   background-color: var(--bg);
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--text-soft), transparent 72%) 0.65px, transparent 0.75px);
-  background-size: 18px 18px;
+  background-image:
+    radial-gradient(circle at 55% -10%, color-mix(in srgb, var(--surface), transparent 45%), transparent 40%),
+    radial-gradient(circle, color-mix(in srgb, var(--text-soft), transparent 78%) 0.65px, transparent 0.75px);
+  background-size: auto, 20px 20px;
 }
 
 .tool-popover {
@@ -129,7 +131,7 @@ body {
 }
 
 .hero-gradient-text {
-  background: linear-gradient(105deg, #7257e8 6%, #9d5ad9 52%, #dc6f92 96%);
+  background: linear-gradient(105deg, #32756c 5%, #428c82 48%, #4d7892 96%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -147,7 +149,7 @@ body {
   height: 34rem;
   right: -13rem;
   top: -13rem;
-  background: radial-gradient(circle, rgb(114 87 232 / 0.16), transparent 68%);
+  background: radial-gradient(circle, rgb(50 117 108 / 0.17), transparent 68%);
 }
 
 .hero-orb-two {
@@ -155,7 +157,7 @@ body {
   height: 25rem;
   left: -12rem;
   bottom: -8rem;
-  background: radial-gradient(circle, rgb(220 111 146 / 0.1), transparent 68%);
+  background: radial-gradient(circle, rgb(77 120 146 / 0.1), transparent 68%);
 }
 
 .upload-stage::after {
@@ -166,12 +168,88 @@ body {
   right: -3rem;
   bottom: -3rem;
   border-radius: 999px;
-  background: rgb(114 87 232 / 0.08);
+  background: rgb(50 117 108 / 0.09);
   filter: blur(2px);
 }
 
 .reader-scroll {
   overscroll-behavior: contain;
+  background:
+    radial-gradient(circle at 50% -10%, rgb(121 184 174 / 0.12), transparent 35%),
+    #202624;
+}
+
+.reader-shell {
+  background: rgb(15 20 18 / 0.94);
+}
+
+.reader-toolbar {
+  background: color-mix(in srgb, var(--surface), transparent 3%);
+  box-shadow: 0 10px 34px rgb(6 10 9 / 0.15);
+}
+
+/* PDF.js metin katmanı: görünmez metin, PDF görüntüsüyle birebir üst üste gelir. */
+.pdf-text-layer {
+  color-scheme: only light;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: clip;
+  line-height: 1;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-align: initial;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  --min-font-size: 1;
+  --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv: calc(1 / var(--min-font-size));
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.pdf-text-layer :is(span, br) {
+  position: absolute;
+  color: transparent;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0 0;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.pdf-text-layer > :not(.markedContent),
+.pdf-text-layer .markedContent span:not(.markedContent) {
+  z-index: 1;
+  --font-height: 0;
+  --scale-x: 1;
+  --rotate: 0deg;
+  font-size: calc(var(--text-scale-factor) * var(--font-height));
+  transform: rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+}
+
+.pdf-text-layer .markedContent {
+  display: contents;
+}
+
+.pdf-text-layer ::selection {
+  color: transparent;
+  background: rgb(40 132 209 / 0.36);
+}
+
+.pdf-search-match {
+  margin: -1px;
+  padding: 1px;
+  color: transparent;
+  background: rgb(246 198 60 / 0.52);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(137 102 0 / 0.16);
+}
+
+.pdf-search-match.is-current {
+  background: rgb(255 141 51 / 0.68);
+  box-shadow: 0 0 0 1px rgb(147 68 15 / 0.34);
 }
 
 input,

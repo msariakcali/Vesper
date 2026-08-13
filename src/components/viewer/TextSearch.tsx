@@ -11,16 +11,18 @@ interface SearchResult {
 interface Props {
   model: DocumentModel;
   currentPageIndex: number;
-  onNavigate: (pageIndex: number) => void;
+  onNavigate: (pageIndex: number, matchIndex: number) => void;
+  query: string;
+  onQueryChange: (query: string) => void;
 }
 
 export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearch(
-  { model, currentPageIndex, onNavigate },
+  { model, currentPageIndex, onNavigate, query, onQueryChange },
   ref,
 ) {
-  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [busy, setBusy] = useState(false);
+  const [activeOccurrence, setActiveOccurrence] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -50,7 +52,11 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
         }),
       )
         .then((items) => {
-          if (!cancelled) setResults(items.filter(Boolean) as SearchResult[]);
+          if (cancelled) return;
+          const nextResults = items.filter(Boolean) as SearchResult[];
+          setResults(nextResults);
+          setActiveOccurrence(0);
+          if (nextResults[0]) onNavigate(nextResults[0].pageIndex, 0);
         })
         .catch(() => {
           if (!cancelled) setResults([]);
@@ -64,22 +70,37 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [model, query]);
+  }, [model, onNavigate, query]);
+
+  const occurrences = useMemo(
+    () => results.flatMap((result) =>
+      Array.from({ length: result.matchCount }, (_, matchIndex) => ({
+        pageIndex: result.pageIndex,
+        matchIndex,
+      })),
+    ),
+    [results],
+  );
 
   const activeResult = useMemo(() => {
-    if (results.length === 0) return -1;
-    const exact = results.findIndex((result) => result.pageIndex === currentPageIndex);
-    return exact >= 0 ? exact : 0;
-  }, [currentPageIndex, results]);
+    if (occurrences.length === 0) return -1;
+    const active = occurrences[activeOccurrence];
+    if (active?.pageIndex === currentPageIndex) return activeOccurrence;
+    const exact = occurrences.findIndex((result) => result.pageIndex === currentPageIndex);
+    return exact >= 0 ? exact : Math.min(activeOccurrence, occurrences.length - 1);
+  }, [activeOccurrence, currentPageIndex, occurrences]);
+
+  const totalMatches = occurrences.length;
 
   const navigate = (delta: number) => {
-    if (results.length === 0) return;
-    const next = (activeResult + delta + results.length) % results.length;
-    onNavigate(results[next].pageIndex);
+    if (occurrences.length === 0) return;
+    const next = (activeResult + delta + occurrences.length) % occurrences.length;
+    setActiveOccurrence(next);
+    onNavigate(occurrences[next].pageIndex, occurrences[next].matchIndex);
   };
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 rounded-xl border border-border bg-surface-2/90 p-1 shadow-sm">
       <div className="relative">
         <Search
           size={14}
@@ -88,9 +109,10 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
         <input
           ref={ref}
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Metinde ara"
-          className="h-8 w-56 rounded-md border border-border bg-surface-2 pl-7 pr-7 text-sm text-text"
+          className="h-7 w-32 rounded-lg border-0 bg-transparent pl-7 pr-6 text-[11px] text-text shadow-none sm:w-48"
+          aria-label="PDF metninde ara"
         />
         {busy && (
           <span className="absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-border border-t-accent [animation:spin_700ms_linear_infinite]" />
@@ -101,19 +123,22 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
           <button
             type="button"
             className="grid h-7 w-7 place-items-center rounded text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-40"
-            disabled={results.length === 0}
+            disabled={occurrences.length === 0}
             onClick={() => navigate(-1)}
             aria-label="Önceki arama sonucu"
           >
             <ChevronLeft size={14} />
           </button>
-          <span className="min-w-10 text-center text-xs text-text-dim tabular-nums">
-            {results.length === 0 ? "0/0" : `${activeResult + 1}/${results.length}`}
+          <span
+            className="min-w-12 text-center text-[10px] text-text-dim tabular-nums"
+            title={`${totalMatches} eşleşme`}
+          >
+            {occurrences.length === 0 ? "0/0" : `${activeResult + 1}/${occurrences.length}`}
           </span>
           <button
             type="button"
             className="grid h-7 w-7 place-items-center rounded text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-40"
-            disabled={results.length === 0}
+            disabled={occurrences.length === 0}
             onClick={() => navigate(1)}
             aria-label="Sonraki arama sonucu"
           >

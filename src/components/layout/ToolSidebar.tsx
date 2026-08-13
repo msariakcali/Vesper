@@ -7,8 +7,8 @@ export function ToolSidebar() {
   const openDialog = useOpenDialog();
 
   return (
-    <aside className="project-sidebar hidden w-[17rem] shrink-0 flex-col border-r border-border bg-surface lg:flex">
-      <div className="flex items-center justify-between px-4 pb-3 pt-5">
+    <aside className="project-sidebar hidden w-[16rem] shrink-0 flex-col border-r border-border bg-surface lg:flex">
+      <div className="flex items-center justify-between px-4 pb-3 pt-4">
         <div>
           <div className="flex items-center gap-2 text-text">
             <Files size={16} className="text-brand" />
@@ -19,7 +19,7 @@ export function ToolSidebar() {
         <button
           type="button"
           onClick={() => void openDialog()}
-          className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-white shadow-sm transition hover:bg-brand-strong"
+          className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-accent-text shadow-sm transition hover:bg-brand-strong"
           title="PDF ekle"
           aria-label="PDF ekle"
         >

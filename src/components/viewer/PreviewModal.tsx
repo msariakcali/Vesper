@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BookOpen, FileText, Minus, Plus, X } from "lucide-react";
-import { renderPage } from "../../core/render/pdfjs";
+import { renderPage, renderPageTextLayer } from "../../core/render/pdfjs";
 import type { Overlay, PageRef, SourceDocument } from "../../core/model/types";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore, type PlacementImage, type PlacementMode } from "../../store/uiStore";
@@ -35,6 +35,8 @@ export function PreviewModal() {
   const searchRef = useRef<HTMLInputElement>(null);
   const [currentPageId, setCurrentPageId] = useState<string | null>(null);
   const [pageField, setPageField] = useState("1");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTarget, setSearchTarget] = useState<{ pageIndex: number; matchIndex: number } | null>(null);
 
   const pages = model.pages;
   const visiblePageId = currentPageId ?? previewPageId;
@@ -57,6 +59,11 @@ export function PreviewModal() {
     },
     [pages],
   );
+
+  const handleSearchNavigate = useCallback((index: number, matchIndex: number) => {
+    setSearchTarget({ pageIndex: index, matchIndex });
+    scrollToIndex(index);
+  }, [scrollToIndex]);
 
   const updateCurrentPage = useCallback(() => {
     const scroller = scrollRef.current;
@@ -118,6 +125,8 @@ export function PreviewModal() {
 
   const close = () => {
     cancelPlacement();
+    setSearchQuery("");
+    setSearchTarget(null);
     setPreviewPage(null);
   };
 
@@ -168,7 +177,7 @@ export function PreviewModal() {
 
   return (
     <div
-      className="fixed inset-0 z-40 flex flex-col bg-[#111116]/92 backdrop-blur-md"
+      className="reader-shell fixed inset-0 z-40 flex flex-col backdrop-blur-md"
       onClick={close}
       onWheel={(event) => {
         if (!event.ctrlKey) return;
@@ -177,7 +186,7 @@ export function PreviewModal() {
       }}
     >
       <div
-        className="flex min-h-14 shrink-0 items-center gap-3 border-b border-border bg-surface px-4 py-2.5 shadow-sm"
+        className="reader-toolbar flex min-h-14 shrink-0 items-center gap-3 border-b border-border px-3 py-2 shadow-sm sm:px-4"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex min-w-0 items-center gap-2">
@@ -240,7 +249,12 @@ export function PreviewModal() {
             ref={searchRef}
             model={model}
             currentPageIndex={currentIndex}
-            onNavigate={(index) => scrollToIndex(index)}
+            onNavigate={handleSearchNavigate}
+            query={searchQuery}
+            onQueryChange={(query) => {
+              setSearchQuery(query);
+              setSearchTarget(null);
+            }}
           />
         </div>
       </div>
@@ -273,6 +287,8 @@ export function PreviewModal() {
                 zoom={zoom}
                 scrollRoot={scrollRef}
                 active={page.id === visiblePageId}
+                searchQuery={searchQuery}
+                activeSearchMatch={searchTarget?.pageIndex === index ? searchTarget.matchIndex : null}
                 placementMode={placementMode}
                 placementImage={placementImage}
                 cancelPlacement={cancelPlacement}
@@ -294,6 +310,8 @@ function ReaderPage({
   zoom,
   scrollRoot,
   active,
+  searchQuery,
+  activeSearchMatch,
   placementMode,
   placementImage,
   cancelPlacement,
@@ -306,6 +324,8 @@ function ReaderPage({
   zoom: number;
   scrollRoot: React.RefObject<HTMLDivElement | null>;
   active: boolean;
+  searchQuery: string;
+  activeSearchMatch: number | null;
   placementMode: PlacementMode;
   placementImage: PlacementImage | null;
   cancelPlacement: () => void;
@@ -313,10 +333,12 @@ function ReaderPage({
 }) {
   const addOverlay = useDocumentStore((state) => state.addOverlay);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textLayerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
   const [rendering, setRendering] = useState(false);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [textReady, setTextReady] = useState(false);
   const [renderSize, setRenderSize] = useState(() => {
     const width = readerRenderWidth(zoom);
     return { width, height: Math.round(width * 1.414) };
@@ -334,6 +356,7 @@ function ReaderPage({
   useEffect(() => {
     let cancelled = false;
     let started = false;
+    let cancelTextLayer: (() => void) | null = null;
     const element = pageRef.current;
     if (!element) return;
 
@@ -343,6 +366,7 @@ function ReaderPage({
       setRendering(true);
       setFailed(false);
       setReady(false);
+      setTextReady(false);
       try {
         const rendered = await renderPage(
           source.id,
@@ -366,6 +390,27 @@ function ReaderPage({
         rendered.bitmap.close();
         setRenderSize({ width: rendered.width, height: rendered.height });
         setReady(true);
+
+        const textContainer = textLayerRef.current;
+        if (textContainer) {
+          const textLayer = await renderPageTextLayer(
+            source.id,
+            source.bytes,
+            page.sourceIndex,
+            textContainer,
+            rendered.width,
+            page.rotation,
+          );
+          cancelTextLayer = textLayer.cancel;
+          if (!cancelled) {
+            textLayer.textDivs.forEach((element, itemIndex) => {
+              element.dataset.pdfText = textLayer.textItems[itemIndex] ?? element.textContent ?? "";
+            });
+            setTextReady(true);
+          } else {
+            textLayer.cancel();
+          }
+        }
       } catch {
         if (!cancelled) setFailed(true);
       } finally {
@@ -384,9 +429,15 @@ function ReaderPage({
     observer.observe(element);
     return () => {
       cancelled = true;
+      cancelTextLayer?.();
       observer.disconnect();
     };
   }, [page.rotation, page.sourceIndex, source.bytes, source.id, scrollRoot, zoom]);
+
+  useEffect(() => {
+    if (!textReady || !textLayerRef.current) return;
+    highlightTextLayer(textLayerRef.current, searchQuery, active, activeSearchMatch);
+  }, [active, activeSearchMatch, searchQuery, textReady]);
 
   useEffect(() => {
     if (!placementMode) setTextPoint(null);
@@ -458,7 +509,18 @@ function ReaderPage({
             "block h-full w-full",
             placementMode ? "cursor-crosshair" : "cursor-text",
           ].join(" ")}
-          style={{ opacity: ready ? 1 : 0, transition: "opacity 160ms" }}
+          style={{
+            opacity: ready ? 1 : 0,
+            pointerEvents: placementMode ? "auto" : "none",
+            transition: "opacity 160ms",
+          }}
+        />
+        <div
+          ref={textLayerRef}
+          className="pdf-text-layer textLayer"
+          data-searching={searchQuery.trim() ? "true" : "false"}
+          style={{ pointerEvents: placementMode ? "none" : "auto" }}
+          aria-label={`Sayfa ${index + 1} metni`}
         />
         {!ready && !failed && (
           <div className="absolute inset-0 grid place-items-center bg-white">
@@ -529,7 +591,7 @@ function OverlayPreview({
   if (overlay.kind === "text") {
     return (
       <span
-        className="pointer-events-none absolute origin-bottom-left whitespace-pre text-black"
+        className="pointer-events-none absolute z-[3] origin-bottom-left whitespace-pre text-black"
         style={{
           left: `${overlay.x * 100}%`,
           top: `${overlay.y * 100}%`,
@@ -562,7 +624,7 @@ function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "i
     <img
       src={url}
       alt="Yerleştirilen görsel"
-      className="pointer-events-none absolute origin-top-left object-contain"
+      className="pointer-events-none absolute z-[3] origin-top-left object-contain"
       style={{
         left: `${overlay.x * 100}%`,
         top: `${overlay.y * 100}%`,
@@ -573,4 +635,43 @@ function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "i
       }}
     />
   );
+}
+
+function highlightTextLayer(
+  container: HTMLElement,
+  query: string,
+  activePage: boolean,
+  activeMatchIndex: number | null,
+) {
+  const needle = query.trim().toLocaleLowerCase("tr-TR");
+
+  container.querySelectorAll<HTMLElement>("[data-pdf-text]").forEach((element) => {
+    const original = element.dataset.pdfText ?? "";
+    element.replaceChildren(document.createTextNode(original));
+    if (!needle) return;
+
+    const searchable = original.toLocaleLowerCase("tr-TR");
+    let cursor = 0;
+    let matchIndex = searchable.indexOf(needle, cursor);
+    if (matchIndex < 0) return;
+
+    const fragment = document.createDocumentFragment();
+    while (matchIndex >= 0) {
+      if (matchIndex > cursor) fragment.append(document.createTextNode(original.slice(cursor, matchIndex)));
+      const mark = document.createElement("mark");
+      mark.className = "pdf-search-match";
+      mark.textContent = original.slice(matchIndex, matchIndex + needle.length);
+      fragment.append(mark);
+      cursor = matchIndex + needle.length;
+      matchIndex = searchable.indexOf(needle, cursor);
+    }
+    if (cursor < original.length) fragment.append(document.createTextNode(original.slice(cursor)));
+    element.replaceChildren(fragment);
+  });
+
+  if (!activePage) return;
+  const matches = container.querySelectorAll<HTMLElement>(".pdf-search-match");
+  const current = matches[activeMatchIndex ?? 0];
+  current?.classList.add("is-current");
+  if (activeMatchIndex !== null) current?.scrollIntoView({ behavior: "smooth", block: "center" });
 }

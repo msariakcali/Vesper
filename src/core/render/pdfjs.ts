@@ -69,6 +69,12 @@ export interface RenderedPage {
   height: number;
 }
 
+export interface RenderedTextLayer {
+  cancel: () => void;
+  textDivs: HTMLElement[];
+  textItems: string[];
+}
+
 /**
  * Bir sayfayı verilen genişliğe sığacak şekilde render eder.
  *
@@ -111,6 +117,44 @@ export async function renderPage(
     bitmap: canvas.transferToImageBitmap(),
     width: canvas.width,
     height: canvas.height,
+  };
+}
+
+/**
+ * PDF.js'in gerçek metin katmanını sayfa görüntüsüyle aynı ölçekte kurar.
+ * Bu katman, metni seçilebilir/kopyalanabilir yapar ve arama vurguları için
+ * kararlı DOM düğümleri sağlar.
+ */
+export async function renderPageTextLayer(
+  sourceId: string,
+  bytes: Uint8Array,
+  pageIndex: number,
+  container: HTMLElement,
+  targetWidth: number,
+  rotation = 0,
+): Promise<RenderedTextLayer> {
+  const doc = await loadPdfDocument(sourceId, bytes);
+  const page = await doc.getPage(pageIndex + 1);
+  const base = page.getViewport({ scale: 1, rotation: page.rotate + rotation });
+  const scale = targetWidth / base.width;
+  const viewport = page.getViewport({ scale, rotation: page.rotate + rotation });
+  const content = await page.getTextContent({ includeMarkedContent: true });
+
+  container.replaceChildren();
+  container.style.setProperty("--scale-factor", String(scale));
+  container.style.setProperty("--total-scale-factor", String(scale));
+
+  const layer = new pdfjs.TextLayer({
+    textContentSource: content,
+    container,
+    viewport,
+  });
+  await layer.render();
+
+  return {
+    cancel: () => layer.cancel(),
+    textDivs: layer.textDivs,
+    textItems: layer.textContentItemsStr,
   };
 }
 

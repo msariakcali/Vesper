@@ -78,11 +78,11 @@ export function WorkspaceToolbar() {
   }, [active, setActiveTool]);
 
   return (
-    <div ref={rootRef} className="relative z-30 shrink-0 border-b border-border bg-surface">
-      <div className="flex h-[5.25rem] items-stretch gap-1 overflow-x-auto px-3 py-2">
-        <div className="hidden w-16 shrink-0 flex-col justify-center pl-1 xl:flex">
-          <span className="text-[9px] font-bold tracking-[0.16em] text-text-dim uppercase">Araçlar</span>
-          <span className="mt-1 text-[10px] leading-tight text-text-soft">PDF'ini düzenle</span>
+    <div ref={rootRef} className="relative z-30 shrink-0 border-b border-border bg-surface/95 backdrop-blur-xl">
+      <div className="flex h-[3.75rem] items-center gap-1 overflow-x-auto px-3 py-2">
+        <div className="hidden w-[4.5rem] shrink-0 flex-col justify-center pl-1 xl:flex">
+          <span className="text-[8px] font-bold tracking-[0.16em] text-text-dim uppercase">Araçlar</span>
+          <span className="mt-0.5 text-[9px] leading-tight text-text-soft">Düzenle</span>
         </div>
         <div className="mx-1 hidden w-px shrink-0 bg-border xl:block" />
 
@@ -96,7 +96,7 @@ export function WorkspaceToolbar() {
               aria-pressed={selected}
               onClick={() => setActiveTool(selected ? "pages" : tool.id)}
               className={[
-                "group/tool relative flex min-w-[4.4rem] shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-2 text-center transition",
+                "group/tool relative flex h-10 min-w-max shrink-0 items-center justify-center gap-2 rounded-xl px-2.5 text-center transition",
                 selected
                   ? "bg-accent-soft text-brand"
                   : "text-text-dim hover:bg-surface-2 hover:text-text",
@@ -104,7 +104,7 @@ export function WorkspaceToolbar() {
             >
               <span
                 className={[
-                  "grid h-8 w-8 place-items-center rounded-lg transition",
+                  "grid h-7 w-7 place-items-center rounded-lg transition",
                   selected
                     ? "bg-brand text-white shadow-sm"
                     : "bg-surface-2 text-text-dim group-hover/tool:bg-surface-3 group-hover/tool:text-text",
@@ -112,8 +112,8 @@ export function WorkspaceToolbar() {
               >
                 <Icon size={16} strokeWidth={1.9} />
               </span>
-              <span className="whitespace-nowrap text-[10px] font-semibold">{tool.label}</span>
-              {selected && <ChevronDown size={10} className="absolute bottom-1 right-1 text-brand/60" />}
+              <span className="whitespace-nowrap text-[9px] font-semibold">{tool.label}</span>
+              {selected && <ChevronDown size={9} className="text-brand/65" />}
             </button>
           );
         })}
@@ -131,9 +131,9 @@ function ToolPopover({ tool, onClose }: { tool: ToolDefinition; onClose: () => v
   const Panel = tool.panel;
 
   return (
-    <section className="tool-popover absolute left-1/2 top-[calc(100%+0.6rem)] w-[23rem] max-w-[calc(100%-2rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-border bg-surface shadow-[var(--shadow-float)]">
+    <section className="tool-popover absolute left-1/2 top-[calc(100%+0.6rem)] w-[23rem] max-w-[calc(100%-2rem)] -translate-x-1/2 overflow-hidden rounded-[1.15rem] border border-border bg-surface shadow-[var(--shadow-float)]">
       <header className="flex items-center gap-3 border-b border-border bg-sidebar-header px-4 py-3">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white shadow-sm">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-accent-text shadow-sm">
           <Icon size={17} />
         </span>
         <div className="min-w-0 flex-1">

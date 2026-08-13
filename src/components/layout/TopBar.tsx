@@ -24,9 +24,9 @@ export function TopBar() {
   const firstSource = Object.values(sources)[0];
 
   return (
-    <header className="topbar flex h-16 shrink-0 items-center gap-2 px-4 text-white">
+    <header className="topbar flex h-[3.75rem] shrink-0 items-center gap-2 px-3 text-white sm:px-4">
       <div className="mr-2 flex shrink-0 items-center gap-3 sm:mr-4 sm:w-[15rem]">
-        <span className="brand-mark grid h-9 w-9 place-items-center rounded-xl text-white">
+        <span className="brand-mark grid h-8 w-8 place-items-center rounded-[0.7rem] text-white">
           <Layers3 size={18} strokeWidth={2.2} />
         </span>
         <span className="min-w-0">

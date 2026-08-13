@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "default" | "ghost" | "danger";
+type Variant = "primary" | "default" | "ghost" | "danger" | "topbar" | "brand";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -15,6 +15,8 @@ const VARIANTS: Record<Variant, string> = {
   default: "bg-surface-2 text-text border-border hover:border-accent/60",
   ghost: "bg-transparent text-text-dim border-transparent hover:bg-surface-2 hover:text-text",
   danger: "bg-transparent text-danger border-transparent hover:bg-danger/10",
+  topbar: "bg-white/6 text-white/75 border-white/8 hover:bg-white/11 hover:text-white",
+  brand: "bg-brand text-white border-brand hover:bg-brand-strong disabled:hover:bg-brand",
 };
 
 export function Button({
@@ -30,10 +32,10 @@ export function Button({
       type="button"
       {...props}
       className={[
-        "inline-flex items-center justify-center gap-2 rounded-md border font-medium",
-        "transition-colors duration-100 select-none",
+        "inline-flex items-center justify-center gap-2 rounded-lg border text-xs font-semibold",
+        "transition-[background-color,border-color,color,transform] duration-150 select-none active:translate-y-px",
         "disabled:opacity-40 disabled:cursor-not-allowed",
-        compact ? "h-8 px-2" : "h-9 px-3",
+        compact ? "h-8 px-2" : "h-9 px-3.5",
         VARIANTS[variant],
         className,
       ].join(" ")}

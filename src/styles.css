@@ -1,52 +1,77 @@
 @import "tailwindcss";
 
-/* Tema, kök öğedeki data-theme ile sürülüyor (uiStore tarafından yazılır). */
+@font-face {
+  font-family: "Forma Sans";
+  src: url("./assets/fonts/NotoSans-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Profesyonel belge uygulaması paleti: soğuk nötrler + güven veren mavi vurgu. */
 :root {
-  --bg: #f1f5f9;
+  --bg: #edeef2;
   --surface: #ffffff;
-  --surface-2: #eef2f7;
-  --sidebar-header: #f8fafc;
-  --panel-active: #f8fbff;
-  --border: #d8e0ea;
-  --text: #172033;
-  --text-dim: #64748b;
-  --accent: #2563eb;
-  --accent-soft: #e8f0ff;
+  --surface-2: #f3f3f6;
+  --surface-3: #e8e8ee;
+  --sidebar-header: #fafafd;
+  --canvas-header: rgb(255 255 255 / 0.82);
+  --panel-active: #f7f5ff;
+  --border: #e2e2e8;
+  --text: #23232d;
+  --text-dim: #676773;
+  --text-soft: #9696a1;
+  --brand: #7257e8;
+  --brand-strong: #6145dc;
+  --accent: #7257e8;
+  --accent-soft: #efebff;
   --accent-text: #ffffff;
-  --danger: #dc2626;
-  --ok: #059669;
-  --shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 12px 30px rgb(15 23 42 / 0.08);
+  --danger: #d7485f;
+  --ok: #16a276;
+  --topbar: #1f1e29;
+  --shadow: 0 2px 5px rgb(31 30 41 / 0.06), 0 18px 46px rgb(31 30 41 / 0.10);
+  --shadow-float: 0 22px 65px rgb(31 30 41 / 0.19), 0 3px 10px rgb(31 30 41 / 0.08);
 }
 
 [data-theme="dark"] {
-  --bg: #0b1120;
-  --surface: #111827;
-  --surface-2: #192235;
-  --sidebar-header: #0f172a;
-  --panel-active: #111d33;
-  --border: #263247;
-  --text: #f1f5f9;
-  --text-dim: #94a3b8;
-  --accent: #60a5fa;
-  --accent-soft: #172b4d;
-  --accent-text: #07111f;
-  --danger: #fb7185;
-  --ok: #34d399;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 14px 34px rgb(0 0 0 / 0.32);
+  --bg: #17171d;
+  --surface: #222229;
+  --surface-2: #2b2b34;
+  --surface-3: #34343f;
+  --sidebar-header: #26262e;
+  --canvas-header: rgb(34 34 41 / 0.88);
+  --panel-active: #2a263d;
+  --border: #393943;
+  --text: #f4f3f7;
+  --text-dim: #aaa8b4;
+  --text-soft: #777581;
+  --brand: #9580f4;
+  --brand-strong: #a794ff;
+  --accent: #9580f4;
+  --accent-soft: #312b4a;
+  --accent-text: #17141f;
+  --danger: #ff7188;
+  --ok: #4fd2a8;
+  --topbar: #111116;
+  --shadow: 0 2px 8px rgb(0 0 0 / 0.25), 0 20px 50px rgb(0 0 0 / 0.28);
+  --shadow-float: 0 24px 70px rgb(0 0 0 / 0.48), 0 3px 12px rgb(0 0 0 / 0.32);
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-sidebar-header: var(--sidebar-header);
+  --color-canvas-header: var(--canvas-header);
   --color-panel-active: var(--panel-active);
   --color-border: var(--border);
   --color-text: var(--text);
   --color-text-dim: var(--text-dim);
+  --color-text-soft: var(--text-soft);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-text: var(--accent-text);
@@ -64,12 +89,43 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: "Forma Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   font-size: 14px;
-  /* Masaüstü uygulaması hissi: metin seçimi ve taşma davranışı web sayfası gibi olmasın. */
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
   -webkit-user-select: none;
   user-select: none;
+}
+
+.topbar {
+  background:
+    radial-gradient(circle at 9% -90%, rgb(136 104 255 / 0.6), transparent 34%),
+    linear-gradient(105deg, var(--topbar), color-mix(in srgb, var(--topbar), #2e263d 24%));
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.06), 0 8px 22px rgb(18 16 27 / 0.12);
+}
+
+.brand-mark {
+  background: linear-gradient(145deg, #9e87ff, #6849dc);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), 0 7px 18px rgb(97 69 220 / 0.34);
+}
+
+.project-sidebar {
+  box-shadow: 8px 0 30px rgb(31 30 41 / 0.035);
+}
+
+.workspace-canvas {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text-soft), transparent 72%) 0.65px, transparent 0.75px);
+  background-size: 18px 18px;
+}
+
+.tool-popover {
+  animation: popover-in 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: top center;
+}
+
+.reader-scroll {
+  overscroll-behavior: contain;
 }
 
 input,
@@ -86,10 +142,23 @@ select {
   font: inherit;
 }
 
-/* İnce, zemine karışan kaydırma çubuğu. */
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+textarea,
+select {
+  transition: border-color 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]):focus,
+textarea:focus,
+select:focus {
+  border-color: color-mix(in srgb, var(--brand), transparent 25%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand), transparent 86%);
+  outline: none;
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--surface-3) transparent;
 }
 
 @utility panel {
@@ -97,25 +166,26 @@ select {
   border: 1px solid var(--border);
 }
 
-/* Odak halkası: klavyeyle gezinme görünür kalsın ama fareyle tıklamada çıkmasın. */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 
 @keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popover-in {
+  from { opacity: 0; transform: translate(-50%, -6px) scale(0.985); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 980px) {
+  .project-sidebar { width: 14.5rem; }
+  .topbar > :first-child { width: 12rem; }
 }

@@ -3,8 +3,8 @@ import { parsePageRange } from "../../core/ops/pageRange";
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-xs font-semibold tracking-wide text-text-dim uppercase">{title}</h3>
+    <div className="flex flex-col gap-2.5">
+      <h3 className="text-[9px] font-bold tracking-[0.14em] text-text-soft uppercase">{title}</h3>
       {children}
     </div>
   );
@@ -28,7 +28,7 @@ export function PageRangeInput({
         placeholder={pageCount > 0 ? `1-${pageCount}` : "Sayfa aralığı"}
         spellCheck={false}
         className={[
-          "h-9 w-full rounded-md border bg-surface px-3 font-mono text-sm text-text",
+          "h-9 w-full rounded-lg border bg-sidebar-header px-3 font-mono text-xs text-text",
           parsed.errors.length > 0 ? "border-danger" : "border-border",
         ].join(" ")}
       />
@@ -54,9 +54,9 @@ export function SegmentedButton({
       aria-pressed={selected}
       onClick={onClick}
       className={[
-        "min-h-9 rounded-md border px-2 text-xs transition-colors",
+        "min-h-9 rounded-lg border px-2 text-[10px] font-semibold transition-colors",
         selected
-          ? "border-accent bg-accent-soft text-accent"
+          ? "border-brand/40 bg-accent-soft text-brand"
           : "border-border bg-surface text-text-dim hover:text-text",
       ].join(" ")}
     >

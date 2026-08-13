@@ -3,6 +3,7 @@ import { StatusBar } from "./components/layout/StatusBar";
 import { Toasts } from "./components/layout/Toasts";
 import { ToolSidebar } from "./components/layout/ToolSidebar";
 import { TopBar } from "./components/layout/TopBar";
+import { CanvasHeader, WorkspaceToolbar } from "./components/layout/WorkspaceToolbar";
 import { EmptyState } from "./components/pages/EmptyState";
 import { PageGrid } from "./components/pages/PageGrid";
 import { PreviewModal } from "./components/viewer/PreviewModal";
@@ -26,17 +27,21 @@ export default function App() {
   }, [pages, retainSelection]);
 
   return (
-    <div className="flex h-full flex-col bg-bg text-text">
+    <div className="app-shell flex h-full flex-col bg-bg text-text">
       <TopBar />
 
       <div className="flex min-h-0 flex-1">
         <ToolSidebar />
-        <main className="min-w-0 flex-1 overflow-y-auto bg-bg">
-          {pages.length === 0 ? <EmptyState /> : <PageGrid />}
-        </main>
+        <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+          <WorkspaceToolbar />
+          <CanvasHeader />
+          <main className="workspace-canvas min-h-0 min-w-0 flex-1 overflow-y-auto">
+            {pages.length === 0 ? <EmptyState /> : <PageGrid />}
+          </main>
+          <StatusBar />
+        </section>
       </div>
 
-      <StatusBar />
       <Toasts />
       <PreviewModal />
     </div>

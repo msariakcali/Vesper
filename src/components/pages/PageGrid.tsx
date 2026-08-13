@@ -92,8 +92,8 @@ export function PageGrid() {
     >
       <SortableContext items={orderedIds} strategy={rectSortingStrategy}>
         <div
-          className="grid gap-5 p-6"
-          style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${thumbnailSize}px, 1fr))` }}
+          className="grid min-h-full content-start justify-center gap-x-7 gap-y-8 p-8 lg:p-10"
+          style={{ gridTemplateColumns: `repeat(auto-fill, ${thumbnailSize}px)` }}
           // Boşluğa tıklamak seçimi temizler.
           onClick={(event) => {
             if (event.target === event.currentTarget) selectionApi.clear();
@@ -127,7 +127,7 @@ export function PageGrid() {
       <DragOverlay dropAnimation={null}>
         {draggingPage ? (
           <div
-            className="grid place-items-center rounded-lg border-2 border-accent bg-surface text-sm font-semibold shadow-lg"
+            className="grid place-items-center rounded-xl border-2 border-brand bg-surface text-xs font-bold text-brand shadow-[var(--shadow-float)]"
             style={{ width: thumbnailSize, height: thumbnailSize * 1.414 }}
           >
             {selected.size > 1 && selected.has(draggingPage.id)

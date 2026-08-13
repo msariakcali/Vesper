@@ -85,6 +85,16 @@ export function useKeyboardShortcuts() {
       if ((event.key === "Delete" || event.key === "Backspace") && ids.length > 0) {
         event.preventDefault();
         doc.deletePages(ids);
+        return;
+      }
+
+      // R, seçili sayfadan; seçim yoksa ilk sayfadan okuma modunu açar.
+      if (event.key.toLowerCase() === "r") {
+        const pageId = ids[0] ?? doc.model.pages[0]?.id;
+        if (pageId) {
+          event.preventDefault();
+          ui.setPreviewPage(pageId);
+        }
       }
     };
 

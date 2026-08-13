@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "PDF Editör",
+  "productName": "Forma PDF Studio",
   "version": "0.1.0",
   "identifier": "com.pdfeditor.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "PDF Editör",
+        "title": "Forma — PDF Studio",
         "width": 1360,
         "height": 900,
         "minWidth": 940,
@@ -38,7 +38,7 @@
       {
         "ext": ["pdf"],
         "name": "PDF Belgesi",
-        "description": "PDF Editör ile aç",
+        "description": "Forma ile aç",
         "role": "Editor"
       }
     ]

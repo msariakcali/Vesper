@@ -14,7 +14,7 @@ export function StatusBar() {
   const sourceCount = Object.keys(sources).length;
 
   return (
-    <footer className="flex h-8 shrink-0 items-center gap-4 border-t border-border bg-sidebar-header px-3 text-[11px] text-text-dim">
+    <footer className="flex h-7 shrink-0 items-center gap-4 border-t border-border bg-sidebar-header px-4 text-[9px] text-text-soft">
       {busy ? (
         <span className="flex items-center gap-2 text-text">
           <span
@@ -25,7 +25,7 @@ export function StatusBar() {
         </span>
       ) : (
         <>
-          <span className="tabular-nums">
+          <span className="font-medium tabular-nums">
             {pages.length} sayfa
             {sourceCount > 1 && ` · ${sourceCount} belge`}
           </span>
@@ -50,7 +50,7 @@ export function StatusBar() {
       )}
 
       <div className="flex-1" />
-      <span>{platform.kind === "tauri" ? "Belgeler / PDF Editör" : "Tarayıcı modu"}</span>
+      <span>{platform.kind === "tauri" ? "Forma · Yerel çalışma" : "Forma · Tarayıcı önizlemesi"}</span>
     </footer>
   );
 }

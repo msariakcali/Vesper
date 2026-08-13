@@ -27,7 +27,7 @@ export function Toasts() {
           <div
             key={toast.id}
             role="status"
-            className="pointer-events-auto flex max-w-lg items-start gap-2.5 rounded-lg border border-border bg-surface px-3.5 py-2.5 text-sm shadow-[var(--shadow)]"
+            className="pointer-events-auto flex max-w-lg items-start gap-2.5 rounded-xl border border-border bg-surface px-3.5 py-2.5 text-xs shadow-[var(--shadow-float)]"
             style={{ animation: "toast-in 160ms ease-out" }}
           >
             <Icon size={16} className={`mt-0.5 shrink-0 ${COLORS[toast.kind]}`} />

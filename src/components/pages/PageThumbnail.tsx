@@ -161,7 +161,7 @@ export const PageThumbnail = memo(function PageThumbnail({
         )}
 
         {/* Sayfa numarası rozeti */}
-        <span className="absolute left-2 top-2 min-w-6 rounded-md bg-black/58 px-1.5 py-1 text-center text-[9px] font-bold text-white shadow-sm tabular-nums backdrop-blur-sm">
+        <span className="absolute left-2 top-2 min-w-6 rounded-md bg-black/58 px-1.5 py-1 text-center text-[10px] font-bold text-white shadow-sm tabular-nums backdrop-blur-sm">
           {String(number).padStart(2, "0")}
         </span>
 
@@ -211,11 +211,11 @@ export const PageThumbnail = memo(function PageThumbnail({
       </div>
 
       <div className="flex min-w-0 items-center justify-between gap-2 px-0.5">
-        <span className={selected ? "text-[11px] font-bold text-brand" : "text-[11px] font-semibold text-text-dim"}>
+        <span className={selected ? "text-[12px] font-bold text-brand" : "text-[12px] font-semibold text-text-dim"}>
           {t("page", { count: number })}
         </span>
         {showSourceName && (
-          <span className="min-w-0 truncate text-right text-[9px] text-text-soft" title={source.name}>
+          <span className="min-w-0 truncate text-right text-[10px] text-text-soft" title={source.name}>
             {source.name}
           </span>
         )}

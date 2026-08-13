@@ -3,6 +3,7 @@ import { buildPdf } from "../core/model/buildPdf";
 import { platform } from "../platform";
 import { useDocumentStore } from "../store/documentStore";
 import { useUiStore } from "../store/uiStore";
+import { useTranslation } from "../i18n";
 
 let saveRevision = 0;
 
@@ -12,6 +13,7 @@ export function useAutoSave() {
   const dirty = useDocumentStore((state) => state.dirty);
   const setAutoSaveStatus = useUiStore((state) => state.setAutoSaveStatus);
   const notify = useUiStore((state) => state.notify);
+  const { t } = useTranslation();
 
   useEffect(() => {
     saveRevision += 1;
@@ -43,10 +45,10 @@ export function useAutoSave() {
         .catch((error: unknown) => {
           if (revision !== saveRevision) return;
           setAutoSaveStatus("error");
-          notify("error", `Otomatik kayıt başarısız: ${error instanceof Error ? error.message : String(error)}`);
+          notify("error", t("autoSaveFailed", { message: error instanceof Error ? error.message : String(error) }));
         });
     }, 1200);
 
     return () => window.clearTimeout(timer);
-  }, [dirty, model, notify, setAutoSaveStatus]);
+  }, [dirty, model, notify, setAutoSaveStatus, t]);
 }

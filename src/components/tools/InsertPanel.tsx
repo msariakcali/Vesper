@@ -8,6 +8,8 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
+import { Section } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 type InsertPosition = "start" | "before" | "after" | "end";
 type PageSize = keyof typeof PAGE_SIZES;
@@ -28,6 +30,7 @@ export function InsertPanel() {
   const [position, setPosition] = useState<InsertPosition>("end");
   const [pageSize, setPageSize] = useState<PageSize>("A4");
   const [images, setImages] = useState<PickedFile[]>([]);
+  const { t } = useTranslation();
 
   const selectedIndex = useMemo(
     () => pages.findIndex((page) => selected.has(page.id)),
@@ -43,10 +46,10 @@ export function InsertPanel() {
           : Math.max(0, selectedIndex + 1);
 
   const runInsert = async (work: () => Promise<Uint8Array>, name: string) => {
-    setBusy(`${name} hazırlanıyor…`);
+    setBusy(t("preparingNamed", { name }));
     try {
       const count = await insertAt(await work(), name, targetIndex);
-      if (count > 0) notify("success", `${count} sayfa eklendi.`);
+      if (count > 0) notify("success", t("pagesAdded", { count }));
     } catch (error) {
       notify("error", error instanceof Error ? error.message : String(error));
     } finally {
@@ -68,7 +71,7 @@ export function InsertPanel() {
       for (const file of files) {
         await insertAt(file.bytes, file.name, targetIndex);
       }
-      if (files.length > 0) notify("success", `${files.length} PDF belgeye eklendi.`);
+      if (files.length > 0) notify("success", t("pdfAddedToDocument", { count: files.length }));
     } catch (error) {
       notify("error", error instanceof Error ? error.message : String(error));
     }
@@ -76,32 +79,32 @@ export function InsertPanel() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Section title="Ekleme konumu">
+      <Section title={t("insertPosition")}>
         <div className="grid grid-cols-2 gap-1.5">
           <PositionButton selected={position === "start"} onClick={() => setPosition("start")}>
-            Başa
+            {t("positionStart")}
           </PositionButton>
           <PositionButton
             selected={position === "before"}
             disabled={selectedIndex < 0}
             onClick={() => setPosition("before")}
           >
-            Seçiliden önce
+            {t("positionBeforeSelected")}
           </PositionButton>
           <PositionButton
             selected={position === "after"}
             disabled={selectedIndex < 0}
             onClick={() => setPosition("after")}
           >
-            Seçiliden sonra
+            {t("positionAfterSelected")}
           </PositionButton>
           <PositionButton selected={position === "end"} onClick={() => setPosition("end")}>
-            Sona
+            {t("positionEnd")}
           </PositionButton>
         </div>
       </Section>
 
-      <Section title="Boş sayfa">
+      <Section title={t("blankPage")}>
         <div className="flex gap-2">
           <select
             value={pageSize}
@@ -116,14 +119,14 @@ export function InsertPanel() {
             icon={<Plus size={15} />}
             onClick={() => void runInsert(() => createBlankPagePdf(pageSize), `bos-${pageSize}.pdf`)}
           >
-            Boş sayfa ekle
+            {t("addBlankPage")}
           </Button>
         </div>
       </Section>
 
-      <Section title="Görselden">
+      <Section title={t("fromImage")}>
         <Button icon={<ImagePlus size={15} />} onClick={() => void pickImages()}>
-          Görsel seç…
+          {t("chooseImage")}
         </Button>
         {images.length > 0 && (
           <div className="flex flex-col gap-1 rounded-md border border-border bg-surface-2 p-2">
@@ -146,13 +149,13 @@ export function InsertPanel() {
             ).then(() => setImages([]))
           }
         >
-          Sayfa olarak ekle
+          {t("addAsPage")}
         </Button>
       </Section>
 
-      <Section title="Başka PDF'ten">
+      <Section title={t("fromAnotherPdf")}>
         <Button icon={<FilePlus size={15} />} onClick={() => void pickPdf()}>
-          PDF seç…
+          {t("choosePdf")}
         </Button>
       </Section>
     </div>
@@ -185,14 +188,5 @@ function PositionButton({
     >
       {children}
     </button>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-xs font-semibold tracking-wide text-text-dim uppercase">{title}</h3>
-      {children}
-    </div>
   );
 }

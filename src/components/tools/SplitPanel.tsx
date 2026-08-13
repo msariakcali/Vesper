@@ -6,6 +6,8 @@ import { useSplitExport } from "../../hooks/useSplit";
 import { platform } from "../../platform";
 import { useDocumentStore } from "../../store/documentStore";
 import { Button } from "../ui/Button";
+import { Section } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 type SplitMode = "ranges" | "every" | "each";
 
@@ -15,6 +17,7 @@ export function SplitPanel() {
   const [mode, setMode] = useState<SplitMode>("ranges");
   const [ranges, setRanges] = useState("");
   const [every, setEvery] = useState(5);
+  const { t } = useTranslation();
 
   const rangeErrors = useMemo(
     () =>
@@ -41,22 +44,22 @@ export function SplitPanel() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Section title="Bölme yöntemi">
+      <Section title={t("splitMethod")}>
         <div className="grid grid-cols-1 gap-1.5">
           <ModeButton selected={mode === "ranges"} onClick={() => setMode("ranges")}>
-            Aralıklara göre
+            {t("splitByRanges")}
           </ModeButton>
           <ModeButton selected={mode === "every"} onClick={() => setMode("every")}>
-            Her N sayfada bir
+            {t("splitEveryNPages")}
           </ModeButton>
           <ModeButton selected={mode === "each"} onClick={() => setMode("each")}>
-            Her sayfa ayrı dosya
+            {t("splitEachPageOwnFile")}
           </ModeButton>
         </div>
       </Section>
 
       {mode === "ranges" && (
-        <Section title="Her satıra bir aralık yazın">
+        <Section title={t("oneRangePerLine")}>
           <textarea
             value={ranges}
             onChange={(event) => setRanges(event.target.value)}
@@ -69,13 +72,13 @@ export function SplitPanel() {
             ].join(" ")}
           />
           {rangeErrors.length > 0 && (
-            <p className="text-xs text-danger">Anlaşılmayan bölüm: {rangeErrors.join(", ")}</p>
+            <p className="text-xs text-danger">{t("unrecognizedSection", { list: rangeErrors.join(", ") })}</p>
           )}
         </Section>
       )}
 
       {mode === "every" && (
-        <Section title="Sayfa sayısı">
+        <Section title={t("pageCount")}>
           <input
             type="number"
             min={1}
@@ -88,12 +91,12 @@ export function SplitPanel() {
       )}
 
       <p className="text-xs text-text-dim">
-        → {groups.length} dosya oluşacak
-        {groups.length > 0 && ` (${groups.map((group) => group.pages.length).join(", ")} sayfa)`}
+        {t("filesWillBeCreated", { count: groups.length })}
+        {groups.length > 0 && t("filesPagesSuffix", { list: groups.map((group) => group.pages.length).join(", ") })}
       </p>
       {platform.kind === "web" && (
         <p className="rounded-md bg-surface-2 px-2.5 py-2 text-xs text-text-dim">
-          Tarayıcıda her dosya ayrı indirilecek.
+          {t("browserDownloadNote")}
         </p>
       )}
       <Button
@@ -102,7 +105,7 @@ export function SplitPanel() {
         disabled={invalid}
         onClick={() => void splitExport(groups, first?.name ?? "belge.pdf")}
       >
-        Böl ve Klasöre Kaydet
+        {t("splitAndSaveToFolder")}
       </Button>
     </div>
   );
@@ -131,14 +134,5 @@ function ModeButton({
     >
       {children}
     </button>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-xs font-semibold tracking-wide text-text-dim uppercase">{title}</h3>
-      {children}
-    </div>
   );
 }

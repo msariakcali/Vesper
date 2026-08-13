@@ -32,12 +32,12 @@ export function CanvasHeader() {
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-semibold tracking-[-0.01em]">{t("pages")}</h2>
           {pages.length > 0 && (
-            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-semibold text-text-dim tabular-nums">
+            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-text-dim tabular-nums">
               {pages.length}
             </span>
           )}
         </div>
-        <p className="mt-0.5 text-[10px] text-text-soft">
+        <p className="mt-0.5 text-[11px] text-text-soft">
           {sourceCount > 1 ? t("documentsInWorkspace", { count: sourceCount }) : t("selectAndReorder")}
         </p>
       </div>
@@ -57,7 +57,7 @@ export function CanvasHeader() {
         type="button"
         disabled={pages.length === 0}
         onClick={() => (hasSelection ? clearSelection() : setSelection(pages.map((page) => page.id)))}
-        className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
+        className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
       >
         <Check size={13} />
         {hasSelection ? t("selected", { count: ids.length }) : t("selectAll")}
@@ -85,7 +85,7 @@ export function CanvasHeader() {
           className="w-20 accent-[var(--brand)]"
           aria-label={t("pageCardSize")}
         />
-        <span className="w-9 text-right text-[10px] text-text-soft tabular-nums">{thumbnailSize}</span>
+        <span className="w-9 text-right text-[11px] text-text-soft tabular-nums">{thumbnailSize}</span>
       </div>
     </div>
   );

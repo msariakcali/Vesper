@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import type { DocumentModel } from "../../core/model/types";
 import { getPageText } from "../../core/render/textCache";
+import { useTranslation } from "../../i18n";
 
 interface SearchResult {
   pageIndex: number;
@@ -23,6 +24,7 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
   const [results, setResults] = useState<SearchResult[]>([]);
   const [busy, setBusy] = useState(false);
   const [activeOccurrence, setActiveOccurrence] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     let cancelled = false;
@@ -110,9 +112,9 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
           ref={ref}
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Metinde ara"
-          className="h-7 w-32 rounded-lg border-0 bg-transparent pl-7 pr-6 text-[11px] text-text shadow-none sm:w-48"
-          aria-label="PDF metninde ara"
+          placeholder={t("searchInText")}
+          className="h-7 w-32 rounded-lg border-0 bg-transparent pl-7 pr-6 text-[12px] text-text shadow-none sm:w-48"
+          aria-label={t("searchInPdf")}
         />
         {busy && (
           <span className="absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-border border-t-accent [animation:spin_700ms_linear_infinite]" />
@@ -125,13 +127,13 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
             className="grid h-7 w-7 place-items-center rounded text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-40"
             disabled={occurrences.length === 0}
             onClick={() => navigate(-1)}
-            aria-label="Önceki arama sonucu"
+            aria-label={t("previousResult")}
           >
             <ChevronLeft size={14} />
           </button>
           <span
-            className="min-w-12 text-center text-[10px] text-text-dim tabular-nums"
-            title={`${totalMatches} eşleşme`}
+            className="min-w-12 text-center text-[11px] text-text-dim tabular-nums"
+            title={t("matchesCount", { count: totalMatches })}
           >
             {occurrences.length === 0 ? "0/0" : `${activeResult + 1}/${occurrences.length}`}
           </span>
@@ -140,7 +142,7 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
             className="grid h-7 w-7 place-items-center rounded text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-40"
             disabled={occurrences.length === 0}
             onClick={() => navigate(1)}
-            aria-label="Sonraki arama sonucu"
+            aria-label={t("nextResult")}
           >
             <ChevronRight size={14} />
           </button>

@@ -4,7 +4,7 @@ import { parsePageRange } from "../../core/ops/pageRange";
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <h3 className="text-[9px] font-bold tracking-[0.14em] text-text-soft uppercase">{title}</h3>
+      <h3 className="text-[10px] font-bold tracking-[0.14em] text-text-soft uppercase">{title}</h3>
       {children}
     </div>
   );
@@ -54,7 +54,7 @@ export function SegmentedButton({
       aria-pressed={selected}
       onClick={onClick}
       className={[
-        "min-h-9 rounded-lg border px-2 text-[10px] font-semibold transition-colors",
+        "min-h-9 rounded-lg border px-2 text-[11px] font-semibold transition-colors",
         selected
           ? "border-brand/40 bg-accent-soft text-brand"
           : "border-border bg-surface text-text-dim hover:text-text",

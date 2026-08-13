@@ -6,6 +6,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore, type PlacementImage, type PlacementMode } from "../../store/uiStore";
 import { Button } from "../ui/Button";
 import { TextSearch } from "./TextSearch";
+import { useTranslation } from "../../i18n";
 
 function readerRenderWidth(zoom: number): number {
   // Varsayılan yakınlaştırmada sayfa, dar masaüstü penceresine de taşmadan sığsın.
@@ -37,6 +38,7 @@ export function PreviewModal() {
   const [pageField, setPageField] = useState("1");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTarget, setSearchTarget] = useState<{ pageIndex: number; matchIndex: number } | null>(null);
+  const { t } = useTranslation();
 
   const pages = model.pages;
   const visiblePageId = currentPageId ?? previewPageId;
@@ -208,20 +210,20 @@ export function PreviewModal() {
             compact
             icon={<X size={18} />}
             onClick={close}
-            aria-label="Okuma modunu kapat"
+            aria-label={t("closeReaderMode")}
           />
           <span className="hidden h-8 w-px bg-border sm:block" />
           <span className="hidden h-8 w-8 place-items-center rounded-lg bg-accent-soft text-brand sm:grid">
             <BookOpen size={15} />
           </span>
           <span className="min-w-0">
-            <span className="block max-w-44 truncate text-[11px] font-bold text-text">{currentSource.name}</span>
-            <span className="mt-0.5 block text-[9px] text-text-soft">Okuma modu · aşağı kaydırarak ilerle</span>
+            <span className="block max-w-44 truncate text-[12px] font-bold text-text">{currentSource.name}</span>
+            <span className="mt-0.5 block text-[10px] text-text-soft">{t("readingModeHint")}</span>
           </span>
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          <label className="flex h-8 items-center gap-1 rounded-lg border border-border bg-sidebar-header px-2 text-[10px] text-text-dim">
+          <label className="flex h-8 items-center gap-1 rounded-lg border border-border bg-sidebar-header px-2 text-[11px] text-text-dim">
             <FileText size={12} className="text-text-soft" />
             <input
               type="number"
@@ -236,8 +238,8 @@ export function PreviewModal() {
                   jumpToPage();
                 }
               }}
-              className="h-6 w-7 border-0 bg-transparent p-0 text-center text-[10px] font-bold text-text outline-none"
-              aria-label="Sayfaya git"
+              className="h-6 w-7 border-0 bg-transparent p-0 text-center text-[11px] font-bold text-text outline-none"
+              aria-label={t("goToPage")}
             />
             <span className="text-text-soft">/ {pages.length}</span>
           </label>
@@ -247,16 +249,16 @@ export function PreviewModal() {
             icon={<Minus size={15} />}
             disabled={zoom <= 0.5}
             onClick={() => setZoom(zoom - 0.25)}
-            aria-label="Uzaklaştır"
+            aria-label={t("zoomOut")}
           />
-          <span className="hidden w-10 text-center text-[10px] text-text-dim tabular-nums sm:block">{Math.round(zoom * 100)}%</span>
+          <span className="hidden w-10 text-center text-[11px] text-text-dim tabular-nums sm:block">{Math.round(zoom * 100)}%</span>
           <Button
             variant="ghost"
             compact
             icon={<Plus size={15} />}
             disabled={zoom >= 3}
             onClick={() => setZoom(zoom + 0.25)}
-            aria-label="Yakınlaştır"
+            aria-label={t("zoomIn")}
           />
           <TextSearch
             ref={searchRef}
@@ -273,10 +275,10 @@ export function PreviewModal() {
       </div>
 
       {placementMode && (
-        <div className="absolute left-1/2 top-[4.5rem] z-20 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-[10px] font-semibold text-white shadow-lg">
+        <div className="absolute left-1/2 top-[4.5rem] z-20 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-[11px] font-semibold text-white shadow-lg">
           {placementMode === "text"
-            ? "Metnin yerleşeceği noktaya tıklayın"
-            : "İmzanın yerleşeceği noktaya tıklayın"}
+            ? t("clickToPlaceText")
+            : t("clickToPlaceSignature")}
         </div>
       )}
 
@@ -360,6 +362,7 @@ function ReaderPage({
   const [text, setText] = useState("");
   const [textSize, setTextSize] = useState(18);
   const [textColor, setTextColor] = useState("#202020");
+  const { t } = useTranslation();
 
   useEffect(() => {
     registerPage(page.id, pageRef.current);
@@ -504,8 +507,8 @@ function ReaderPage({
 
   return (
     <article ref={pageRef} className="scroll-mt-5">
-      <div className="mb-2 flex items-center justify-between px-1 text-[10px] font-semibold text-white/58">
-        <span>Sayfa {index + 1}</span>
+      <div className="mb-2 flex items-center justify-between px-1 text-[11px] font-semibold text-white/58">
+        <span>{t("page", { count: index + 1 })}</span>
         <span>{index + 1} / {pageCount}</span>
       </div>
       <div
@@ -533,7 +536,7 @@ function ReaderPage({
           className="pdf-text-layer textLayer"
           data-searching={searchQuery.trim() ? "true" : "false"}
           style={{ pointerEvents: placementMode ? "none" : "auto" }}
-          aria-label={`Sayfa ${index + 1} metni`}
+          aria-label={t("pageTextLabel", { count: index + 1 })}
         />
         {!ready && !failed && (
           <div className="absolute inset-0 grid place-items-center bg-white">
@@ -542,7 +545,7 @@ function ReaderPage({
         )}
         {failed && (
           <div className="absolute inset-0 grid place-items-center bg-white p-5 text-center text-xs text-danger">
-            Sayfa görüntülenemedi.
+            {t("pageRenderFailed")}
           </div>
         )}
         {page.overlays.map((overlay) => (
@@ -561,7 +564,7 @@ function ReaderPage({
               autoFocus
               value={text}
               onChange={(event) => setText(event.target.value)}
-              placeholder="Metin"
+              placeholder={t("text")}
               className="h-8 w-full rounded-lg border border-border bg-sidebar-header px-2 text-xs text-text"
             />
             <div className="mt-2 grid grid-cols-[1fr_3rem] gap-2">
@@ -572,24 +575,24 @@ function ReaderPage({
                 value={textSize}
                 onChange={(event) => setTextSize(Number(event.target.value) || 18)}
                 className="h-8 rounded-lg border border-border bg-sidebar-header px-2 font-mono text-xs text-text"
-                aria-label="Metin boyutu"
+                aria-label={t("textSize")}
               />
               <input
                 type="color"
                 value={textColor}
                 onChange={(event) => setTextColor(event.target.value)}
                 className="h-8 w-full"
-                aria-label="Metin rengi"
+                aria-label={t("textColor")}
               />
             </div>
             <div className="mt-2 flex justify-end gap-1">
-              <Button variant="ghost" compact onClick={cancelPlacement}>İptal</Button>
-              <Button variant="primary" compact disabled={!text.trim()} onClick={addText}>Ekle</Button>
+              <Button variant="ghost" compact onClick={cancelPlacement}>{t("cancel")}</Button>
+              <Button variant="primary" compact disabled={!text.trim()} onClick={addText}>{t("add")}</Button>
             </div>
           </div>
         )}
       </div>
-      {rendering && <p className="mt-2 text-center text-[9px] text-white/38">Sayfa hazırlanıyor…</p>}
+      {rendering && <p className="mt-2 text-center text-[10px] text-white/38">{t("pagePreparing")}</p>}
     </article>
   );
 }
@@ -625,6 +628,7 @@ function OverlayPreview({
 
 function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "image" }> }) {
   const [url, setUrl] = useState("");
+  const { t } = useTranslation();
   useEffect(() => {
     const objectUrl = URL.createObjectURL(
       new Blob([overlay.data.slice().buffer as ArrayBuffer], { type: overlay.mime }),
@@ -636,7 +640,7 @@ function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "i
   return (
     <img
       src={url}
-      alt="Yerleştirilen görsel"
+      alt={t("placedImageAlt")}
       className="pointer-events-none absolute z-[3] origin-top-left object-contain"
       style={{
         left: `${overlay.x * 100}%`,

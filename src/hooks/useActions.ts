@@ -5,6 +5,7 @@ import { platform } from "../platform";
 import { useDocumentStore } from "../store/documentStore";
 import { useSelectionStore } from "../store/selectionStore";
 import { useUiStore } from "../store/uiStore";
+import { useTranslation } from "../i18n";
 
 /** "rapor.pdf" + "_sayfa_3-7" -> "rapor_sayfa_3-7.pdf" */
 export function suggestName(base: string, suffix: string): string {
@@ -21,15 +22,16 @@ export function useExportPages() {
   const markSaved = useDocumentStore((s) => s.markSaved);
   const setBusy = useUiStore((s) => s.setBusy);
   const notify = useUiStore((s) => s.notify);
+  const { t } = useTranslation();
 
   return useCallback(
     async (pages: PageRef[], fileName: string, options?: { markClean?: boolean }) => {
       if (pages.length === 0) {
-        notify("error", "Önce en az bir sayfa seçmelisiniz.");
+        notify("error", t("selectAtLeastOnePage"));
         return false;
       }
 
-      setBusy(`${pages.length} sayfa hazırlanıyor…`);
+      setBusy(t("preparingPagesCount", { count: pages.length }));
       try {
         const bytes = await buildPdf(model, pages);
         const path = await platform.saveBytes(bytes, fileName);
@@ -38,7 +40,9 @@ export function useExportPages() {
         if (options?.markClean) markSaved();
         notify(
           "success",
-          `${pages.length} sayfa kaydedildi${platform.kind === "tauri" ? `: ${path}` : "."}`,
+          platform.kind === "tauri"
+            ? t("pagesSavedPath", { count: pages.length, path })
+            : t("pagesSaved", { count: pages.length }),
         );
         return true;
       } catch (error) {
@@ -48,7 +52,7 @@ export function useExportPages() {
         setBusy(null);
       }
     },
-    [model, markSaved, notify, setBusy],
+    [model, markSaved, notify, setBusy, t],
   );
 }
 

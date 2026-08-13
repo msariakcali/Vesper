@@ -16,7 +16,7 @@ export function StatusBar() {
   const sourceCount = Object.keys(sources).length;
 
   return (
-    <footer className="flex h-7 shrink-0 items-center gap-4 border-t border-border bg-sidebar-header px-4 text-[9px] text-text-soft">
+    <footer className="flex h-8 shrink-0 items-center gap-4 border-t border-border bg-sidebar-header px-4 text-[10px] text-text-soft">
       {busy ? (
         <span className="flex items-center gap-2 text-text">
           <span
@@ -29,7 +29,7 @@ export function StatusBar() {
         <>
           <span className="font-medium tabular-nums">
             {t("pagesCount", { count: pages.length })}
-            {sourceCount > 1 && ` · ${t("documentsInWorkspace", { count: sourceCount })}`}
+            {sourceCount > 1 && ` · ${t("documentsCount", { count: sourceCount })}`}
           </span>
           {selected.size > 0 && (
             <span className="tabular-nums text-accent">{t("selected", { count: selected.size })}</span>

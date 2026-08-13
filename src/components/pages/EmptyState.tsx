@@ -39,11 +39,11 @@ export function EmptyState() {
             </span>
             <span>
               <span className="block text-sm font-semibold leading-none tracking-[-0.03em]">Forma</span>
-              <span className="mt-1 block text-[8px] font-medium tracking-[0.16em] text-text-soft uppercase">PDF Studio</span>
+              <span className="mt-1 block text-[9px] font-medium tracking-[0.16em] text-text-soft uppercase">PDF Studio</span>
             </span>
           </a>
 
-          <nav className="ml-auto hidden items-center gap-7 text-[11px] font-medium text-text-dim md:flex" aria-label="Main menu">
+          <nav className="ml-auto hidden items-center gap-7 text-[12px] font-medium text-text-dim md:flex" aria-label="Main menu">
             <a href="#neler-yapilir" className="transition hover:text-brand">{t("features")}</a>
             <a href="#guvenlik" className="transition hover:text-brand">{t("privacy")}</a>
             <span className="rounded-full border border-brand/20 bg-brand/[0.07] px-3 py-1.5 text-brand">
@@ -51,7 +51,7 @@ export function EmptyState() {
             </span>
           </nav>
 
-          <select value={language} onChange={(event) => setLanguage(event.target.value as "en" | "tr")} className="ml-3 h-9 rounded-full border-0 bg-surface-2 px-3 text-[11px] font-semibold text-text outline-none" aria-label="Language">
+          <select value={language} onChange={(event) => setLanguage(event.target.value as "en" | "tr")} className="ml-3 h-9 rounded-full border-0 bg-surface-2 px-3 text-[12px] font-semibold text-text outline-none" aria-label="Language">
             <option value="en">EN</option>
             <option value="tr">TR</option>
           </select>
@@ -67,7 +67,7 @@ export function EmptyState() {
           <button
             type="button"
             onClick={() => void openDialog()}
-            className="ml-2 inline-flex h-9 items-center gap-2 rounded-full bg-brand px-4 text-[11px] font-medium text-white shadow-sm transition hover:bg-brand-strong"
+            className="ml-2 inline-flex h-9 items-center gap-2 rounded-full bg-brand px-4 text-[12px] font-medium text-white shadow-sm transition hover:bg-brand-strong"
           >
             {t("addPdf")} <ArrowRight size={13} />
           </button>
@@ -80,7 +80,7 @@ export function EmptyState() {
           <div className="hero-orb hero-orb-two" />
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[10px] font-medium text-brand">
+              <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[11px] font-medium text-brand">
                 <Sparkles size={12} /> {t("browserPdfStudio")}
               </span>
               <h1 className="mt-7 max-w-3xl text-[clamp(2.8rem,6.5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.065em]">
@@ -91,7 +91,7 @@ export function EmptyState() {
                 {t("heroDescription")}
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[11px] font-medium text-text-dim">
+              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[12px] font-medium text-text-dim">
                 {[
                   t("noAccount"),
                   t("noUpload"),
@@ -118,13 +118,13 @@ export function EmptyState() {
                   <FilePlus2 size={29} strokeWidth={1.8} />
                 </span>
                 <span className="mt-6 text-lg font-semibold tracking-[-0.035em]">{t("dropPdf")}</span>
-                <span className="mt-2 max-w-xs text-[11px] leading-5 text-text-dim">
+                <span className="mt-2 max-w-xs text-[12px] leading-5 text-text-dim">
                   {t("dropDescription")}
                 </span>
-                <span className="mt-6 inline-flex h-10 items-center gap-2 rounded-full bg-brand px-5 text-[11px] font-medium text-white shadow-sm">
+                <span className="mt-6 inline-flex h-10 items-center gap-2 rounded-full bg-brand px-5 text-[12px] font-medium text-white shadow-sm">
                   {t("chooseFile")} <ArrowRight size={13} />
                 </span>
-                <span className="mt-4 text-[10px] font-medium text-text-soft">{t("secureBrowser")}</span>
+                <span className="mt-4 text-[11px] font-medium text-text-soft">{t("secureBrowser")}</span>
               </div>
             </button>
           </div>
@@ -133,7 +133,7 @@ export function EmptyState() {
         <section id="neler-yapilir" className="border-y border-border bg-surface px-5 py-20 sm:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-2xl">
-              <span className="text-[10px] font-medium tracking-[0.08em] text-brand uppercase">{t("oneWorkspace")}</span>
+              <span className="text-[11px] font-medium tracking-[0.08em] text-brand uppercase">{t("oneWorkspace")}</span>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{t("uploadEditReadDownload")}</h2>
               <p className="mt-4 text-sm leading-6 text-text-dim">{t("workflowDescription")}</p>
             </div>
@@ -144,10 +144,10 @@ export function EmptyState() {
                     <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-brand">
                       <Icon size={19} strokeWidth={1.8} />
                     </span>
-                    <span className="text-[10px] font-semibold text-text-soft">0{index + 1}</span>
+                    <span className="text-[11px] font-semibold text-text-soft">0{index + 1}</span>
                   </div>
                   <h3 className="mt-7 text-base font-semibold tracking-[-0.025em]">{t(title)}</h3>
-                  <p className="mt-2 text-[11px] leading-5 text-text-dim">{t(text)}</p>
+                  <p className="mt-2 text-[12px] leading-5 text-text-dim">{t(text)}</p>
                 </article>
               ))}
             </div>
@@ -161,9 +161,9 @@ export function EmptyState() {
             </span>
             <div>
               <h2 className="text-xl font-black tracking-[-0.035em]">{t("privacyTitle")}</h2>
-              <p className="mt-2 max-w-2xl text-[11px] leading-5 text-white/48">{t("privacyDescription")}</p>
+              <p className="mt-2 max-w-2xl text-[12px] leading-5 text-white/48">{t("privacyDescription")}</p>
             </div>
-            <button type="button" onClick={() => void openDialog()} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-[11px] font-medium text-[#1d1d1f] transition hover:-translate-y-0.5">
+            <button type="button" onClick={() => void openDialog()} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-medium text-[#1d1d1f] transition hover:-translate-y-0.5">
               <Download size={14} /> {t("getStarted")}
             </button>
           </div>
@@ -171,7 +171,7 @@ export function EmptyState() {
       </main>
 
       <footer className="border-t border-border px-5 py-7 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-[10px] font-medium text-text-soft sm:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-[11px] font-medium text-text-soft sm:flex-row">
           <span>© 2026 Forma PDF Studio</span>
           <span>{t("footerFlow")}</span>
         </div>

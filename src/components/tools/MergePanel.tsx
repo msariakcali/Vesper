@@ -4,12 +4,15 @@ import { useExportPages } from "../../hooks/useActions";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useDocumentStore } from "../../store/documentStore";
 import { Button } from "../ui/Button";
+import { Section } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 export function MergePanel() {
   const model = useDocumentStore((state) => state.model);
   const movePagesTo = useDocumentStore((state) => state.movePagesTo);
   const openDialog = useOpenDialog();
   const exportPages = useExportPages();
+  const { t } = useTranslation();
 
   const sourceOrder = useMemo(() => {
     const seen = new Set<string>();
@@ -44,7 +47,7 @@ export function MergePanel() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Section title="Birleştirilecek belgeler">
+      <Section title={t("documentsToMerge")}>
         <div className="flex flex-col gap-2">
           {sourceOrder.map((sourceId, index) => {
             const source = model.sources[sourceId];
@@ -57,14 +60,14 @@ export function MergePanel() {
                 <FileText size={16} className="shrink-0 text-accent" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm">{source.name}</span>
-                  <span className="block text-xs text-text-dim">{count} sayfa</span>
+                  <span className="block text-xs text-text-dim">{t("pagesCount", { count })}</span>
                 </span>
                 <Button
                   variant="ghost"
                   compact
                   disabled={index === 0}
                   icon={<ArrowUp size={14} />}
-                  aria-label={`${source.name} belgesini yukarı taşı`}
+                  aria-label={t("moveDocumentUp", { name: source.name })}
                   onClick={() => moveSource(sourceId, -1)}
                 />
                 <Button
@@ -72,7 +75,7 @@ export function MergePanel() {
                   compact
                   disabled={index === sourceOrder.length - 1}
                   icon={<ArrowDown size={14} />}
-                  aria-label={`${source.name} belgesini aşağı taşı`}
+                  aria-label={t("moveDocumentDown", { name: source.name })}
                   onClick={() => moveSource(sourceId, 1)}
                 />
               </div>
@@ -80,15 +83,15 @@ export function MergePanel() {
           })}
         </div>
         <Button icon={<Plus size={15} />} onClick={() => void openDialog()}>
-          Daha fazla PDF ekle
+          {t("addMorePdf")}
         </Button>
       </Section>
 
       <div className="rounded-md border border-border bg-surface-2 px-3 py-2 text-sm">
-        Toplam: <strong className="text-accent tabular-nums">{model.pages.length}</strong> sayfa
+        {t("totalPrefix")} <strong className="text-accent tabular-nums">{model.pages.length}</strong> {t("pagesUnit")}
       </div>
       {disabled && (
-        <p className="text-xs text-text-dim">Birleştirmek için en az 2 PDF açın.</p>
+        <p className="text-xs text-text-dim">{t("needAtLeastTwoPdfs")}</p>
       )}
       <Button
         variant="primary"
@@ -96,17 +99,8 @@ export function MergePanel() {
         disabled={disabled}
         onClick={() => void exportPages(model.pages, "birlestirilmis.pdf")}
       >
-        Birleştir ve Farklı Kaydet
+        {t("mergeAndSaveAs")}
       </Button>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-xs font-semibold tracking-wide text-text-dim uppercase">{title}</h3>
-      {children}
     </div>
   );
 }

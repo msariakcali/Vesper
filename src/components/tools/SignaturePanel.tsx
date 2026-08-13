@@ -6,6 +6,7 @@ import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
 import { SegmentedButton } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 type Tab = "draw" | "upload";
 
@@ -28,6 +29,7 @@ export function SignaturePanel() {
   const drawing = useRef(false);
   const [tab, setTab] = useState<Tab>("draw");
   const [color, setColor] = useState("#000000");
+  const { t } = useTranslation();
 
   const previewPlacement = (data: Uint8Array, mime: "image/png" | "image/jpeg", aspectRatio: number) => {
     const page = pages.find((item) => selected.has(item.id)) ?? pages[0];
@@ -35,7 +37,7 @@ export function SignaturePanel() {
     setPlacementImage({ data, mime, aspectRatio });
     setPlacementMode("signature");
     setPreviewPage(page.id);
-    notify("info", "İmzayı yerleştirmek için sayfada bir noktaya tıklayın.");
+    notify("info", t("signaturePlacementHint"));
   };
 
   const pointerPosition = (event: React.PointerEvent<HTMLCanvasElement>) => {
@@ -93,8 +95,8 @@ export function SignaturePanel() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-1">
-        <SegmentedButton selected={tab === "draw"} onClick={() => setTab("draw")}>Çiz</SegmentedButton>
-        <SegmentedButton selected={tab === "upload"} onClick={() => setTab("upload")}>Yükle</SegmentedButton>
+        <SegmentedButton selected={tab === "draw"} onClick={() => setTab("draw")}>{t("draw")}</SegmentedButton>
+        <SegmentedButton selected={tab === "upload"} onClick={() => setTab("upload")}>{t("upload")}</SegmentedButton>
       </div>
       {tab === "draw" ? (
         <>
@@ -110,7 +112,7 @@ export function SignaturePanel() {
           />
           <div className="flex items-center justify-between gap-2">
             <label className="flex items-center gap-2 text-xs text-text-dim">
-              Kalem rengi
+              {t("penColor")}
               <input type="color" value={color} onChange={(event) => setColor(event.target.value)} />
             </label>
             <Button
@@ -119,16 +121,16 @@ export function SignaturePanel() {
               icon={<Eraser size={14} />}
               onClick={() => canvasRef.current?.getContext("2d")?.clearRect(0, 0, 400, 150)}
             >
-              Temizle
+              {t("clear")}
             </Button>
           </div>
           <Button variant="primary" icon={<PenTool size={15} />} onClick={() => void placeDrawing()}>
-            Sayfaya Yerleştir
+            {t("placeOnPage")}
           </Button>
         </>
       ) : (
         <Button variant="primary" icon={<ImagePlus size={15} />} onClick={() => void upload()}>
-          Görsel Seç…
+          {t("chooseImage")}
         </Button>
       )}
     </div>

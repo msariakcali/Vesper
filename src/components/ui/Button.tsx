@@ -32,7 +32,7 @@ export function Button({
       type="button"
       {...props}
       className={[
-        "inline-flex items-center justify-center gap-2 rounded-lg border text-[12px] font-medium",
+        "inline-flex items-center justify-center gap-2 rounded-lg border text-[13px] font-medium",
         "transition-[background-color,border-color,color,transform] duration-150 select-none active:translate-y-px",
         "disabled:opacity-40 disabled:cursor-not-allowed",
         compact ? "h-9 px-2.5" : "h-10 px-4",

@@ -3,6 +3,7 @@ import { platform, type PickedFile } from "../platform";
 import { useDocumentStore } from "../store/documentStore";
 import { useUiStore } from "../store/uiStore";
 import { useRecentFilesStore } from "../store/recentFilesStore";
+import { useTranslation } from "../i18n";
 
 /**
  * Dosya açma akışı: diyalog, sürükle-bırak ve "PDF Editör ile aç" başlangıcı
@@ -12,13 +13,14 @@ export function useAddFiles() {
   const addSources = useDocumentStore((s) => s.addSources);
   const notify = useUiStore((s) => s.notify);
   const setBusy = useUiStore((s) => s.setBusy);
+  const { t } = useTranslation();
 
   return useCallback(
     async (files: PickedFile[]) => {
       const pdfs = files.filter((f) => f.name.toLowerCase().endsWith(".pdf"));
       if (pdfs.length === 0) return;
 
-      setBusy(pdfs.length === 1 ? `${pdfs[0].name} açılıyor…` : `${pdfs.length} dosya açılıyor…`);
+      setBusy(pdfs.length === 1 ? t("openingNamed", { name: pdfs[0].name }) : t("openingFilesCount", { count: pdfs.length }));
       try {
         const prepared =
           platform.kind === "tauri"
@@ -41,13 +43,13 @@ export function useAddFiles() {
           for (const file of prepared) {
             if (file.path && openedPaths.has(file.path)) addRecent({ path: file.path, name: file.name });
           }
-          notify("success", added === 1 ? "Belge açıldı." : `${added} belge açıldı.`);
+          notify("success", added === 1 ? t("documentOpened") : t("documentsOpenedCount", { count: added }));
         }
       } finally {
         setBusy(null);
       }
     },
-    [addSources, notify, setBusy],
+    [addSources, notify, setBusy, t],
   );
 }
 

@@ -5,6 +5,8 @@ import { useExtractSelection } from "../../hooks/useActions";
 import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { Button } from "../ui/Button";
+import { Section } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 /**
  * Sayfa ayıklama paneli — uygulamanın çekirdek akışı.
@@ -19,6 +21,7 @@ export function ExtractPanel() {
   const selected = useSelectionStore((s) => s.selected);
   const setSelection = useSelectionStore((s) => s.set);
   const extract = useExtractSelection();
+  const { t } = useTranslation();
 
   const [text, setText] = useState("");
   /** Kutuya yazarken seçimi biz güncelliyoruz; geri yansımayı engellemek için işaret. */
@@ -47,13 +50,13 @@ export function ExtractPanel() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Section title="Sayfa aralığı">
+      <Section title={t("pageRange")}>
         <input
           value={text}
           onChange={(event) => applyText(event.target.value)}
           onFocus={() => setEditing(true)}
           onBlur={() => setEditing(false)}
-          placeholder="örn. 3-7 veya 1-5, 8, 11-13"
+          placeholder={t("pageRangePlaceholder")}
           spellCheck={false}
           className={[
             "h-9 w-full rounded-md border bg-surface px-3 font-mono text-sm text-text",
@@ -62,38 +65,38 @@ export function ExtractPanel() {
           ].join(" ")}
         />
         {parsed.errors.length > 0 ? (
-          <p className="text-xs text-danger">Anlaşılmayan bölüm: {parsed.errors.join(", ")}</p>
+          <p className="text-xs text-danger">{t("unrecognizedSection", { list: parsed.errors.join(", ") })}</p>
         ) : (
           <p className="text-xs text-text-dim">
-            Izgaradan seçim yapabilir veya buraya aralık yazabilirsiniz.
+            {t("gridOrTypeRangeHint")}
           </p>
         )}
 
         <div className="flex flex-wrap gap-1.5">
-          <QuickPick label="Tümü" onClick={() => applyText(`1-${pages.length}`)} />
+          <QuickPick label={t("quickPickAll")} onClick={() => applyText(`1-${pages.length}`)} />
           <QuickPick
-            label="Tek sayfalar"
+            label={t("quickPickOdd")}
             onClick={() =>
               setSelection(pages.filter((_, index) => index % 2 === 0).map((page) => page.id))
             }
           />
           <QuickPick
-            label="Çift sayfalar"
+            label={t("quickPickEven")}
             onClick={() =>
               setSelection(pages.filter((_, index) => index % 2 === 1).map((page) => page.id))
             }
           />
-          <QuickPick label="Temizle" onClick={() => applyText("")} />
+          <QuickPick label={t("clear")} onClick={() => applyText("")} />
         </div>
       </Section>
 
       <div className="rounded-md border border-border bg-surface-2 px-3 py-2 text-sm">
         {count === 0 ? (
-          <span className="text-text-dim">Henüz sayfa seçilmedi</span>
+          <span className="text-text-dim">{t("noPagesSelectedYet")}</span>
         ) : (
           <span>
-            <strong className="text-accent tabular-nums">{count}</strong> sayfa seçili
-            <span className="text-text-dim"> / {pages.length}</span>
+            <strong className="text-accent tabular-nums">{t("pagesSelectedCount", { count })}</strong>
+            <span className="text-text-dim"> {t("ofTotal", { total: pages.length })}</span>
           </span>
         )}
       </div>
@@ -105,10 +108,10 @@ export function ExtractPanel() {
           disabled={disabled}
           onClick={() => void extract()}
         >
-          Seçilenleri ayıkla ve kaydet
+          {t("extractAndSaveSelected")}
         </Button>
         <p className="px-0.5 text-xs text-text-dim">
-          Seçili sayfalardan yeni bir PDF oluşturur. Açık belge değişmez.
+          {t("extractSelectedHint")}
         </p>
 
         <Button
@@ -116,21 +119,12 @@ export function ExtractPanel() {
           disabled={disabled || count === pages.length}
           onClick={() => keepOnlyPages([...selected])}
         >
-          Yalnızca seçilenleri tut
+          {t("keepOnlySelected")}
         </Button>
         <p className="px-0.5 text-xs text-text-dim">
-          Seçilmeyen sayfaları açık belgeden çıkarır. Ctrl+Z ile geri alınabilir.
+          {t("keepOnlySelectedHint")}
         </p>
       </div>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-xs font-semibold tracking-wide text-text-dim uppercase">{title}</h3>
-      {children}
     </div>
   );
 }

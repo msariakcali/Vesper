@@ -28,14 +28,14 @@ export function DocumentPanel() {
 
       <section>
         <div className="mb-2 flex h-6 items-center justify-between">
-          <h3 className="text-[10px] font-bold tracking-[0.15em] text-text-soft uppercase">{t("documents")}</h3>
+          <h3 className="text-[11px] font-bold tracking-[0.15em] text-text-soft uppercase">{t("documents")}</h3>
           <button
             type="button"
             onClick={() => {
               closeAll();
               clearSelection();
             }}
-            className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[10px] text-text-soft hover:bg-danger/10 hover:text-danger"
+            className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-text-soft hover:bg-danger/10 hover:text-danger"
           >
             <X size={10} /> {t("closeAll")}
           </button>
@@ -66,8 +66,8 @@ export function DocumentPanel() {
                   </span>
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[11px] font-bold text-text">{source.name}</span>
-                  <span className="mt-0.5 block text-[10px] text-text-soft">{t("pagesCount", { count: pageIds.length })}</span>
+                  <span className="block truncate text-[12px] font-bold text-text">{source.name}</span>
+                  <span className="mt-0.5 block text-[11px] text-text-soft">{t("pagesCount", { count: pageIds.length })}</span>
                 </span>
                 {allSelected && <Check size={13} className="text-brand" />}
               </button>
@@ -78,13 +78,13 @@ export function DocumentPanel() {
         <button
           type="button"
           onClick={() => selected.size > 0 ? clearSelection() : setSelection(model.pages.map((page) => page.id))}
-          className="mt-2 w-full rounded-lg px-2 py-1.5 text-[10px] font-semibold text-text-dim hover:bg-surface-2 hover:text-text"
+          className="mt-2 w-full rounded-lg px-2 py-1.5 text-[11px] font-semibold text-text-dim hover:bg-surface-2 hover:text-text"
         >
           {selected.size > 0 ? t("clearSelection") : t("selectAllPages")}
         </button>
       </section>
 
-      <p className="rounded-xl bg-sidebar-header px-3 py-3 text-[10px] leading-relaxed text-text-soft">
+      <p className="rounded-xl bg-sidebar-header px-3 py-3 text-[11px] leading-relaxed text-text-soft">
         {t("sessionFilesNote")}
       </p>
     </div>

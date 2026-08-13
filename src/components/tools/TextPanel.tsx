@@ -3,12 +3,14 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
+import { useTranslation } from "../../i18n";
 
 export function TextPanel() {
   const pages = useDocumentStore((state) => state.model.pages);
   const selected = useSelectionStore((state) => state.selected);
   const setPreviewPage = useUiStore((state) => state.setPreviewPage);
   const setPlacementMode = useUiStore((state) => state.setPlacementMode);
+  const { t } = useTranslation();
 
   const begin = () => {
     const page = pages.find((item) => selected.has(item.id)) ?? pages[0];
@@ -20,7 +22,7 @@ export function TextPanel() {
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-text-dim">
-        Metni hassas biçimde yerleştirmek için büyük önizlemede istediğiniz noktaya tıklayın.
+        {t("textPlacementHint")}
       </p>
       <Button
         variant="primary"
@@ -28,7 +30,7 @@ export function TextPanel() {
         disabled={pages.length === 0}
         onClick={begin}
       >
-        Metin Ekle
+        {t("addText")}
       </Button>
     </div>
   );

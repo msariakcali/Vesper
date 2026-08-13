@@ -78,7 +78,7 @@ export function ToolSidebar() {
 
   return (
     <div className="flex shrink-0">
-      <aside className="project-sidebar relative z-30 flex w-[4.75rem] shrink-0 flex-col items-stretch gap-0.5 overflow-y-auto border-r border-border bg-sidebar-header px-1.5 py-3">
+      <aside className="project-sidebar relative z-30 flex w-[5.25rem] shrink-0 flex-col items-stretch gap-0.5 overflow-y-auto border-r border-border bg-sidebar-header px-1.5 py-3">
         <RailButton
           item={DOCUMENTS}
           selected={activeTool === "documents"}
@@ -139,13 +139,13 @@ function RailButton({
       <span className="relative">
         <span
           className={[
-            "grid h-8 w-8 place-items-center rounded-lg transition",
+            "grid h-9 w-9 place-items-center rounded-lg transition",
             selected
               ? "bg-brand text-white shadow-sm"
               : "bg-surface-2 text-text-dim group-hover/rail:bg-surface-3 group-hover/rail:text-text",
           ].join(" ")}
         >
-          <Icon size={16} strokeWidth={1.9} />
+          <Icon size={17} strokeWidth={1.9} />
         </span>
         {badge !== undefined && (
           <span className="absolute -right-1 -top-1 grid h-3.5 min-w-3.5 place-items-center rounded-full border-2 border-sidebar-header bg-brand px-0.5 text-[7px] font-bold text-white">
@@ -153,7 +153,7 @@ function RailButton({
           </span>
         )}
       </span>
-      <span className="text-[9px] font-semibold leading-tight tracking-tight">{t(item.labelKey)}</span>
+      <span className="text-[10.5px] font-semibold leading-tight tracking-tight">{t(item.labelKey)}</span>
     </button>
   );
 }
@@ -164,14 +164,14 @@ function ToolDock({ item, onClose }: { item: RailItem; onClose: () => void }) {
   const { t } = useTranslation();
 
   return (
-    <section className="tool-dock flex w-[20rem] shrink-0 flex-col overflow-hidden border-r border-border bg-surface">
+    <section className="tool-dock flex w-[21rem] shrink-0 flex-col overflow-hidden border-r border-border bg-surface">
       <header className="flex shrink-0 items-center gap-3 border-b border-border bg-sidebar-header px-4 py-3.5">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-accent-text shadow-sm">
           <Icon size={17} />
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-bold tracking-[-0.015em]">{t(item.labelKey)}</h2>
-          <p className="mt-0.5 truncate text-[10px] text-text-dim">{t(item.descriptionKey)}</p>
+          <p className="mt-0.5 truncate text-[11px] text-text-dim">{t(item.descriptionKey)}</p>
         </div>
         <button
           type="button"
@@ -182,7 +182,7 @@ function ToolDock({ item, onClose }: { item: RailItem; onClose: () => void }) {
           <X size={15} />
         </button>
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto p-4 text-[13px]">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 text-[14px]">
         <Panel />
       </div>
     </section>

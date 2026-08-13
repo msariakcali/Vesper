@@ -6,6 +6,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
 import { PageRangeInput, Section, SegmentedButton } from "./toolUi";
+import { useTranslation } from "../../i18n";
 
 type Position = `${"top" | "middle" | "bottom"}-${"left" | "center" | "right"}`;
 type NumberFormat = "{n}" | "{n} / {total}" | "Sayfa {n}";
@@ -41,6 +42,7 @@ export function PageNumberPanel() {
   const [color, setColor] = useState("#202020");
   const [range, setRange] = useState(() => (pages.length ? `1-${pages.length}` : ""));
   const parsed = useMemo(() => parsePageRange(range, pages.length), [pages.length, range]);
+  const { t } = useTranslation();
 
   const apply = () => {
     const entries = parsed.indices.map((pageIndex, selectedIndex) => {
@@ -61,12 +63,12 @@ export function PageNumberPanel() {
       return { pageId: pages[pageIndex].id, overlay };
     });
     addOverlayPerPage(entries);
-    notify("success", `${entries.length} sayfaya numara eklendi.`);
+    notify("success", t("pageNumbersAdded", { count: entries.length }));
   };
 
   return (
     <div className="flex flex-col gap-5">
-      <Section title="Konum">
+      <Section title={t("position")}>
         <div className="grid w-24 grid-cols-3 gap-1">
           {POSITION_LABELS.map((item) => (
             <button
@@ -87,7 +89,7 @@ export function PageNumberPanel() {
           ))}
         </div>
       </Section>
-      <Section title="Biçim">
+      <Section title={t("format")}>
         <div className="grid grid-cols-3 gap-1">
           {(["{n}", "{n} / {total}", "Sayfa {n}"] as NumberFormat[]).map((item) => (
             <SegmentedButton key={item} selected={format === item} onClick={() => setFormat(item)}>
@@ -96,7 +98,7 @@ export function PageNumberPanel() {
           ))}
         </div>
         <label className="grid grid-cols-[5rem_1fr] items-center gap-2 text-xs text-text-dim">
-          Başlangıç
+          {t("start")}
           <input
             type="number"
             value={start}
@@ -105,7 +107,7 @@ export function PageNumberPanel() {
           />
         </label>
         <label className="grid grid-cols-[5rem_1fr_3rem] items-center gap-2 text-xs text-text-dim">
-          Boyut
+          {t("size")}
           <input
             type="range"
             min={7}
@@ -117,11 +119,11 @@ export function PageNumberPanel() {
           <span className="text-right font-mono text-text">{size}pt</span>
         </label>
         <label className="flex items-center justify-between text-xs text-text-dim">
-          Renk
+          {t("color")}
           <input type="color" value={color} onChange={(event) => setColor(event.target.value)} />
         </label>
       </Section>
-      <Section title="Uygulanacak sayfalar">
+      <Section title={t("pagesToApply")}>
         <PageRangeInput value={range} onChange={setRange} pageCount={pages.length} />
       </Section>
       <Button
@@ -130,7 +132,7 @@ export function PageNumberPanel() {
         disabled={parsed.indices.length === 0 || parsed.errors.length > 0}
         onClick={apply}
       >
-        Sayfa Numaralarını Ekle
+        {t("addPageNumbers")}
       </Button>
     </div>
   );

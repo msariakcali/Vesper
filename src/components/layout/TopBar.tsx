@@ -34,7 +34,7 @@ export function TopBar() {
         </span>
         <span className="min-w-0">
           <span className="block text-base font-semibold leading-none tracking-[-0.025em]">Forma</span>
-          <span className="mt-1 block text-[9px] font-medium tracking-[0.15em] text-text-soft uppercase">
+          <span className="mt-1 block text-[10px] font-medium tracking-[0.15em] text-text-soft uppercase">
             PDF Studio
           </span>
         </span>
@@ -42,11 +42,11 @@ export function TopBar() {
 
       <div className="hidden min-w-0 items-center gap-2 md:flex">
         <div className="min-w-0">
-          <p className="max-w-[22rem] truncate text-[13px] font-medium text-text">
+          <p className="max-w-[22rem] truncate text-[14px] font-medium text-text">
             {firstSource?.name ?? t("untitledProject")}
             {dirty && <span className="ml-1.5 text-brand">●</span>}
           </p>
-          <p className="mt-0.5 text-[11px] text-text-soft">
+          <p className="mt-0.5 text-[12px] text-text-soft">
             {hasPages ? t("pageProject", { count: pages.length }) : t("newPdfProject")}
           </p>
         </div>
@@ -79,7 +79,7 @@ export function TopBar() {
         <select
           value={language}
           onChange={(event) => setLanguage(event.target.value as "en" | "tr")}
-          className="h-8 cursor-pointer border-0 bg-transparent px-1.5 text-[11px] font-semibold text-text outline-none"
+          className="h-8 cursor-pointer border-0 bg-transparent px-1.5 text-[12px] font-semibold text-text outline-none"
           aria-label="Language"
         >
           <option value="en">EN</option>

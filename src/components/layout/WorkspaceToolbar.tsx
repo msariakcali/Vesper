@@ -78,8 +78,8 @@ export function WorkspaceToolbar() {
   }, [active, setActiveTool]);
 
   return (
-    <div ref={rootRef} className="relative z-30 shrink-0 border-b border-border bg-surface/95 backdrop-blur-xl">
-      <div className="flex h-[3.75rem] items-center gap-1 overflow-x-auto px-3 py-2">
+    <div ref={rootRef} className="relative z-30 shrink-0 border-b border-border bg-surface/90 backdrop-blur-xl">
+      <div className="flex h-[3.5rem] items-center gap-1 overflow-x-auto px-3 py-2">
         <div className="hidden w-[4.5rem] shrink-0 flex-col justify-center pl-1 xl:flex">
           <span className="text-[8px] font-bold tracking-[0.16em] text-text-dim uppercase">Araçlar</span>
           <span className="mt-0.5 text-[9px] leading-tight text-text-soft">Düzenle</span>
@@ -96,7 +96,7 @@ export function WorkspaceToolbar() {
               aria-pressed={selected}
               onClick={() => setActiveTool(selected ? "pages" : tool.id)}
               className={[
-                "group/tool relative flex h-10 min-w-max shrink-0 items-center justify-center gap-2 rounded-xl px-2.5 text-center transition",
+                "group/tool relative flex h-9 min-w-max shrink-0 items-center justify-center gap-1.5 rounded-lg px-2.5 text-center transition",
                 selected
                   ? "bg-accent-soft text-brand"
                   : "text-text-dim hover:bg-surface-2 hover:text-text",
@@ -104,7 +104,7 @@ export function WorkspaceToolbar() {
             >
               <span
                 className={[
-                  "grid h-7 w-7 place-items-center rounded-lg transition",
+                  "grid h-6 w-6 place-items-center rounded-md transition",
                   selected
                     ? "bg-brand text-white shadow-sm"
                     : "bg-surface-2 text-text-dim group-hover/tool:bg-surface-3 group-hover/tool:text-text",
@@ -149,7 +149,7 @@ function ToolPopover({ tool, onClose }: { tool: ToolDefinition; onClose: () => v
           <X size={15} />
         </button>
       </header>
-      <div className="max-h-[min(34rem,calc(100vh-13rem))] overflow-y-auto p-4">
+        <div className="max-h-[min(34rem,calc(100vh-13rem))] overflow-y-auto p-4 text-[13px]">
         <Panel />
       </div>
     </section>

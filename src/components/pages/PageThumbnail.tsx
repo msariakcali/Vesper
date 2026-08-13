@@ -129,10 +129,10 @@ export const PageThumbnail = memo(function PageThumbnail({
           }
         }}
         className={[
-          "relative cursor-pointer overflow-hidden rounded-lg border bg-white shadow-[0_2px_7px_rgb(31_30_41/0.08)]",
-          "transition-[border-color,box-shadow,transform] duration-200 group-hover:-translate-y-1 group-hover:shadow-[0_14px_32px_rgb(31_30_41/0.14)]",
+          "relative cursor-pointer overflow-hidden rounded-xl border bg-white shadow-[0_2px_7px_rgb(0_0_0/0.08)]",
+          "transition-[border-color,box-shadow,transform] duration-200 group-hover:-translate-y-1 group-hover:shadow-[0_14px_32px_rgb(0_0_0/0.14)]",
           selected
-            ? "border-brand shadow-[0_0_0_3px_var(--accent-soft),0_14px_32px_rgb(31_30_41/0.12)]"
+            ? "border-brand shadow-[0_0_0_3px_var(--accent-soft),0_14px_32px_rgb(0_0_0/0.12)]"
             : "border-border hover:border-brand/45",
         ].join(" ")}
         style={{ aspectRatio: `1 / ${aspect}` }}
@@ -185,7 +185,7 @@ export const PageThumbnail = memo(function PageThumbnail({
 
         {/* Sayfanın üzerine gelince tek noktadan erişilen hızlı araç paleti. */}
         <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/65 via-black/30 to-transparent px-2 pb-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-          <div className="flex items-center gap-1 rounded-xl border border-white/15 bg-[#1f1e29]/82 p-1 shadow-xl backdrop-blur-md">
+          <div className="flex items-center gap-1 rounded-xl border border-white/15 bg-black/70 p-1 shadow-xl backdrop-blur-md">
             <ThumbAction label="Okuma modunda aç" onClick={onPreview}>
               <Maximize2 size={14} />
             </ThumbAction>

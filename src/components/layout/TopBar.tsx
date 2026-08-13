@@ -1,4 +1,4 @@
-import { Download, FilePlus2, Layers3, Moon, Redo2, Sparkles, Sun, Undo2 } from "lucide-react";
+import { Download, FilePlus2, Layers3, Moon, Redo2, Sun, Undo2 } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useSaveAll } from "../../hooks/useActions";
 import { useDocumentStore } from "../../store/documentStore";
@@ -24,35 +24,32 @@ export function TopBar() {
   const firstSource = Object.values(sources)[0];
 
   return (
-    <header className="topbar flex h-[3.75rem] shrink-0 items-center gap-2 px-3 text-white sm:px-4">
+    <header className="topbar flex h-14 shrink-0 items-center gap-2 px-3 text-text sm:px-4">
       <div className="mr-2 flex shrink-0 items-center gap-3 sm:mr-4 sm:w-[15rem]">
-        <span className="brand-mark grid h-8 w-8 place-items-center rounded-[0.7rem] text-white">
+        <span className="brand-mark grid h-8 w-8 place-items-center rounded-[0.65rem] text-white">
           <Layers3 size={18} strokeWidth={2.2} />
         </span>
         <span className="min-w-0">
-          <span className="block text-[15px] font-bold leading-none tracking-[-0.025em]">Forma</span>
-          <span className="mt-1 block text-[9px] font-semibold tracking-[0.18em] text-white/45 uppercase">
+          <span className="block text-[15px] font-semibold leading-none tracking-[-0.025em]">Forma</span>
+          <span className="mt-1 block text-[8px] font-medium tracking-[0.15em] text-text-soft uppercase">
             PDF Studio
           </span>
         </span>
       </div>
 
       <div className="hidden min-w-0 items-center gap-2 md:flex">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-white/7 text-white/65">
-          <Sparkles size={15} />
-        </span>
         <div className="min-w-0">
-          <p className="max-w-[22rem] truncate text-xs font-semibold text-white/90">
+          <p className="max-w-[22rem] truncate text-xs font-medium text-text">
             {firstSource?.name ?? "İsimsiz çalışma"}
             {dirty && <span className="ml-1.5 text-brand">●</span>}
           </p>
-          <p className="mt-0.5 text-[10px] text-white/38">
+          <p className="mt-0.5 text-[10px] text-text-soft">
             {hasPages ? `${pages.length} sayfalık çalışma` : "Yeni PDF projesi"}
           </p>
         </div>
       </div>
 
-      <div className="ml-1 hidden h-6 w-px bg-white/10 sm:block md:ml-3" />
+      <div className="ml-1 hidden h-5 w-px bg-border sm:block md:ml-3" />
       <Button
         variant="topbar"
         compact

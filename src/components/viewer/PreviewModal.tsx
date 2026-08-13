@@ -510,7 +510,7 @@ function ReaderPage({
       </div>
       <div
         className={[
-          "relative overflow-hidden rounded-[3px] bg-white shadow-[0_28px_72px_rgb(0_0_0/0.42)] transition-shadow",
+          "relative overflow-hidden rounded-[4px] bg-white shadow-[0_28px_72px_rgb(0_0_0/0.42)] transition-shadow",
           active ? "ring-2 ring-brand/50 ring-offset-4 ring-offset-transparent" : "",
         ].join(" ")}
         style={{ width: renderSize.width, height: renderSize.height }}

@@ -7,19 +7,19 @@ export function ToolSidebar() {
   const openDialog = useOpenDialog();
 
   return (
-    <aside className="project-sidebar hidden w-[16rem] shrink-0 flex-col border-r border-border bg-surface lg:flex">
-      <div className="flex items-center justify-between px-4 pb-3 pt-4">
+    <aside className="project-sidebar hidden w-[17rem] shrink-0 flex-col border-r border-border bg-sidebar-header lg:flex">
+      <div className="flex items-center justify-between px-5 pb-4 pt-5">
         <div>
           <div className="flex items-center gap-2 text-text">
             <Files size={16} className="text-brand" />
-            <h1 className="text-sm font-bold tracking-[-0.015em]">Açık belgeler</h1>
+            <h1 className="text-sm font-semibold tracking-[-0.015em]">Açık belgeler</h1>
           </div>
           <p className="mt-1 text-[10px] text-text-dim">Bu tarayıcı oturumunda</p>
         </div>
         <button
           type="button"
           onClick={() => void openDialog()}
-          className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-accent-text shadow-sm transition hover:bg-brand-strong"
+          className="grid h-8 w-8 place-items-center rounded-full bg-brand text-accent-text shadow-sm transition hover:bg-brand-strong"
           title="PDF ekle"
           aria-label="PDF ekle"
         >
@@ -27,8 +27,8 @@ export function ToolSidebar() {
         </button>
       </div>
 
-      <div className="mx-4 h-px bg-border" />
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
+      <div className="mx-5 h-px bg-border" />
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         <DocumentPanel />
       </div>
 

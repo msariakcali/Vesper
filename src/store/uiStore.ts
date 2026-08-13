@@ -4,6 +4,7 @@ import { create } from "zustand";
 
 export type ToolId =
   | "pages"
+  | "documents"
   | "extract"
   | "split"
   | "merge"

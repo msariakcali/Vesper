@@ -118,9 +118,9 @@ body {
   background-image: none;
 }
 
-.tool-popover {
-  animation: popover-in 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: top center;
+.tool-dock {
+  animation: dock-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: left center;
 }
 
 .website-home {
@@ -295,9 +295,9 @@ select:focus {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes popover-in {
-  from { opacity: 0; transform: translate(-50%, -6px) scale(0.985); }
-  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+@keyframes dock-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes spin {

@@ -3,7 +3,7 @@ import { StatusBar } from "./components/layout/StatusBar";
 import { Toasts } from "./components/layout/Toasts";
 import { ToolSidebar } from "./components/layout/ToolSidebar";
 import { TopBar } from "./components/layout/TopBar";
-import { CanvasHeader, WorkspaceToolbar } from "./components/layout/WorkspaceToolbar";
+import { CanvasHeader } from "./components/layout/CanvasToolbar";
 import { EmptyState } from "./components/pages/EmptyState";
 import { PageGrid } from "./components/pages/PageGrid";
 import { PreviewModal } from "./components/viewer/PreviewModal";
@@ -36,7 +36,6 @@ export default function App() {
           <div className="flex min-h-0 flex-1">
             <ToolSidebar />
             <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-              <WorkspaceToolbar />
               <CanvasHeader />
               <main className="workspace-canvas min-h-0 min-w-0 flex-1 overflow-y-auto">
                 <PageGrid />

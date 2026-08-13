@@ -56,6 +56,11 @@ export function PageGrid() {
     [orderedIds, selectionApi],
   );
 
+  const handleToggle = useCallback(
+    (id: string) => selectionApi.toggle(id),
+    [selectionApi],
+  );
+
   const handleDragStart = (event: DragStartEvent) => {
     const id = String(event.active.id);
     setDraggingId(id);
@@ -112,6 +117,7 @@ export function PageGrid() {
                 selected={selected.has(page.id)}
                 showSourceName={showSourceName}
                 onSelect={(event) => handleSelect(page.id, event)}
+                onToggle={() => handleToggle(page.id)}
                 onPreview={() => setPreviewPage(page.id)}
                 onRotateLeft={() => rotatePages([page.id], -90)}
                 onRotateRight={() => rotatePages([page.id], 90)}

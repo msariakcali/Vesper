@@ -15,6 +15,7 @@ interface Props {
   /** Birden fazla kaynak açıkken sayfanın hangi dosyadan geldiğini göster. */
   showSourceName: boolean;
   onSelect: (event: React.MouseEvent) => void;
+  onToggle: () => void;
   onPreview: () => void;
   onRotateLeft: () => void;
   onRotateRight: () => void;
@@ -35,6 +36,7 @@ export const PageThumbnail = memo(function PageThumbnail({
   selected,
   showSourceName,
   onSelect,
+  onToggle,
   onPreview,
   onRotateLeft,
   onRotateRight,
@@ -161,11 +163,25 @@ export const PageThumbnail = memo(function PageThumbnail({
           {String(number).padStart(2, "0")}
         </span>
 
-        {selected && (
-          <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-brand text-white shadow-md">
-            <Check size={13} strokeWidth={2.5} />
-          </span>
-        )}
+        <button
+          type="button"
+          aria-label={`Sayfa ${number} ${selected ? "seçimini kaldır" : "seç"}`}
+          aria-pressed={selected}
+          title={selected ? "Seçimden çıkar" : "Çoklu seçime ekle"}
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggle();
+          }}
+          className={[
+            "absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full border shadow-md transition",
+            selected
+              ? "border-brand bg-brand text-accent-text"
+              : "border-white/70 bg-white/88 text-transparent hover:border-brand hover:text-brand",
+          ].join(" ")}
+        >
+          <Check size={13} strokeWidth={2.5} />
+        </button>
 
         {/* Sayfanın üzerine gelince tek noktadan erişilen hızlı araç paleti. */}
         <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/65 via-black/30 to-transparent px-2 pb-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">

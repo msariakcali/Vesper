@@ -112,6 +112,24 @@ export function PreviewModal() {
     return () => window.clearTimeout(timer);
   }, [previewPageId, updateCurrentPage, zoom]);
 
+  // Ctrl/Cmd + tekerlek yalnızca PDF sayfalarının ölçeğini değiştirir.
+  // Tarayıcının ya da okuyucu araç çubuğunun büyümesini engellemek için native
+  // ve passive olmayan dinleyici kullanıyoruz.
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!previewPageId || !scroller) return;
+
+    const handleDocumentZoom = (event: WheelEvent) => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      const currentZoom = useUiStore.getState().previewZoom;
+      useUiStore.getState().setPreviewZoom(currentZoom + (event.deltaY < 0 ? 0.25 : -0.25));
+    };
+
+    scroller.addEventListener("wheel", handleDocumentZoom, { passive: false });
+    return () => scroller.removeEventListener("wheel", handleDocumentZoom);
+  }, [previewPageId]);
+
   useEffect(() => () => {
     if (pendingFrame.current !== null) window.cancelAnimationFrame(pendingFrame.current);
   }, []);
@@ -179,11 +197,6 @@ export function PreviewModal() {
     <div
       className="reader-shell fixed inset-0 z-40 flex flex-col backdrop-blur-md"
       onClick={close}
-      onWheel={(event) => {
-        if (!event.ctrlKey) return;
-        event.preventDefault();
-        setZoom(zoom + (event.deltaY < 0 ? 0.25 : -0.25));
-      }}
     >
       <div
         className="reader-toolbar flex min-h-14 shrink-0 items-center gap-3 border-b border-border px-3 py-2 shadow-sm sm:px-4"

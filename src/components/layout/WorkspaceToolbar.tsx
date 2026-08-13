@@ -186,7 +186,7 @@ export function CanvasHeader() {
           )}
         </div>
         <p className="mt-0.5 text-[9px] text-text-soft">
-          {sourceCount > 1 ? `${sourceCount} belge tek çalışma içinde` : "Sürükleyerek yeniden sırala"}
+          {sourceCount > 1 ? `${sourceCount} belge tek çalışma içinde` : "Kutuyla çoklu seç · sürükleyerek sırala"}
         </p>
       </div>
 

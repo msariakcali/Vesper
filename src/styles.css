@@ -35,7 +35,7 @@
 }
 
 [data-theme="dark"] {
-  --bg: #000000;
+  --bg: #1c1c1e;
   --surface: #1c1c1e;
   --surface-2: #2c2c2e;
   --surface-3: #3a3a3c;
@@ -83,14 +83,6 @@ html,
 body,
 #root {
   height: 100%;
-}
-
-/* Uygulama ilk açıldığında daha rahat okunacak bir çalışma ölçeği kullanır.
-   Bu, tarayıcının sayfa yakınlaştırmasını değil yalnızca Forma arayüzünü etkiler. */
-#root {
-  zoom: 1.08;
-  width: calc(100% / 1.08);
-  height: calc(100% / 1.08);
 }
 
 body {
@@ -317,11 +309,6 @@ select:focus {
 }
 
 @media (max-width: 640px) {
-  #root {
-    zoom: 1;
-    width: 100%;
-    height: 100%;
-  }
   .topbar > :first-child { width: auto; }
   .website-home header .brand-mark { width: 2rem; height: 2rem; }
 }

@@ -76,10 +76,10 @@ export const useUiStore = create<UiState>((set) => ({
   busy: null,
   toasts: [],
   previewPageId: null,
-  previewZoom: 1,
+  previewZoom: 1.1,
   placementMode: null,
   placementImage: null,
-  thumbnailSize: 190,
+  thumbnailSize: 205,
   autoSaveStatus: "idle",
   lastSavedPath: null,
 

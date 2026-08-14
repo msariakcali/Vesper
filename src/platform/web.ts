@@ -6,10 +6,7 @@ import {
   type Platform,
 } from "./types";
 
-/**
- * Tarayıcı fallback'i. Masaüstü sürümüyle aynı arayüzü sağlar ama
- * dosya yolları yoktur ve kaydetme indirme klasörüne düşer.
- */
+/** Web uygulamasının dosya seçme, bırakma ve indirme davranışları. */
 
 function toAccept(filter: { extensions: string[] }): string {
   return filter.extensions.map((e) => `.${e}`).join(",");
@@ -102,27 +99,4 @@ export const webPlatform: Platform = {
     };
   },
 
-  async getStartupFiles() {
-    return [];
-  },
-
-  async readFilesByPaths() {
-    return [];
-  },
-
-  async onOpenFiles() {
-    return () => {};
-  },
-
-  async getLibraryDir() {
-    return null;
-  },
-
-  async listLibraryFiles() {
-    return [];
-  },
-
-  async deleteLibraryFile() {},
-
-  async openLibraryDir() {},
 };

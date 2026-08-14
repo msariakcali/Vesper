@@ -61,7 +61,7 @@ export function DocumentPanel() {
               >
                 <span className="relative grid h-9 w-8 shrink-0 place-items-center rounded-lg bg-accent-soft text-brand">
                   <FileText size={15} />
-                  <span className="absolute -left-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full border-2 border-surface bg-brand px-0.5 text-[7px] font-bold text-white">
+                  <span className="absolute -left-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full border-2 border-surface bg-brand px-0.5 text-[7px] font-bold text-accent-text">
                     {index + 1}
                   </span>
                 </span>

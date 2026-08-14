@@ -99,7 +99,7 @@ export function PageGrid() {
     >
       <SortableContext items={orderedIds} strategy={rectSortingStrategy}>
         <div
-          className="grid min-h-full content-start justify-center gap-x-7 gap-y-8 p-8 lg:p-10"
+          className="page-grid grid min-h-full content-start justify-center gap-x-7 gap-y-7 p-5 sm:p-7 lg:p-9"
           style={{ gridTemplateColumns: `repeat(auto-fill, ${thumbnailSize}px)` }}
           // Boşluğa tıklamak seçimi temizler.
           onClick={(event) => {
@@ -135,7 +135,7 @@ export function PageGrid() {
       <DragOverlay dropAnimation={null}>
         {draggingPage ? (
           <div
-            className="grid place-items-center rounded-xl border-2 border-brand bg-surface text-xs font-bold text-brand shadow-[var(--shadow-float)]"
+            className="grid place-items-center rounded-lg border-2 border-brand bg-surface text-xs font-bold text-brand shadow-[var(--shadow-float)]"
             style={{ width: thumbnailSize, height: thumbnailSize * 1.414 }}
           >
             {selected.size > 1 && selected.has(draggingPage.id)

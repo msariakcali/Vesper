@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BookOpen, Check, Copy, Grid2X2, RotateCcw, RotateCw, Trash2 } from "lucide-react";
+import { Check, Copy, Eye, Grid2X2, RotateCcw, RotateCw, Trash2 } from "lucide-react";
 import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
@@ -27,12 +27,12 @@ export function CanvasHeader() {
   const readerPageId = ids[0] ?? pages[0]?.id;
 
   return (
-    <div className="flex h-16 shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-4">
+    <div className="canvas-toolbar flex h-14 shrink-0 items-center gap-1.5 overflow-x-auto border-b border-border bg-canvas-header px-3 sm:px-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold tracking-[-0.01em]">{t("pages")}</h2>
+          <h2 className="text-[13px] font-bold tracking-[-0.01em]">{t("pages")}</h2>
           {pages.length > 0 && (
-            <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-text-dim tabular-nums">
+            <span className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[10px] font-bold text-text-dim tabular-nums">
               {pages.length}
             </span>
           )}
@@ -42,12 +42,12 @@ export function CanvasHeader() {
         </p>
       </div>
 
-      <div className="ml-3 h-6 w-px bg-border" />
+      <div className="ml-2 h-6 w-px bg-border" />
       <Button
-        variant="primary"
+        variant="default"
         compact
         disabled={!readerPageId}
-        icon={<BookOpen size={14} />}
+        icon={<Eye size={14} />}
         onClick={() => readerPageId && setPreviewPage(readerPageId)}
         title={hasSelection ? t("startReadingSelected") : t("startReading")}
       >
@@ -57,7 +57,7 @@ export function CanvasHeader() {
         type="button"
         disabled={pages.length === 0}
         onClick={() => (hasSelection ? clearSelection() : setSelection(pages.map((page) => page.id)))}
-        className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12px] font-semibold text-text-dim hover:bg-surface hover:text-text disabled:opacity-35"
+        className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-35"
       >
         <Check size={13} />
         {hasSelection ? t("selected", { count: ids.length }) : t("selectAll")}
@@ -85,7 +85,7 @@ export function CanvasHeader() {
           className="w-20 accent-[var(--brand)]"
           aria-label={t("pageCardSize")}
         />
-        <span className="w-9 text-right text-[11px] text-text-soft tabular-nums">{thumbnailSize}</span>
+        <span className="w-8 text-right text-[10px] text-text-soft tabular-nums">{thumbnailSize}</span>
       </div>
     </div>
   );

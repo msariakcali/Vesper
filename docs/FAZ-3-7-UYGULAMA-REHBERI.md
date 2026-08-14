@@ -670,56 +670,23 @@ DPI: [——●———] 150        Format: ○ PNG  ○ JPEG
 - `Ctrl+F`: arama kutusuna odaklan (yalnızca önizleme açıkken).
 - `Ctrl+E`: aktif aracı `extract` yap (`setActiveTool('extract')`) — hızlı erişim.
 
-### 7.2 Son açılan dosyalar
-
-**Yeni store:** `src/store/recentFilesStore.ts`:
-```ts
-interface RecentFile { path: string; name: string; openedAt: number }
-// localStorage key: "pdf-editor-recent", en fazla 10 kayıt, path yalnızca Tauri'de dolu.
-```
-- Her başarılı `addSources` çağrısından sonra (Tauri'de, `path` doluysa) bu listeye eklenir — `useAddFiles` hook'una bir satır eklenir.
-- `DocumentPanel.tsx`'te, hiç belge açık değilken (`sources.length === 0` dalı) "Son Açılanlar" listesi gösterilir, tıklanınca `platform` üzerinden path okunup `addSources` çağrılır. **Web platformunda** bu bölüm hiç gösterilmez (`path` yok).
-
-### 7.3 Şifreli/bozuk PDF hata yönetimi — doğrulama
+### 7.2 Şifreli/bozuk PDF hata yönetimi — doğrulama
 
 Bu zaten büyük ölçüde uygulanmış durumda: `core/render/pdfjs.ts`'teki `PasswordProtectedError` ve `documentStore.addSources`'taki `try/catch` → `errors` dizisi → `useAddFiles`'ta `notify("error", ...)`. Faz 7'de yapılacak tek şey **uçtan uca doğrulama**: parola korumalı bir PDF ile test edip Türkçe hata mesajının (`"Bu PDF parola korumalı ve açılamıyor."`) toast olarak göründüğünü doğrulamak. Kod değişikliği gerekmiyor.
 
-### 7.4 Dosya ilişkilendirme ve tekli örnek
-
-`src-tauri/tauri.conf.json`'da `fileAssociations` zaten tanımlı, `startup_files` Rust komutu zaten var ve `useFileDropAndStartup` bunu çağırıyor. **Eksik olan:** uygulama zaten açıkken bir PDF'e çift tıklanırsa, **yeni bir örnek** açılır (varsayılan Tauri davranışı) — mevcut pencereye dosyayı göndermek için `tauri-plugin-single-instance` eklenmeli:
-
-```bash
-pnpm tauri add single-instance
-```
-```rust
-// lib.rs — Builder zincirine EN BAŞA eklenir (diğer pluginlerden önce):
-.plugin(tauri_plugin_single_instance::init(|app, args, _cwd| {
-    // args[1..] içindeki .pdf yollarını filtrele, frontend'e event olarak gönder
-    let paths: Vec<String> = args.into_iter().skip(1)
-        .filter(|a| a.to_lowercase().ends_with(".pdf"))
-        .collect();
-    if !paths.is_empty() {
-        let _ = app.emit("open-files", paths);
-    }
-    // mevcut pencereyi öne getir
-    if let Some(w) = app.get_webview_window("main") { let _ = w.set_focus(); }
-}))
-```
-Frontend'de `useFileDropAndStartup` içine bir `listen("open-files", ...)` dinleyicisi eklenir (Tauri event API, `@tauri-apps/api/event`).
-
-### 7.5 `vitest` kapsamının tamamlanması
+### 7.3 `vitest` kapsamının tamamlanması
 
 Faz 3-6'da yazılan her saf fonksiyon (`split.ts`, `blankPage.ts`, `imageToPdf.ts`, `color.ts`, overlay uygulayan `buildPdf.ts` genişletmesi) için `pageRange.test.ts` ve `buildPdf.test.ts` desenini izleyen testler yazılmalı: gerçek `pdf-lib` ile üretip geri okuyarak sayfa sayısı/boyut/döndürme/metin varlığını doğrulayan testler — mock'lama yok, gerçek PDF baytları üzerinde çalışan testler (mevcut testlerin izlediği yaklaşım).
 
-### 7.6 `tauri build` ile MSI üretimi
+### 7.4 Web dağıtımı
 
 ```bash
-pnpm tauri build
+pnpm build
+pnpm preview
 ```
-- Çıktı: `src-tauri/target/release/bundle/msi/PDF Editör_0.1.0_x64_en-US.msi` (ve/veya `nsis/` altında `.exe` kurulum dosyası — `tauri.conf.json`'daki `bundle.targets: "all"` her ikisini de üretir).
-- İlk derleme birkaç dakika sürer (release modu, optimizasyonlar açık). İkon dosyaları zaten `src-tauri/icons/` altında mevcut (proje iskeletiyle geldi) — özel bir logo isteniyorsa `pnpm tauri icon <path-to-1024px-png>` ile yeniden üretilebilir.
-- **Doğrulama:** MSI'ı kur, uygulamayı başlat, bir `.pdf` dosyasına sağ tıklayıp "Birlikte Aç → PDF Editör" seçeneğinin listede olduğunu doğrula (dosya ilişkilendirmesi), dosyaya çift tıklayıp uygulamanın açıldığını doğrula.
-- İmzasız MSI'da Windows SmartScreen uyarısı çıkar — bu beklenen bir durumdur, kod imzalama sertifikası (yıllık ücretli) olmadan kaçınılmaz; kişisel/iç kullanım için sorun teşkil etmez.
+- Üretim çıktısı `dist/` klasörüne yazılır ve statik bir web sunucusunda yayınlanabilir.
+- PDF dosyaları uygulama sunucusuna gönderilmez; bütün okuma ve düzenleme işlemleri tarayıcı belleğinde yapılır.
+- Dağıtımdan önce dosya seçme, sürükle-bırak, çoklu indirme ve dar ekran araç rayı gerçek tarayıcılarda doğrulanmalıdır.
 
 ---
 
@@ -736,4 +703,4 @@ Fazlar birbirine bağımlı değildir (her biri farklı bir araç panelidir), an
 7. **Faz 6 (Dönüştürme)** — `renderPage` genişletmesi dışında bağımsız.
 8. **Faz 7 (Cila)** — en son, çünkü diğer her şeyin üzerine ince ayar yapar.
 
-Her adımdan sonra `pnpm vitest run` ve `pnpm exec tsc --noEmit` çalıştırılmalı; UI değişiklikleri için `pnpm tauri dev` ile gerçek pencerede elle test edilmelidir (bu belgeyi yazan oturumda native pencereye otomasyon erişimi olmadığından, görsel doğrulama geliştiriciye/kullanıcıya aittir).
+Her adımdan sonra `pnpm vitest run` ve `pnpm exec tsc --noEmit` çalıştırılmalı; UI değişiklikleri `pnpm dev` ile farklı tarayıcı genişliklerinde elle test edilmelidir.

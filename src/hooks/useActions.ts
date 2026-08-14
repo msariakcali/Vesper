@@ -38,12 +38,7 @@ export function useExportPages() {
         if (!path) return false;
 
         if (options?.markClean) markSaved();
-        notify(
-          "success",
-          platform.kind === "tauri"
-            ? t("pagesSavedPath", { count: pages.length, path })
-            : t("pagesSaved", { count: pages.length }),
-        );
+        notify("success", t("pagesSaved", { count: pages.length }));
         return true;
       } catch (error) {
         notify("error", error instanceof Error ? error.message : String(error));

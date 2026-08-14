@@ -1,4 +1,4 @@
-import { Download, FilePlus2, Layers3, Moon, Redo2, Sun, Undo2 } from "lucide-react";
+import { Download, FilePlus2, Languages, Layers3, Moon, Redo2, Sun, Undo2 } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useSaveAll } from "../../hooks/useActions";
 import { useDocumentStore } from "../../store/documentStore";
@@ -27,32 +27,30 @@ export function TopBar() {
   const firstSource = Object.values(sources)[0];
 
   return (
-    <header className="topbar flex h-16 shrink-0 items-center gap-2 px-3 text-text sm:px-4">
-      <div className="mr-2 flex shrink-0 items-center gap-3 sm:mr-4 sm:w-[15rem]">
-        <span className="brand-mark grid h-9 w-9 place-items-center rounded-[0.7rem] text-white">
-          <Layers3 size={19} strokeWidth={2.2} />
+    <header className="topbar flex h-[3.75rem] shrink-0 items-center gap-1.5 px-3 text-text sm:px-4">
+      <div className="mr-1 flex shrink-0 items-center gap-2.5 sm:mr-3 sm:w-[13.5rem]">
+        <span className="brand-mark grid h-8 w-8 place-items-center rounded-[9px] text-accent-text">
+          <Layers3 size={17} strokeWidth={2.15} />
         </span>
-        <span className="min-w-0">
-          <span className="block text-base font-semibold leading-none tracking-[-0.025em]">Forma</span>
-          <span className="mt-1 block text-[10px] font-medium tracking-[0.15em] text-text-soft uppercase">
-            PDF Studio
-          </span>
+        <span className="hidden min-w-0 sm:block">
+          <span className="block text-[14px] font-bold leading-none tracking-[-0.025em]">Forma</span>
+          <span className="mt-1 block text-[8px] font-semibold tracking-[0.14em] text-text-soft uppercase">PDF Workspace</span>
         </span>
       </div>
 
-      <div className="hidden min-w-0 items-center gap-2 md:flex">
-        <div className="min-w-0">
-          <p className="max-w-[22rem] truncate text-[14px] font-medium text-text">
+      <div className="hidden min-w-0 items-center border-l border-border pl-4 md:flex">
+        <div className="min-w-0 leading-tight">
+          <p className="max-w-[18rem] truncate text-[12px] font-bold text-text">
             {firstSource?.name ?? t("untitledProject")}
-            {dirty && <span className="ml-1.5 text-brand">●</span>}
+            {dirty && <span className="ml-1.5 text-brand" aria-label="Unsaved changes">●</span>}
           </p>
-          <p className="mt-0.5 text-[12px] text-text-soft">
+          <p className="mt-1 text-[10px] text-text-soft">
             {hasPages ? t("pageProject", { count: pages.length }) : t("newPdfProject")}
           </p>
         </div>
       </div>
 
-      <div className="ml-1 hidden h-5 w-px bg-border sm:block md:ml-3" />
+      <div className="ml-1 hidden h-5 w-px bg-border md:ml-3 md:block" />
       <Button
         variant="topbar"
         compact
@@ -74,12 +72,13 @@ export function TopBar() {
 
       <div className="flex-1" />
 
-      <label className="hidden items-center rounded-lg bg-surface-2 px-1 sm:flex" title="Language">
+      <label className="hidden h-8 items-center gap-1.5 rounded-lg border border-border bg-surface px-2 sm:flex" title="Language">
         <span className="sr-only">Language</span>
+        <Languages size={13} className="text-text-soft" />
         <select
           value={language}
           onChange={(event) => setLanguage(event.target.value as "en" | "tr")}
-          className="h-8 cursor-pointer border-0 bg-transparent px-1.5 text-[12px] font-semibold text-text outline-none"
+          className="cursor-pointer border-0 bg-transparent text-[10px] font-bold text-text outline-none"
           aria-label="Language"
         >
           <option value="en">EN</option>
@@ -97,6 +96,7 @@ export function TopBar() {
       />
       <Button
         variant="topbar"
+        compact
         icon={<FilePlus2 size={15} />}
         onClick={() => void openDialog()}
         title={t("importPdf")}

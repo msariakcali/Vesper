@@ -9,7 +9,7 @@ import { TextSearch } from "./TextSearch";
 import { useTranslation } from "../../i18n";
 
 function readerRenderWidth(zoom: number): number {
-  // Varsayılan yakınlaştırmada sayfa, dar masaüstü penceresine de taşmadan sığsın.
+  // Varsayılan yakınlaştırmada sayfa, dar tarayıcı penceresine taşmadan sığsın.
   const available = Math.max(360, Math.min(900, window.innerWidth - 96));
   return Math.round(available * zoom);
 }
@@ -275,7 +275,7 @@ export function PreviewModal() {
       </div>
 
       {placementMode && (
-        <div className="absolute left-1/2 top-[4.5rem] z-20 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-[11px] font-semibold text-white shadow-lg">
+        <div className="absolute left-1/2 top-[4.5rem] z-20 -translate-x-1/2 rounded-full bg-brand px-4 py-2 text-[11px] font-semibold text-accent-text shadow-lg">
           {placementMode === "text"
             ? t("clickToPlaceText")
             : t("clickToPlaceSignature")}

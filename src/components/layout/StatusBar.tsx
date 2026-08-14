@@ -1,16 +1,14 @@
 import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
-import { platform } from "../../platform";
 import { useTranslation } from "../../i18n";
+import { ShieldCheck } from "lucide-react";
 
 export function StatusBar() {
   const pages = useDocumentStore((s) => s.model.pages);
   const sources = useDocumentStore((s) => s.model.sources);
   const selected = useSelectionStore((s) => s.selected);
   const busy = useUiStore((s) => s.busy);
-  const autoSaveStatus = useUiStore((s) => s.autoSaveStatus);
-  const lastSavedPath = useUiStore((s) => s.lastSavedPath);
   const { t } = useTranslation();
 
   const sourceCount = Object.keys(sources).length;
@@ -34,25 +32,14 @@ export function StatusBar() {
           {selected.size > 0 && (
             <span className="tabular-nums text-accent">{t("selected", { count: selected.size })}</span>
           )}
-          {platform.kind === "tauri" && pages.length > 0 && (
-            <span
-              className={autoSaveStatus === "error" ? "text-danger" : "text-ok"}
-              title={lastSavedPath ?? undefined}
-            >
-              {autoSaveStatus === "saving"
-                ? t("autosaving")
-                : autoSaveStatus === "pending"
-                  ? t("changesDetected")
-                  : autoSaveStatus === "saved"
-                    ? t("autosaved")
-                    : t("autosaveOn")}
-            </span>
-          )}
         </>
       )}
 
       <div className="flex-1" />
-      <span>{platform.kind === "tauri" ? t("localMode") : t("browserMode")}</span>
+      <span className="hidden items-center gap-1.5 sm:flex">
+        <ShieldCheck size={11} className="text-ok" />
+        {t("browserMode")}
+      </span>
     </footer>
   );
 }

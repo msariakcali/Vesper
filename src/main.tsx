@@ -4,7 +4,7 @@ import App from "./App";
 import { useUiStore } from "./store/uiStore";
 import "./styles.css";
 
-// Tema, ilk boyamadan önce kök öğeye yazılmalı — aksi halde açık/koyu geçişi göze çarpar.
+// Tema ve dil ilk boyamadan önce kök öğeye yazılır; geçiş sırasında titreme olmaz.
 document.documentElement.dataset.theme = useUiStore.getState().theme;
 document.documentElement.lang = useUiStore.getState().language;
 

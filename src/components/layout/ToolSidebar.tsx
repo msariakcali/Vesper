@@ -46,18 +46,26 @@ const DOCUMENTS: RailItem = {
   panel: DocumentPanel,
 };
 
-const TOOLS: RailItem[] = [
-  { id: "insert", labelKey: "insert", descriptionKey: "insertDescription", icon: FilePlus2, panel: InsertPanel },
-  { id: "text", labelKey: "text", descriptionKey: "textDescription", icon: Type, panel: TextPanel },
-  { id: "signature", labelKey: "signature", descriptionKey: "signatureDescription", icon: PenTool, panel: SignaturePanel },
-  { id: "watermark", labelKey: "watermark", descriptionKey: "watermarkDescription", icon: Droplets, panel: WatermarkPanel },
-  { id: "pageNumbers", labelKey: "pageNumbers", descriptionKey: "pageNumbersDescription", icon: Hash, panel: PageNumberPanel },
-  { id: "crop", labelKey: "crop", descriptionKey: "cropDescription", icon: Crop, panel: CropPanel },
-  { id: "extract", labelKey: "extract", descriptionKey: "extractDescription", icon: Scissors, panel: ExtractPanel },
-  { id: "split", labelKey: "split", descriptionKey: "splitDescription", icon: SplitSquareHorizontal, panel: SplitPanel },
-  { id: "merge", labelKey: "merge", descriptionKey: "mergeDescription", icon: Combine, panel: MergePanel },
-  { id: "convert", labelKey: "convert", descriptionKey: "convertDescription", icon: FileImage, panel: ConvertPanel },
+const TOOL_GROUPS: RailItem[][] = [
+  [
+    { id: "insert", labelKey: "insert", descriptionKey: "insertDescription", icon: FilePlus2, panel: InsertPanel },
+    { id: "text", labelKey: "text", descriptionKey: "textDescription", icon: Type, panel: TextPanel },
+    { id: "signature", labelKey: "signature", descriptionKey: "signatureDescription", icon: PenTool, panel: SignaturePanel },
+  ],
+  [
+    { id: "watermark", labelKey: "watermark", descriptionKey: "watermarkDescription", icon: Droplets, panel: WatermarkPanel },
+    { id: "pageNumbers", labelKey: "pageNumbers", descriptionKey: "pageNumbersDescription", icon: Hash, panel: PageNumberPanel },
+    { id: "crop", labelKey: "crop", descriptionKey: "cropDescription", icon: Crop, panel: CropPanel },
+  ],
+  [
+    { id: "extract", labelKey: "extract", descriptionKey: "extractDescription", icon: Scissors, panel: ExtractPanel },
+    { id: "split", labelKey: "split", descriptionKey: "splitDescription", icon: SplitSquareHorizontal, panel: SplitPanel },
+    { id: "merge", labelKey: "merge", descriptionKey: "mergeDescription", icon: Combine, panel: MergePanel },
+    { id: "convert", labelKey: "convert", descriptionKey: "convertDescription", icon: FileImage, panel: ConvertPanel },
+  ],
 ];
+
+const TOOLS = TOOL_GROUPS.flat();
 
 /** Sol araç rayı: Canva tarzı ince ikon şeridi + seçili sekmeye göre açılan sabit (docked) panel. */
 export function ToolSidebar() {
@@ -77,22 +85,26 @@ export function ToolSidebar() {
   }, [active, setActiveTool]);
 
   return (
-    <div className="flex shrink-0">
-      <aside className="project-sidebar relative z-30 flex w-[5.25rem] shrink-0 flex-col items-stretch gap-0.5 overflow-y-auto border-r border-border bg-sidebar-header px-1.5 py-3">
+    <div className="tool-sidebar-shell flex shrink-0">
+      <aside className="tool-rail project-sidebar relative z-30 flex w-[4.75rem] shrink-0 flex-col items-stretch gap-0.5 overflow-y-auto border-r border-border bg-sidebar-header px-1.5 py-2.5">
         <RailButton
           item={DOCUMENTS}
           selected={activeTool === "documents"}
           badge={sourceCount > 0 ? sourceCount : undefined}
           onClick={() => setActiveTool(activeTool === "documents" ? "pages" : "documents")}
         />
-        <div className="mx-1 my-1.5 h-px shrink-0 bg-border" />
-        {TOOLS.map((tool) => (
-          <RailButton
-            key={tool.id}
-            item={tool}
-            selected={activeTool === tool.id}
-            onClick={() => setActiveTool(activeTool === tool.id ? "pages" : tool.id)}
-          />
+        {TOOL_GROUPS.map((group) => (
+          <div key={group[0].id} className="contents">
+            <div className="rail-separator mx-1 my-1.5 h-px shrink-0 bg-border" aria-hidden="true" />
+            {group.map((tool) => (
+              <RailButton
+                key={tool.id}
+                item={tool}
+                selected={activeTool === tool.id}
+                onClick={() => setActiveTool(activeTool === tool.id ? "pages" : tool.id)}
+              />
+            ))}
+          </div>
         ))}
 
         <div className="flex-1" />
@@ -101,7 +113,7 @@ export function ToolSidebar() {
           onClick={() => void openDialog()}
           title={t("addPdf")}
           aria-label={t("addPdf")}
-          className="mx-auto grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-dashed border-border text-text-dim transition hover:border-brand/50 hover:text-brand"
+          className="rail-add mx-auto grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-dashed border-border text-text-dim transition hover:border-brand/50 hover:bg-surface hover:text-brand"
         >
           <Plus size={16} />
         </button>
@@ -132,28 +144,29 @@ function RailButton({
       onClick={onClick}
       title={t(item.labelKey)}
       className={[
-        "group/rail relative flex shrink-0 flex-col items-center gap-1 rounded-xl px-1 py-2.5 text-center transition",
-        selected ? "bg-accent-soft text-brand" : "text-text-dim hover:bg-surface-2 hover:text-text",
+        "rail-button group/rail relative flex shrink-0 flex-col items-center gap-1 rounded-lg px-1 py-2 text-center transition",
+        selected ? "bg-accent-soft text-brand" : "text-text-dim hover:bg-surface hover:text-text",
       ].join(" ")}
     >
+      {selected && <span className="rail-active-indicator absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-brand" aria-hidden="true" />}
       <span className="relative">
         <span
           className={[
-            "grid h-9 w-9 place-items-center rounded-lg transition",
+            "grid h-8 w-8 place-items-center rounded-[8px] transition",
             selected
-              ? "bg-brand text-white shadow-sm"
-              : "bg-surface-2 text-text-dim group-hover/rail:bg-surface-3 group-hover/rail:text-text",
+              ? "bg-brand text-accent-text shadow-sm"
+              : "text-text-dim group-hover/rail:text-text",
           ].join(" ")}
         >
-          <Icon size={17} strokeWidth={1.9} />
+          <Icon size={16} strokeWidth={1.9} />
         </span>
         {badge !== undefined && (
-          <span className="absolute -right-1 -top-1 grid h-3.5 min-w-3.5 place-items-center rounded-full border-2 border-sidebar-header bg-brand px-0.5 text-[7px] font-bold text-white">
+          <span className="absolute -right-1 -top-1 grid h-3.5 min-w-3.5 place-items-center rounded-full border-2 border-sidebar-header bg-brand px-0.5 text-[7px] font-bold text-accent-text">
             {badge}
           </span>
         )}
       </span>
-      <span className="text-[10.5px] font-semibold leading-tight tracking-tight">{t(item.labelKey)}</span>
+      <span className="rail-label text-[9.5px] font-semibold leading-tight tracking-tight">{t(item.labelKey)}</span>
     </button>
   );
 }
@@ -164,13 +177,13 @@ function ToolDock({ item, onClose }: { item: RailItem; onClose: () => void }) {
   const { t } = useTranslation();
 
   return (
-    <section className="tool-dock flex w-[21rem] shrink-0 flex-col overflow-hidden border-r border-border bg-surface">
-      <header className="flex shrink-0 items-center gap-3 border-b border-border bg-sidebar-header px-4 py-3.5">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-accent-text shadow-sm">
+    <section className="tool-dock flex w-[20rem] shrink-0 flex-col overflow-hidden border-r border-border bg-surface">
+      <header className="flex shrink-0 items-center gap-3 border-b border-border bg-surface px-4 py-3.5">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-accent-soft text-brand">
           <Icon size={17} />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-bold tracking-[-0.015em]">{t(item.labelKey)}</h2>
+          <h2 className="text-[13px] font-bold tracking-[-0.015em]">{t(item.labelKey)}</h2>
           <p className="mt-0.5 truncate text-[11px] text-text-dim">{t(item.descriptionKey)}</p>
         </div>
         <button

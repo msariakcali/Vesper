@@ -112,7 +112,7 @@ export const PageThumbnail = memo(function PageThumbnail({
         transition,
         opacity: isDragging ? 0.35 : 1,
       }}
-      className="group relative flex flex-col gap-2"
+      className="page-thumbnail group relative flex flex-col gap-2"
     >
       <div
         ref={containerRef}
@@ -131,10 +131,10 @@ export const PageThumbnail = memo(function PageThumbnail({
           }
         }}
         className={[
-          "relative cursor-pointer overflow-hidden rounded-xl border bg-white shadow-[0_2px_7px_rgb(0_0_0/0.08)]",
-          "transition-[border-color,box-shadow,transform] duration-200 group-hover:-translate-y-1 group-hover:shadow-[0_14px_32px_rgb(0_0_0/0.14)]",
+          "page-paper relative cursor-pointer overflow-hidden rounded-md border bg-white shadow-[0_2px_6px_rgb(22_27_38/0.10)]",
+          "transition-[border-color,box-shadow,transform] duration-150 group-hover:-translate-y-0.5 group-hover:shadow-[0_12px_28px_rgb(22_27_38/0.14)]",
           selected
-            ? "border-brand shadow-[0_0_0_3px_var(--accent-soft),0_14px_32px_rgb(0_0_0/0.12)]"
+            ? "border-brand shadow-[0_0_0_3px_var(--accent-soft),0_12px_28px_rgb(22_27_38/0.13)]"
             : "border-border hover:border-brand/45",
         ].join(" ")}
         style={{ aspectRatio: `1 / ${aspect}` }}
@@ -161,7 +161,7 @@ export const PageThumbnail = memo(function PageThumbnail({
         )}
 
         {/* Sayfa numarası rozeti */}
-        <span className="absolute left-2 top-2 min-w-6 rounded-md bg-black/58 px-1.5 py-1 text-center text-[10px] font-bold text-white shadow-sm tabular-nums backdrop-blur-sm">
+        <span className="absolute left-2 top-2 min-w-6 rounded bg-[#1c2230]/78 px-1.5 py-1 text-center text-[9px] font-bold text-white shadow-sm tabular-nums backdrop-blur-sm">
           {String(number).padStart(2, "0")}
         </span>
 
@@ -179,7 +179,7 @@ export const PageThumbnail = memo(function PageThumbnail({
             onToggle();
           }}
           className={[
-            "absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full border shadow-md transition",
+            "absolute right-2 top-2 z-10 grid h-7 w-7 place-items-center rounded-full border shadow-md transition",
             selected
               ? "border-brand bg-brand text-accent-text"
               : "border-white/70 bg-white/88 text-transparent hover:border-brand hover:text-brand",
@@ -189,8 +189,8 @@ export const PageThumbnail = memo(function PageThumbnail({
         </button>
 
         {/* Sayfanın üzerine gelince tek noktadan erişilen hızlı araç paleti. */}
-        <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/65 via-black/30 to-transparent px-2 pb-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-          <div className="flex items-center gap-1 rounded-xl border border-white/15 bg-black/70 p-1 shadow-xl backdrop-blur-md">
+        <div className="thumb-actions absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/70 via-black/30 to-transparent px-2 pb-2 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+          <div className="flex items-center gap-1 rounded-lg border border-white/15 bg-[#151922]/82 p-1 shadow-xl backdrop-blur-md">
             <ThumbAction label={t("openReader")} onClick={onPreview}>
               <Maximize2 size={14} />
             </ThumbAction>
@@ -211,11 +211,11 @@ export const PageThumbnail = memo(function PageThumbnail({
       </div>
 
       <div className="flex min-w-0 items-center justify-between gap-2 px-0.5">
-        <span className={selected ? "text-[12px] font-bold text-brand" : "text-[12px] font-semibold text-text-dim"}>
+        <span className={selected ? "text-[11px] font-bold text-brand" : "text-[11px] font-semibold text-text-dim"}>
           {t("page", { count: number })}
         </span>
         {showSourceName && (
-          <span className="min-w-0 truncate text-right text-[10px] text-text-soft" title={source.name}>
+          <span className="min-w-0 truncate text-right text-[9px] text-text-soft" title={source.name}>
             {source.name}
           </span>
         )}
@@ -247,7 +247,7 @@ function ThumbAction({
         onClick();
       }}
       className={[
-        "grid h-7 w-7 place-items-center rounded-md text-white transition-colors",
+        "grid h-7 w-7 place-items-center rounded-[6px] text-white transition-colors",
         danger ? "hover:bg-danger" : "hover:bg-accent",
       ].join(" ")}
     >

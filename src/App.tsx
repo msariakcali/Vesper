@@ -7,9 +7,8 @@ import { CanvasHeader } from "./components/layout/CanvasToolbar";
 import { EmptyState } from "./components/pages/EmptyState";
 import { PageGrid } from "./components/pages/PageGrid";
 import { PreviewModal } from "./components/viewer/PreviewModal";
-import { useFileDropAndStartup } from "./hooks/useFiles";
+import { useFileDrop } from "./hooks/useFiles";
 import { useKeyboardShortcuts } from "./hooks/useKeyboard";
-import { useAutoSave } from "./hooks/useAutoSave";
 import { useDocumentStore } from "./store/documentStore";
 import { useSelectionStore } from "./store/selectionStore";
 
@@ -17,9 +16,8 @@ export default function App() {
   const pages = useDocumentStore((s) => s.model.pages);
   const retainSelection = useSelectionStore((s) => s.retain);
 
-  useFileDropAndStartup();
+  useFileDrop();
   useKeyboardShortcuts();
-  useAutoSave();
 
   // Silinen veya geri alınan sayfaların kimlikleri seçimde asılı kalmasın.
   useEffect(() => {
@@ -33,7 +31,7 @@ export default function App() {
       ) : (
         <>
           <TopBar />
-          <div className="flex min-h-0 flex-1">
+          <div className="editor-body flex min-h-0 flex-1">
             <ToolSidebar />
             <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
               <CanvasHeader />

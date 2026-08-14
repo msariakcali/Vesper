@@ -6,7 +6,7 @@ import type { PDFDocumentLoadingTask, PDFDocumentProxy } from "pdfjs-dist";
  *
  * `new URL(..., import.meta.url)` deseni Vite'ın worker'ı bundle'a dahil
  * etmesini sağlar ve Tauri'nin özel protokolünde de doğru çözümlenir —
- * CDN'den worker çekmek çevrimdışı masaüstü uygulamasında çalışmazdı.
+ * Worker'ı CDN yerine uygulama paketiyle sunmak gizlilik ve çevrimdışı kullanım sağlar.
  */
 pdfjs.GlobalWorkerOptions.workerPort = new Worker(
   new URL("pdfjs-dist/build/pdf.worker.mjs", import.meta.url),

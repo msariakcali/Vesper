@@ -14,8 +14,6 @@ export interface SourceDocument {
   id: string;
   /** Kullanıcıya gösterilen dosya adı, örn. "rapor.pdf" */
   name: string;
-  /** Diskteki tam yol — yalnızca masaüstünde; tarayıcıda undefined. */
-  path?: string;
   bytes: Uint8Array;
   pageCount: number;
 }

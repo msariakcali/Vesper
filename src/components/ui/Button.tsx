@@ -11,12 +11,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-accent text-accent-text border-accent hover:brightness-110 disabled:hover:brightness-100",
-  default: "bg-surface-2 text-text border-border hover:border-accent/60",
+    "bg-brand text-accent-text border-brand hover:bg-brand-strong disabled:hover:bg-brand",
+  default: "bg-surface text-text border-border shadow-xs hover:border-brand/35 hover:bg-surface-2",
   ghost: "bg-transparent text-text-dim border-transparent hover:bg-surface-2 hover:text-text",
   danger: "bg-transparent text-danger border-transparent hover:bg-danger/10",
   topbar: "bg-transparent text-text-dim border-transparent hover:bg-surface-2 hover:text-text",
-  brand: "bg-brand text-accent-text border-brand hover:bg-brand-strong disabled:hover:bg-brand",
+  brand: "bg-brand text-accent-text border-brand shadow-sm hover:bg-brand-strong disabled:hover:bg-brand",
 };
 
 export function Button({
@@ -32,10 +32,10 @@ export function Button({
       type="button"
       {...props}
       className={[
-        "inline-flex items-center justify-center gap-2 rounded-lg border text-[13px] font-medium",
+        "inline-flex items-center justify-center gap-2 rounded-lg border text-[12px] font-semibold",
         "transition-[background-color,border-color,color,transform] duration-150 select-none active:translate-y-px",
         "disabled:opacity-40 disabled:cursor-not-allowed",
-        compact ? "h-9 px-2.5" : "h-10 px-4",
+        compact ? "h-8 px-2.5" : "h-9 px-3.5",
         VARIANTS[variant],
         className,
       ].join(" ")}

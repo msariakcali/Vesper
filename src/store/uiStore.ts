@@ -18,7 +18,6 @@ export type ToolId =
 
 export type Theme = "light" | "dark";
 export type Language = "en" | "tr";
-export type AutoSaveStatus = "idle" | "pending" | "saving" | "saved" | "error";
 export type PlacementMode = "text" | "signature" | "image" | null;
 
 export interface PlacementImage {
@@ -44,7 +43,8 @@ function initialTheme(): Theme {
 
 function initialLanguage(): Language {
   const stored = localStorage.getItem(LANGUAGE_KEY);
-  return stored === "tr" ? "tr" : "en";
+  if (stored === "tr" || stored === "en") return stored;
+  return navigator.language.toLowerCase().startsWith("tr") ? "tr" : "en";
 }
 
 export interface UiState {
@@ -60,8 +60,6 @@ export interface UiState {
   placementMode: PlacementMode;
   placementImage: PlacementImage | null;
   thumbnailSize: number;
-  autoSaveStatus: AutoSaveStatus;
-  lastSavedPath: string | null;
 
   setTheme: (theme: Theme) => void;
   setLanguage: (language: Language) => void;
@@ -75,7 +73,6 @@ export interface UiState {
   setPlacementMode: (mode: PlacementMode) => void;
   setPlacementImage: (image: PlacementImage | null) => void;
   setThumbnailSize: (size: number) => void;
-  setAutoSaveStatus: (status: AutoSaveStatus, path?: string | null) => void;
 }
 
 let toastId = 0;
@@ -91,8 +88,6 @@ export const useUiStore = create<UiState>((set) => ({
   placementMode: null,
   placementImage: null,
   thumbnailSize: 220,
-  autoSaveStatus: "idle",
-  lastSavedPath: null,
 
   setTheme: (theme) => {
     localStorage.setItem(THEME_KEY, theme);
@@ -137,9 +132,4 @@ export const useUiStore = create<UiState>((set) => ({
   setPlacementMode: (placementMode) => set({ placementMode }),
   setPlacementImage: (placementImage) => set({ placementImage }),
   setThumbnailSize: (thumbnailSize) => set({ thumbnailSize }),
-  setAutoSaveStatus: (autoSaveStatus, path) =>
-    set((state) => ({
-      autoSaveStatus,
-      lastSavedPath: path === undefined ? state.lastSavedPath : path,
-    })),
 }));

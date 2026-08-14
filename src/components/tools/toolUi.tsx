@@ -4,7 +4,7 @@ import { parsePageRange } from "../../core/ops/pageRange";
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-2.5">
-      <h3 className="text-[10px] font-bold tracking-[0.14em] text-text-soft uppercase">{title}</h3>
+      <h3 className="text-[10px] font-bold tracking-[0.1em] text-text-soft uppercase">{title}</h3>
       {children}
     </div>
   );
@@ -28,7 +28,7 @@ export function PageRangeInput({
         placeholder={pageCount > 0 ? `1-${pageCount}` : "Sayfa aralığı"}
         spellCheck={false}
         className={[
-          "h-9 w-full rounded-lg border bg-sidebar-header px-3 font-mono text-xs text-text",
+          "h-9 w-full rounded-lg border bg-surface-2 px-3 font-mono text-xs text-text",
           parsed.errors.length > 0 ? "border-danger" : "border-border",
         ].join(" ")}
       />

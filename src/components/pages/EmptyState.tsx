@@ -1,181 +1,179 @@
+import { useState } from "react";
 import {
   ArrowRight,
   Check,
   Combine,
   Download,
   FilePlus2,
+  Files,
+  FolderOpen,
+  Languages,
+  LayoutGrid,
   Layers3,
   LockKeyhole,
   Moon,
-  ScanText,
-  Sparkles,
+  PenLine,
+  ShieldCheck,
+  SlidersHorizontal,
   Sun,
-  WandSparkles,
 } from "lucide-react";
 import { useOpenDialog } from "../../hooks/useFiles";
 import { useUiStore } from "../../store/uiStore";
 import { useTranslation } from "../../i18n";
 
 const FEATURES = [
-  { icon: ScanText, title: "edit", text: "editFeature" },
+  { icon: LayoutGrid, title: "edit", text: "editFeature" },
   { icon: Combine, title: "mergeFeatureTitle", text: "mergeFeature" },
-  { icon: WandSparkles, title: "enrich", text: "enrichFeature" },
+  { icon: PenLine, title: "enrich", text: "enrichFeature" },
+] as const;
+
+const WORKFLOW = [
+  { icon: FolderOpen, label: "workflowOpen" },
+  { icon: SlidersHorizontal, label: "workflowEdit" },
+  { icon: Download, label: "workflowDownload" },
 ] as const;
 
 export function EmptyState() {
   const openDialog = useOpenDialog();
+  const [dragActive, setDragActive] = useState(false);
   const theme = useUiStore((state) => state.theme);
   const toggleTheme = useUiStore((state) => state.toggleTheme);
   const setLanguage = useUiStore((state) => state.setLanguage);
   const { language, t } = useTranslation();
 
   return (
-    <div className="website-home min-h-full overflow-y-auto bg-bg text-text">
-      <header className="sticky top-0 z-20 border-b border-border bg-bg/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center px-5 sm:px-8">
-          <a href="#top" className="flex items-center gap-3" aria-label="Forma ana sayfa">
-            <span className="brand-mark grid h-9 w-9 place-items-center rounded-xl text-white">
-              <Layers3 size={18} strokeWidth={2.2} />
+    <div className="start-screen min-h-full overflow-y-auto bg-bg text-text">
+      <header className="start-header border-b border-border">
+        <div className="mx-auto flex h-16 max-w-[72rem] items-center px-5 sm:px-8">
+          <div className="flex items-center gap-3" aria-label="Forma PDF">
+            <span className="brand-mark grid h-9 w-9 place-items-center rounded-[10px] text-accent-text">
+              <Layers3 size={18} strokeWidth={2.15} />
             </span>
             <span>
-              <span className="block text-sm font-semibold leading-none tracking-[-0.03em]">Forma</span>
-              <span className="mt-1 block text-[9px] font-medium tracking-[0.16em] text-text-soft uppercase">PDF Studio</span>
+              <span className="block text-[15px] font-bold leading-none tracking-[-0.025em]">Forma</span>
+              <span className="mt-1 block text-[9px] font-semibold tracking-[0.14em] text-text-soft uppercase">PDF Workspace</span>
             </span>
-          </a>
+          </div>
 
-          <nav className="ml-auto hidden items-center gap-7 text-[12px] font-medium text-text-dim md:flex" aria-label="Main menu">
-            <a href="#neler-yapilir" className="transition hover:text-brand">{t("features")}</a>
-            <a href="#guvenlik" className="transition hover:text-brand">{t("privacy")}</a>
-            <span className="rounded-full border border-brand/20 bg-brand/[0.07] px-3 py-1.5 text-brand">
-              {t("free")}
+          <div className="ml-auto flex items-center gap-1.5">
+            <span className="mr-2 hidden items-center gap-1.5 text-[10px] font-semibold text-text-soft sm:flex">
+              <ShieldCheck size={13} className="text-ok" />
+              {t("secureBrowser")}
             </span>
-          </nav>
-
-          <select value={language} onChange={(event) => setLanguage(event.target.value as "en" | "tr")} className="ml-3 h-9 rounded-full border-0 bg-surface-2 px-3 text-[12px] font-semibold text-text outline-none" aria-label="Language">
-            <option value="en">EN</option>
-            <option value="tr">TR</option>
-          </select>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="ml-3 grid h-9 w-9 place-items-center rounded-full text-text-dim transition hover:bg-surface-2 hover:text-text"
-            aria-label="Switch theme"
-          >
-            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-          <button
-            type="button"
-            onClick={() => void openDialog()}
-            className="ml-2 inline-flex h-9 items-center gap-2 rounded-full bg-brand px-4 text-[12px] font-medium text-white shadow-sm transition hover:bg-brand-strong"
-          >
-            {t("addPdf")} <ArrowRight size={13} />
-          </button>
+            <label className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 text-text-dim">
+              <Languages size={14} aria-hidden="true" />
+              <select
+                value={language}
+                onChange={(event) => setLanguage(event.target.value as "en" | "tr")}
+                className="cursor-pointer border-0 bg-transparent text-[11px] font-semibold text-text outline-none"
+                aria-label="Language"
+              >
+                <option value="en">EN</option>
+                <option value="tr">TR</option>
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="grid h-9 w-9 place-items-center rounded-lg border border-transparent text-text-dim transition hover:border-border hover:bg-surface hover:text-text"
+              aria-label={t("switchTheme")}
+            >
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          </div>
         </div>
       </header>
 
-      <main id="top">
-        <section className="relative overflow-hidden px-5 pb-20 pt-16 sm:px-8 sm:pt-28">
-          <div className="hero-orb hero-orb-one" />
-          <div className="hero-orb hero-orb-two" />
-          <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[11px] font-medium text-brand">
-                <Sparkles size={12} /> {t("browserPdfStudio")}
+      <main className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-[72rem] flex-col justify-center px-5 py-10 sm:px-8 sm:py-14">
+        <div className="mb-8 max-w-[46rem]">
+          <span className="text-[11px] font-bold tracking-[0.12em] text-brand uppercase">{t("browserPdfStudio")}</span>
+          <h1 className="mt-3 text-[clamp(2.15rem,4.8vw,3.65rem)] font-bold leading-[1.06] tracking-[-0.047em]">
+            {t("heroTitle")} <span className="text-text-dim">{t("heroAccent")}</span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-[14px] leading-6 text-text-dim sm:text-[15px]">
+            {t("heroDescription")}
+          </p>
+
+          <ol className="mt-6 flex flex-wrap items-center gap-y-2 text-[10px] font-bold text-text-soft" aria-label={t("workflowLabel")}>
+            {WORKFLOW.map(({ icon: Icon, label }, index) => (
+              <li key={label} className="flex items-center">
+                <span className="flex items-center gap-1.5">
+                  <Icon size={13} className="text-brand" />
+                  {t(label)}
+                </span>
+                {index < WORKFLOW.length - 1 && <ArrowRight size={12} className="mx-3 text-border" aria-hidden="true" />}
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="grid items-stretch gap-5 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
+          <button
+            type="button"
+            onClick={() => void openDialog()}
+            onDragEnter={() => setDragActive(true)}
+            onDragOver={(event) => {
+              event.preventDefault();
+              setDragActive(true);
+            }}
+            onDragLeave={() => setDragActive(false)}
+            onDrop={() => setDragActive(false)}
+            className={[
+              "upload-stage group relative flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed bg-surface px-7 py-10 text-center shadow-[var(--shadow)] transition",
+              dragActive
+                ? "border-brand bg-accent-soft shadow-[var(--shadow-float)]"
+                : "border-border hover:border-brand/45 hover:shadow-[var(--shadow-float)]",
+            ].join(" ")}
+          >
+            <span className="grid h-14 w-14 place-items-center rounded-xl border border-brand/15 bg-accent-soft text-brand transition group-hover:-translate-y-0.5">
+              <FilePlus2 size={24} strokeWidth={1.8} />
+            </span>
+            <span className="mt-5 text-[18px] font-bold tracking-[-0.025em]">{t("dropPdf")}</span>
+            <span className="mt-2 max-w-sm text-[12px] leading-5 text-text-dim">{t("dropDescription")}</span>
+            <span className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-brand px-4 text-[12px] font-bold text-accent-text shadow-sm transition group-hover:bg-brand-strong">
+              {t("chooseFile")} <ArrowRight size={14} />
+            </span>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-[10px] font-semibold text-text-soft">
+              <LockKeyhole size={12} /> {t("secureBrowser")}
+            </span>
+          </button>
+
+          <aside className="rounded-xl border border-border bg-surface p-5 shadow-[var(--shadow)] sm:p-6">
+            <div className="flex items-start gap-3 border-b border-border pb-5">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-text-dim">
+                <Files size={17} />
               </span>
-              <h1 className="mt-7 max-w-3xl text-[clamp(2.8rem,6.5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.065em]">
-                {t("heroTitle")}
-                <span className="hero-gradient-text block">{t("heroAccent")}</span>
-              </h1>
-              <p className="mt-7 max-w-xl text-sm leading-7 text-text-dim sm:text-base">
-                {t("heroDescription")}
-              </p>
+              <div>
+                <h2 className="text-[13px] font-bold tracking-[-0.01em]">{t("oneWorkspace")}</h2>
+                <p className="mt-1 text-[11px] leading-5 text-text-soft">{t("workflowDescription")}</p>
+              </div>
+            </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[12px] font-medium text-text-dim">
-                {[
-                  t("noAccount"),
-                  t("noUpload"),
-                  t("noWatermark"),
-                ].map((item) => (
-                  <span key={item} className="flex items-center gap-1.5">
-                    <span className="grid h-4 w-4 place-items-center rounded-full bg-ok/10 text-ok">
-                      <Check size={10} strokeWidth={3} />
-                    </span>
-                    {item}
+            <div className="divide-y divide-border">
+              {FEATURES.map(({ icon: Icon, title, text }) => (
+                <div key={title} className="flex gap-3 py-4 last:pb-0">
+                  <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-border bg-surface-2 text-brand">
+                    <Icon size={15} strokeWidth={1.9} />
                   </span>
-                ))}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => void openDialog()}
-              className="upload-stage group relative min-h-[25rem] overflow-hidden rounded-[2rem] border border-border bg-surface p-5 text-left shadow-[var(--shadow)] transition hover:-translate-y-1 hover:shadow-[var(--shadow-float)]"
-            >
-              <div className="absolute inset-5 rounded-[1.45rem] border border-dashed border-brand/30 transition group-hover:border-brand/65 group-hover:bg-brand/[0.025]" />
-              <div className="relative flex min-h-[22.5rem] flex-col items-center justify-center px-6 text-center">
-                <span className="upload-icon grid h-[4.5rem] w-[4.5rem] place-items-center rounded-[1.4rem] bg-brand text-accent-text shadow-[0_16px_38px_rgb(0_113_227/0.25)] transition duration-300 group-hover:scale-105">
-                  <FilePlus2 size={29} strokeWidth={1.8} />
-                </span>
-                <span className="mt-6 text-lg font-semibold tracking-[-0.035em]">{t("dropPdf")}</span>
-                <span className="mt-2 max-w-xs text-[12px] leading-5 text-text-dim">
-                  {t("dropDescription")}
-                </span>
-                <span className="mt-6 inline-flex h-10 items-center gap-2 rounded-full bg-brand px-5 text-[12px] font-medium text-white shadow-sm">
-                  {t("chooseFile")} <ArrowRight size={13} />
-                </span>
-                <span className="mt-4 text-[11px] font-medium text-text-soft">{t("secureBrowser")}</span>
-              </div>
-            </button>
-          </div>
-        </section>
-
-        <section id="neler-yapilir" className="border-y border-border bg-surface px-5 py-20 sm:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="max-w-2xl">
-              <span className="text-[11px] font-medium tracking-[0.08em] text-brand uppercase">{t("oneWorkspace")}</span>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">{t("uploadEditReadDownload")}</h2>
-              <p className="mt-4 text-sm leading-6 text-text-dim">{t("workflowDescription")}</p>
-            </div>
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {FEATURES.map(({ icon: Icon, title, text }, index) => (
-                <article key={title} className="rounded-[1.4rem] border border-border bg-bg p-6 shadow-[0_8px_24px_rgb(0_0_0/0.04)]">
-                  <div className="flex items-start justify-between">
-                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-brand">
-                      <Icon size={19} strokeWidth={1.8} />
-                    </span>
-                    <span className="text-[11px] font-semibold text-text-soft">0{index + 1}</span>
+                  <div>
+                    <h3 className="text-[12px] font-bold">{t(title)}</h3>
+                    <p className="mt-1 text-[11px] leading-4 text-text-soft">{t(text)}</p>
                   </div>
-                  <h3 className="mt-7 text-base font-semibold tracking-[-0.025em]">{t(title)}</h3>
-                  <p className="mt-2 text-[12px] leading-5 text-text-dim">{t(text)}</p>
-                </article>
+                </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section id="guvenlik" className="px-5 py-20 sm:px-8">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 rounded-[2rem] bg-[#1d1d1f] px-7 py-10 text-white shadow-2xl sm:px-12 lg:grid-cols-[auto_1fr_auto]">
-            <span className="grid h-14 w-14 place-items-center rounded-2xl bg-brand text-accent-text shadow-[0_14px_35px_rgb(0_113_227/0.30)]">
-              <LockKeyhole size={23} />
-            </span>
-            <div>
-              <h2 className="text-xl font-black tracking-[-0.035em]">{t("privacyTitle")}</h2>
-              <p className="mt-2 max-w-2xl text-[12px] leading-5 text-white/48">{t("privacyDescription")}</p>
-            </div>
-            <button type="button" onClick={() => void openDialog()} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-[12px] font-medium text-[#1d1d1f] transition hover:-translate-y-0.5">
-              <Download size={14} /> {t("getStarted")}
-            </button>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-border px-5 py-7 sm:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-[11px] font-medium text-text-soft sm:flex-row">
-          <span>© 2026 Forma PDF Studio</span>
-          <span>{t("footerFlow")}</span>
+          </aside>
         </div>
-      </footer>
+
+        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[10px] font-semibold text-text-soft">
+          {[t("noAccount"), t("noUpload"), t("noWatermark")].map((item) => (
+            <span key={item} className="flex items-center gap-1.5">
+              <Check size={12} className="text-ok" strokeWidth={2.5} />
+              {item}
+            </span>
+          ))}
+        </div>
+      </main>
     </div>
   );
 }

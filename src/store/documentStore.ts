@@ -102,7 +102,7 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
       const id = nextId("src");
       try {
         const pageCount = await readPageCount(id, file.bytes);
-        sources.push({ id, name: file.name, path: file.path, bytes: file.bytes, pageCount });
+        sources.push({ id, name: file.name, bytes: file.bytes, pageCount });
       } catch (error) {
         releasePdfDocument(id);
         const message = error instanceof Error ? error.message : String(error);

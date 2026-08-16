@@ -29,7 +29,10 @@ export function useKeyboardShortcuts() {
           ui.setPlacementMode(null);
           ui.setPlacementImage(null);
         }
-        else selection.clear();
+        else {
+          ui.setSelectionMode(false);
+          selection.clear();
+        }
         return;
       }
 

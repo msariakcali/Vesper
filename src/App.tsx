@@ -11,10 +11,12 @@ import { useFileDrop } from "./hooks/useFiles";
 import { useKeyboardShortcuts } from "./hooks/useKeyboard";
 import { useDocumentStore } from "./store/documentStore";
 import { useSelectionStore } from "./store/selectionStore";
+import { useUiStore } from "./store/uiStore";
 
 export default function App() {
   const pages = useDocumentStore((s) => s.model.pages);
   const retainSelection = useSelectionStore((s) => s.retain);
+  const setSelectionMode = useUiStore((s) => s.setSelectionMode);
 
   useFileDrop();
   useKeyboardShortcuts();
@@ -22,7 +24,8 @@ export default function App() {
   // Silinen veya geri alınan sayfaların kimlikleri seçimde asılı kalmasın.
   useEffect(() => {
     retainSelection(pages.map((page) => page.id));
-  }, [pages, retainSelection]);
+    if (pages.length === 0) setSelectionMode(false);
+  }, [pages, retainSelection, setSelectionMode]);
 
   return (
     <div className="app-shell flex h-full flex-col bg-bg text-text">

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Check, Copy, Eye, Grid2X2, RotateCcw, RotateCw, Trash2 } from "lucide-react";
+import { Check, Copy, Eye, Grid2X2, ListChecks, RotateCcw, RotateCw, Trash2 } from "lucide-react";
 import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
@@ -19,15 +19,18 @@ export function CanvasHeader() {
   const thumbnailSize = useUiStore((state) => state.thumbnailSize);
   const setThumbnailSize = useUiStore((state) => state.setThumbnailSize);
   const setPreviewPage = useUiStore((state) => state.setPreviewPage);
+  const selectionMode = useUiStore((state) => state.selectionMode);
+  const setSelectionMode = useUiStore((state) => state.setSelectionMode);
   const { t } = useTranslation();
 
   const ids = useMemo(() => [...selected], [selected]);
   const hasSelection = ids.length > 0;
+  const allSelected = pages.length > 0 && ids.length === pages.length;
   const sourceCount = Object.keys(sources).length;
   const readerPageId = ids[0] ?? pages[0]?.id;
 
   return (
-    <div className="canvas-toolbar flex h-14 shrink-0 items-center gap-1.5 overflow-x-auto border-b border-border bg-canvas-header px-3 sm:px-4">
+    <div className="canvas-toolbar flex h-[3.75rem] shrink-0 items-center gap-2 overflow-x-auto border-b border-border bg-canvas-header px-3 sm:px-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <h2 className="text-[13px] font-bold tracking-[-0.01em]">{t("pages")}</h2>
@@ -53,15 +56,35 @@ export function CanvasHeader() {
       >
         {t("read")}
       </Button>
-      <button
-        type="button"
+
+      <Button
+        variant={selectionMode ? "primary" : "default"}
+        compact
         disabled={pages.length === 0}
-        onClick={() => (hasSelection ? clearSelection() : setSelection(pages.map((page) => page.id)))}
-        className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-text-dim hover:bg-surface-2 hover:text-text disabled:opacity-35"
+        icon={<ListChecks size={15} />}
+        onClick={() => setSelectionMode(!selectionMode)}
+        aria-pressed={selectionMode}
+        title={selectionMode ? t("finishSelection") : t("selectPages")}
       >
-        <Check size={13} />
-        {hasSelection ? t("selected", { count: ids.length }) : t("selectAll")}
-      </button>
+        {selectionMode ? t("finishSelection") : t("selectPages")}
+      </Button>
+
+      {(selectionMode || hasSelection) && (
+        <Button
+          variant="ghost"
+          compact
+          icon={<Check size={14} />}
+          onClick={() => (allSelected ? clearSelection() : setSelection(pages.map((page) => page.id)))}
+        >
+          {allSelected ? t("clearSelection") : t("selectAll")}
+        </Button>
+      )}
+
+      {hasSelection && (
+        <span className="rounded-lg bg-accent-soft px-2.5 py-1.5 text-[11px] font-bold text-brand tabular-nums">
+          {t("selected", { count: ids.length })}
+        </span>
+      )}
 
       {hasSelection && (
         <>

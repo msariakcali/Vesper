@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import {
   DndContext,
   DragOverlay,
+  MeasuringStrategy,
   PointerSensor,
   closestCenter,
   useSensor,
@@ -33,10 +34,14 @@ export function PageGrid() {
   const duplicatePages = useDocumentStore((s) => s.duplicatePages);
 
   const selected = useSelectionStore((s) => s.selected);
-  const selectionApi = useSelectionStore();
+  const selectOnly = useSelectionStore((s) => s.selectOnly);
+  const selectRangeTo = useSelectionStore((s) => s.selectRangeTo);
+  const toggleSelection = useSelectionStore((s) => s.toggle);
+  const clearSelection = useSelectionStore((s) => s.clear);
 
   const thumbnailSize = useUiStore((s) => s.thumbnailSize);
   const setPreviewPage = useUiStore((s) => s.setPreviewPage);
+  const selectionMode = useUiStore((s) => s.selectionMode);
   const { t } = useTranslation();
 
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -46,28 +51,30 @@ export function PageGrid() {
 
   const sensors = useSensors(
     // Küçük hareketleri tıklama sayarak seçimin sürüklemeye dönüşmesini engelle.
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
   );
 
   const handleSelect = useCallback(
     (id: string, event: React.MouseEvent) => {
-      if (event.shiftKey) selectionApi.selectRangeTo(id, orderedIds);
-      else if (event.ctrlKey || event.metaKey) selectionApi.toggle(id);
-      else selectionApi.selectOnly(id);
+      if (event.shiftKey) selectRangeTo(id, orderedIds);
+      else if (selectionMode || event.ctrlKey || event.metaKey) toggleSelection(id);
+      else selectOnly(id);
     },
-    [orderedIds, selectionApi],
+    [orderedIds, selectOnly, selectRangeTo, selectionMode, toggleSelection],
   );
 
-  const handleToggle = useCallback(
-    (id: string) => selectionApi.toggle(id),
-    [selectionApi],
-  );
+  const handleToggle = useCallback((id: string) => toggleSelection(id), [toggleSelection]);
+  const handlePreview = useCallback((id: string) => setPreviewPage(id), [setPreviewPage]);
+  const handleRotateLeft = useCallback((id: string) => rotatePages([id], -90), [rotatePages]);
+  const handleRotateRight = useCallback((id: string) => rotatePages([id], 90), [rotatePages]);
+  const handleDuplicate = useCallback((id: string) => duplicatePages([id]), [duplicatePages]);
+  const handleDelete = useCallback((id: string) => deletePages([id]), [deletePages]);
 
   const handleDragStart = (event: DragStartEvent) => {
     const id = String(event.active.id);
     setDraggingId(id);
     // Seçim dışındaki bir sayfa sürüklenirse seçim ona geçsin.
-    if (!selected.has(id)) selectionApi.selectOnly(id);
+    if (!selected.has(id)) selectOnly(id);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -93,6 +100,7 @@ export function PageGrid() {
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      measuring={{ droppable: { strategy: MeasuringStrategy.BeforeDragging } }}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragCancel={() => setDraggingId(null)}
@@ -103,7 +111,7 @@ export function PageGrid() {
           style={{ gridTemplateColumns: `repeat(auto-fill, ${thumbnailSize}px)` }}
           // Boşluğa tıklamak seçimi temizler.
           onClick={(event) => {
-            if (event.target === event.currentTarget) selectionApi.clear();
+            if (event.target === event.currentTarget && !selectionMode) clearSelection();
           }}
         >
           {pages.map((page, index) => {
@@ -117,14 +125,15 @@ export function PageGrid() {
                 number={index + 1}
                 width={thumbnailSize}
                 selected={selected.has(page.id)}
+                selectionMode={selectionMode}
                 showSourceName={showSourceName}
-                onSelect={(event) => handleSelect(page.id, event)}
-                onToggle={() => handleToggle(page.id)}
-                onPreview={() => setPreviewPage(page.id)}
-                onRotateLeft={() => rotatePages([page.id], -90)}
-                onRotateRight={() => rotatePages([page.id], 90)}
-                onDuplicate={() => duplicatePages([page.id])}
-                onDelete={() => deletePages([page.id])}
+                onSelect={handleSelect}
+                onToggle={handleToggle}
+                onPreview={handlePreview}
+                onRotateLeft={handleRotateLeft}
+                onRotateRight={handleRotateRight}
+                onDuplicate={handleDuplicate}
+                onDelete={handleDelete}
               />
             );
           })}

@@ -1,6 +1,8 @@
-# Forma — PDF Studio
+# worldinpdf
 
 Tarayıcı içinde çalışan, dosyaları sunucuya göndermeden PDF düzenleme ve okuma uygulaması.
+worldinpdf.com için hazırlanan arayüz, deniz haritası görsel diliyle kurulur: buff harita
+kağıdı, patina turkuazı vurgu ve haritalarda uyarıların basıldığı macenta.
 
 ## Akış
 
@@ -16,3 +18,7 @@ pnpm dev
 ```
 
 Üretim çıktısı `pnpm build` ile `dist` klasörüne hazırlanır.
+
+Arayüz yazı tipleri (Bodoni Moda, IBM Plex Sans/Mono) `public/fonts/` altında kendi
+sunucumuzdan servis edilir — dosyaların cihazdan çıkmadığı bir uygulamanın font için
+üçüncü partiye istek atmaması gerekir.

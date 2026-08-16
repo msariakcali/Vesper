@@ -16,7 +16,6 @@ export type ToolId =
   | "insert"
   | "convert";
 
-export type Theme = "light" | "dark";
 export type Language = "en" | "tr";
 export type PlacementMode = "text" | "signature" | "image" | null;
 
@@ -32,23 +31,15 @@ export interface Toast {
   message: string;
 }
 
-const THEME_KEY = "pdf-editor-theme";
 const LANGUAGE_KEY = "pdf-editor-language";
-
-function initialTheme(): Theme {
-  const stored = localStorage.getItem(THEME_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-}
 
 function initialLanguage(): Language {
   const stored = localStorage.getItem(LANGUAGE_KEY);
   if (stored === "tr" || stored === "en") return stored;
-  return navigator.language.toLowerCase().startsWith("tr") ? "tr" : "en";
+  return "en";
 }
 
 export interface UiState {
-  theme: Theme;
   language: Language;
   activeTool: ToolId;
   /** Uzun süren işlem sırasında gösterilen açıklama; boşsa işlem yok. */
@@ -60,10 +51,10 @@ export interface UiState {
   placementMode: PlacementMode;
   placementImage: PlacementImage | null;
   thumbnailSize: number;
+  /** Açıkken düz tıklama, Ctrl gerektirmeden çoklu sayfa seçimini değiştirir. */
+  selectionMode: boolean;
 
-  setTheme: (theme: Theme) => void;
   setLanguage: (language: Language) => void;
-  toggleTheme: () => void;
   setActiveTool: (tool: ToolId) => void;
   setBusy: (message: string | null) => void;
   notify: (kind: Toast["kind"], message: string) => void;
@@ -73,12 +64,12 @@ export interface UiState {
   setPlacementMode: (mode: PlacementMode) => void;
   setPlacementImage: (image: PlacementImage | null) => void;
   setThumbnailSize: (size: number) => void;
+  setSelectionMode: (enabled: boolean) => void;
 }
 
 let toastId = 0;
 
 export const useUiStore = create<UiState>((set) => ({
-  theme: initialTheme(),
   language: initialLanguage(),
   activeTool: "pages",
   busy: null,
@@ -88,26 +79,13 @@ export const useUiStore = create<UiState>((set) => ({
   placementMode: null,
   placementImage: null,
   thumbnailSize: 220,
-
-  setTheme: (theme) => {
-    localStorage.setItem(THEME_KEY, theme);
-    document.documentElement.dataset.theme = theme;
-    set({ theme });
-  },
+  selectionMode: false,
 
   setLanguage: (language) => {
     localStorage.setItem(LANGUAGE_KEY, language);
     document.documentElement.lang = language;
     set({ language });
   },
-
-  toggleTheme: () =>
-    set((state) => {
-      const theme = state.theme === "dark" ? "light" : "dark";
-      localStorage.setItem(THEME_KEY, theme);
-      document.documentElement.dataset.theme = theme;
-      return { theme };
-    }),
 
   setActiveTool: (activeTool) => set({ activeTool }),
   setBusy: (busy) => set({ busy }),
@@ -132,4 +110,5 @@ export const useUiStore = create<UiState>((set) => ({
   setPlacementMode: (placementMode) => set({ placementMode }),
   setPlacementImage: (placementImage) => set({ placementImage }),
   setThumbnailSize: (thumbnailSize) => set({ thumbnailSize }),
+  setSelectionMode: (selectionMode) => set({ selectionMode }),
 }));

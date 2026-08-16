@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BookOpen, FileText, Minus, Plus, X } from "lucide-react";
+import { BookOpen, Check, FileText, Maximize2, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { renderPage, renderPageTextLayer } from "../../core/render/pdfjs";
-import type { Overlay, PageRef, SourceDocument } from "../../core/model/types";
+import type { Overlay, OverlayChanges, PageRef, SourceDocument } from "../../core/model/types";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore, type PlacementImage, type PlacementMode } from "../../store/uiStore";
 import { Button } from "../ui/Button";
@@ -197,14 +197,14 @@ export function PreviewModal() {
 
   return (
     <div
-      className="reader-shell fixed inset-0 z-40 flex flex-col backdrop-blur-md"
+      className="reader-shell fixed inset-0 z-40 flex flex-col backdrop-blur-xl"
       onClick={close}
     >
       <div
-        className="reader-toolbar flex min-h-14 shrink-0 items-center gap-3 border-b border-border px-3 py-2 shadow-sm sm:px-4"
+        className="reader-toolbar flex min-h-14 shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-3 py-2 shadow-sm sm:flex-nowrap sm:px-4"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="flex min-w-0 shrink-0 items-center gap-2">
           <Button
             variant="ghost"
             compact
@@ -216,14 +216,18 @@ export function PreviewModal() {
           <span className="hidden h-8 w-8 place-items-center rounded-lg bg-accent-soft text-brand sm:grid">
             <BookOpen size={15} />
           </span>
+          {/* İpucu metni yalnızca genişte gösterilir: dar ekranda satır kaymasına
+              yol açıp kapatma düğmesinin üstüne binmesin diye. */}
           <span className="min-w-0">
-            <span className="block max-w-44 truncate text-[12px] font-bold text-text">{currentSource.name}</span>
-            <span className="mt-0.5 block text-[10px] text-text-soft">{t("readingModeHint")}</span>
+            <span className="block max-w-32 truncate text-[12px] font-bold text-text sm:max-w-44">{currentSource.name}</span>
+            <span className="mt-0.5 hidden text-[10px] text-text-soft sm:block">{t("readingModeHint")}</span>
           </span>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
-          <label className="flex h-8 items-center gap-1 rounded-lg border border-border bg-sidebar-header px-2 text-[11px] text-text-dim">
+        {/* Çok dar ekranlarda (≤340px) arama sonucu okları taşarsa kırpılmak yerine
+            yatay kaydırılabilsin diye overflow-x-auto: hiçbir kontrol erişilemez kalmaz. */}
+        <div className="order-3 flex w-full shrink-0 items-center gap-1.5 overflow-x-auto sm:order-none sm:ml-auto sm:w-auto sm:overflow-visible">
+          <label className="flex h-8 shrink-0 items-center gap-1 rounded-lg border border-border bg-sidebar-header px-2 text-[11px] text-text-dim">
             <FileText size={12} className="text-text-soft" />
             <input
               type="number"
@@ -260,17 +264,19 @@ export function PreviewModal() {
             onClick={() => setZoom(zoom + 0.25)}
             aria-label={t("zoomIn")}
           />
-          <TextSearch
-            ref={searchRef}
-            model={model}
-            currentPageIndex={currentIndex}
-            onNavigate={handleSearchNavigate}
-            query={searchQuery}
-            onQueryChange={(query) => {
-              setSearchQuery(query);
-              setSearchTarget(null);
-            }}
-          />
+          <div className="shrink-0">
+            <TextSearch
+              ref={searchRef}
+              model={model}
+              currentPageIndex={currentIndex}
+              onNavigate={handleSearchNavigate}
+              query={searchQuery}
+              onQueryChange={(query) => {
+                setSearchQuery(query);
+                setSearchTarget(null);
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -282,10 +288,12 @@ export function PreviewModal() {
         </div>
       )}
 
+      {/* PDF dışına (sayfa aralarındaki boşluğa) tıklamak okuyucuyu kapatır;
+          sayfa blokları kendi tıklamalarını aşağıda durdurur. */}
       <div
         ref={scrollRef}
         className="reader-scroll min-h-0 flex-1 overflow-y-auto px-6 py-8 sm:px-10"
-        onClick={(event) => event.stopPropagation()}
+        onClick={close}
         onScroll={scheduleCurrentPageUpdate}
       >
         <div className="flex min-w-full flex-col items-center gap-9 pb-16">
@@ -347,9 +355,13 @@ function ReaderPage({
   registerPage: (id: string, element: HTMLDivElement | null) => void;
 }) {
   const addOverlay = useDocumentStore((state) => state.addOverlay);
+  const updateOverlay = useDocumentStore((state) => state.updateOverlay);
+  const notify = useUiStore((state) => state.notify);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const textLayerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
+  const surfaceRef = useRef<HTMLDivElement>(null);
+  const transformRef = useRef<OverlayTransform | null>(null);
   const [rendering, setRendering] = useState(false);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -362,6 +374,8 @@ function ReaderPage({
   const [text, setText] = useState("");
   const [textSize, setTextSize] = useState(18);
   const [textColor, setTextColor] = useState("#202020");
+  const [editingOverlay, setEditingOverlay] = useState<Overlay | null>(null);
+  const [sourceTextDraft, setSourceTextDraft] = useState<Overlay | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -459,6 +473,13 @@ function ReaderPage({
     if (!placementMode) setTextPoint(null);
   }, [placementMode]);
 
+  useEffect(() => {
+    setEditingOverlay((current) => {
+      if (!current) return null;
+      return page.overlays.some((overlay) => overlay.id === current.id) ? current : null;
+    });
+  }, [page.overlays]);
+
   const handlePageClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     if (!placementMode) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -476,6 +497,7 @@ function ReaderPage({
     addOverlay([page.id], {
       kind: "image",
       id: "template",
+      tool: placementMode === "signature" ? "signature" : "image",
       data: placementImage.data,
       mime: placementImage.mime,
       x: point.x,
@@ -493,6 +515,7 @@ function ReaderPage({
     addOverlay([page.id], {
       kind: "text",
       id: "template",
+      tool: "text",
       text: text.trim(),
       x: textPoint.x,
       y: textPoint.y,
@@ -505,13 +528,99 @@ function ReaderPage({
     cancelPlacement();
   };
 
+  const editSourceText = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (placementMode) return;
+    const target = (event.target as HTMLElement).closest<HTMLElement>("[data-pdf-text]");
+    const text = target?.dataset.pdfText?.trim();
+    const surface = surfaceRef.current;
+    if (!target || !text || !surface) return;
+    event.preventDefault();
+    event.stopPropagation();
+
+    const textRect = target.getBoundingClientRect();
+    const pageRect = surface.getBoundingClientRect();
+    const x = clamp((textRect.left - pageRect.left) / pageRect.width, 0, 0.96);
+    const y = clamp((textRect.bottom - pageRect.top) / pageRect.height, 0.02, 1);
+    const size = clamp((textRect.height / pageRect.width) * 595.28, 7, 72);
+    setEditingOverlay(null);
+    setSourceTextDraft({
+      id: "source-text-template",
+      tool: "text",
+      kind: "text",
+      text,
+      x,
+      y,
+      size,
+      color: "#202020",
+      backgroundColor: "#ffffff",
+      backgroundPadding: 1.5,
+      opacity: 1,
+      rotate: 0,
+    });
+  };
+
+  const selectOverlay = (overlay: Overlay) => {
+    if (placementMode) return;
+    setSourceTextDraft(null);
+    setEditingOverlay((current) => current?.id === overlay.id ? current : { ...overlay });
+  };
+
+  const startTransform = (
+    event: React.PointerEvent<HTMLElement>,
+    overlay: Overlay,
+    kind: OverlayTransform["kind"],
+  ) => {
+    if (placementMode || event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const draft = editingOverlay?.id === overlay.id ? editingOverlay : { ...overlay };
+    setEditingOverlay(draft);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    transformRef.current = {
+      id: overlay.id,
+      kind,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      initial: { ...draft },
+    };
+  };
+
+  const updateTransform = (event: React.PointerEvent<HTMLElement>) => {
+    const transform = transformRef.current;
+    const surface = surfaceRef.current;
+    if (!transform || !surface || transform.pointerId !== event.pointerId) return;
+    const rect = surface.getBoundingClientRect();
+    const deltaX = (event.clientX - transform.startX) / rect.width;
+    const deltaY = (event.clientY - transform.startY) / rect.height;
+
+    setEditingOverlay((current) => {
+      if (!current || current.id !== transform.id) return current;
+      if (transform.kind === "move") return moveOverlay(transform.initial, deltaX, deltaY);
+      return resizeOverlay(transform.initial, deltaX);
+    });
+  };
+
+  const endTransform = (event: React.PointerEvent<HTMLElement>) => {
+    if (transformRef.current?.pointerId !== event.pointerId) return;
+    transformRef.current = null;
+  };
+
+  const saveOverlayEdit = () => {
+    if (!editingOverlay) return;
+    updateOverlay(page.id, editingOverlay.id, editableChanges(editingOverlay));
+    setEditingOverlay(null);
+    notify("success", t("appliedItemUpdated"));
+  };
+
   return (
-    <article ref={pageRef} className="scroll-mt-5">
+    <article ref={pageRef} className="scroll-mt-5" onClick={(event) => event.stopPropagation()}>
       <div className="mb-2 flex items-center justify-between px-1 text-[11px] font-semibold text-white/58">
         <span>{t("page", { count: index + 1 })}</span>
         <span>{index + 1} / {pageCount}</span>
       </div>
       <div
+        ref={surfaceRef}
         className={[
           "relative overflow-hidden rounded-[4px] bg-white shadow-[0_28px_72px_rgb(0_0_0/0.42)] transition-shadow",
           active ? "ring-2 ring-brand/50 ring-offset-4 ring-offset-transparent" : "",
@@ -534,6 +643,7 @@ function ReaderPage({
         <div
           ref={textLayerRef}
           className="pdf-text-layer textLayer"
+          onClick={editSourceText}
           data-searching={searchQuery.trim() ? "true" : "false"}
           style={{ pointerEvents: placementMode ? "none" : "auto" }}
           aria-label={t("pageTextLabel", { count: index + 1 })}
@@ -549,8 +659,53 @@ function ReaderPage({
           </div>
         )}
         {page.overlays.map((overlay) => (
-          <OverlayPreview key={overlay.id} overlay={overlay} canvasWidth={renderSize.width} />
+          <OverlayPreview
+            key={overlay.id}
+            overlay={editingOverlay?.id === overlay.id ? editingOverlay : overlay}
+            canvasWidth={renderSize.width}
+            selected={editingOverlay?.id === overlay.id}
+            editable={!placementMode}
+            onSelect={() => selectOverlay(overlay)}
+            onMoveStart={(event) => startTransform(event, overlay, "move")}
+            onResizeStart={(event) => startTransform(event, overlay, "resize")}
+            onTransformMove={updateTransform}
+            onTransformEnd={endTransform}
+          />
         ))}
+        {sourceTextDraft && !placementMode && (
+          <OverlayPreview
+            overlay={sourceTextDraft}
+            canvasWidth={renderSize.width}
+            selected
+            editable={false}
+            onSelect={() => undefined}
+            onMoveStart={() => undefined}
+            onResizeStart={() => undefined}
+            onTransformMove={() => undefined}
+            onTransformEnd={() => undefined}
+          />
+        )}
+        {(editingOverlay || sourceTextDraft) && !placementMode && (
+          <OnPageOverlayEditor
+            overlay={editingOverlay ?? sourceTextDraft!}
+            onChange={(overlay) => {
+              if (editingOverlay) setEditingOverlay(overlay);
+              else setSourceTextDraft(overlay);
+            }}
+            onCancel={() => {
+              setEditingOverlay(null);
+              setSourceTextDraft(null);
+            }}
+            onSave={() => {
+              if (editingOverlay) saveOverlayEdit();
+              else if (sourceTextDraft) {
+                addOverlay([page.id], sourceTextDraft);
+                setSourceTextDraft(null);
+                notify("success", t("sourceTextReplaced"));
+              }
+            }}
+          />
+        )}
         {textPoint && placementMode === "text" && (
           <div
             className="absolute z-10 w-56 rounded-xl border border-border bg-surface p-2.5 shadow-[var(--shadow-float)]"
@@ -600,14 +755,43 @@ function ReaderPage({
 function OverlayPreview({
   overlay,
   canvasWidth,
+  selected,
+  editable,
+  onSelect,
+  onMoveStart,
+  onResizeStart,
+  onTransformMove,
+  onTransformEnd,
 }: {
   overlay: Overlay;
   canvasWidth: number;
+  selected: boolean;
+  editable: boolean;
+  onSelect: () => void;
+  onMoveStart: (event: React.PointerEvent<HTMLElement>) => void;
+  onResizeStart: (event: React.PointerEvent<HTMLElement>) => void;
+  onTransformMove: (event: React.PointerEvent<HTMLElement>) => void;
+  onTransformEnd: (event: React.PointerEvent<HTMLElement>) => void;
 }) {
+  const common = {
+    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+      onSelect();
+      onMoveStart(event);
+    },
+    onPointerMove: onTransformMove,
+    onPointerUp: onTransformEnd,
+    onPointerCancel: onTransformEnd,
+  };
+
   if (overlay.kind === "text") {
     return (
-      <span
-        className="pointer-events-none absolute z-[3] origin-bottom-left whitespace-pre text-black"
+      <div
+        {...common}
+        className={[
+          "absolute origin-bottom-left whitespace-pre text-black",
+          editable ? "cursor-move touch-none" : "pointer-events-none",
+          selected ? "z-10 outline outline-2 outline-brand outline-offset-2" : "z-[3]",
+        ].join(" ")}
         style={{
           left: `${overlay.x * 100}%`,
           top: `${overlay.y * 100}%`,
@@ -615,15 +799,55 @@ function OverlayPreview({
           fontSize: `${(overlay.size * canvasWidth) / 595.28}px`,
           lineHeight: 1,
           color: overlay.color,
+          backgroundColor: overlay.backgroundColor,
+          padding: overlay.backgroundColor
+            ? `${((overlay.backgroundPadding ?? 1) * canvasWidth) / 595.28}px`
+            : undefined,
           opacity: overlay.opacity,
           transform: `translateY(-100%) rotate(${-overlay.rotate}deg)`,
         }}
       >
         {overlay.text}
-      </span>
+        {selected && editable && <ResizeHandle onPointerDown={onResizeStart} />}
+      </div>
     );
   }
-  return <ImageOverlayPreview overlay={overlay} />;
+  return (
+    <div
+      {...common}
+      className={[
+        "absolute origin-top-left",
+        editable ? "cursor-move touch-none" : "pointer-events-none",
+        selected ? "z-10 outline outline-2 outline-brand outline-offset-2" : "z-[3]",
+      ].join(" ")}
+      style={{
+        left: `${overlay.x * 100}%`,
+        top: `${overlay.y * 100}%`,
+        width: `${overlay.width * 100}%`,
+        height: `${overlay.height * 100}%`,
+        opacity: overlay.opacity,
+        transform: `rotate(${-overlay.rotate}deg)`,
+      }}
+    >
+      <ImageOverlayPreview overlay={overlay} />
+      {selected && editable && <ResizeHandle onPointerDown={onResizeStart} />}
+    </div>
+  );
+}
+
+function ResizeHandle({ onPointerDown }: { onPointerDown: (event: React.PointerEvent<HTMLElement>) => void }) {
+  return (
+    <span
+      role="presentation"
+      onPointerDown={(event) => {
+        event.stopPropagation();
+        onPointerDown(event);
+      }}
+      className="absolute -bottom-2 -right-2 grid h-5 w-5 cursor-nwse-resize place-items-center rounded-full border-2 border-white bg-brand shadow-md"
+    >
+      <Maximize2 size={10} className="text-accent-text" />
+    </span>
+  );
 }
 
 function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "image" }> }) {
@@ -641,17 +865,204 @@ function ImageOverlayPreview({ overlay }: { overlay: Extract<Overlay, { kind: "i
     <img
       src={url}
       alt={t("placedImageAlt")}
-      className="pointer-events-none absolute z-[3] origin-top-left object-contain"
-      style={{
-        left: `${overlay.x * 100}%`,
-        top: `${overlay.y * 100}%`,
-        width: `${overlay.width * 100}%`,
-        height: `${overlay.height * 100}%`,
-        opacity: overlay.opacity,
-        transform: `rotate(${-overlay.rotate}deg)`,
-      }}
+      draggable={false}
+      className="pointer-events-none block h-full w-full select-none object-contain"
     />
   );
+}
+
+function OnPageOverlayEditor({
+  overlay,
+  onChange,
+  onCancel,
+  onSave,
+}: {
+  overlay: Overlay;
+  onChange: (overlay: Overlay) => void;
+  onCancel: () => void;
+  onSave: () => void;
+}) {
+  const { t } = useTranslation();
+  const patch = (changes: OverlayChanges) => onChange({ ...overlay, ...changes } as Overlay);
+  const changeImageWidth = (percent: number) => {
+    if (overlay.kind !== "image") return;
+    const ratio = overlay.width > 0 ? overlay.height / overlay.width : 1;
+    const width = percent / 100;
+    patch({ width, height: Math.min(0.95, width * ratio) });
+  };
+  const size = overlay.kind === "text" ? Math.round(overlay.size) : Math.round(overlay.width * 100);
+
+  return (
+    <div
+      className="absolute right-3 top-3 z-20 w-64 rounded-xl border border-border bg-surface/97 p-2.5 shadow-[var(--shadow-float)] backdrop-blur"
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div>
+          <p className="text-[10px] font-bold tracking-[0.08em] text-brand uppercase">{t("editOnPage")}</p>
+          <p className="mt-0.5 text-[9px] text-text-soft">{t("editOnPageHint")}</p>
+        </div>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="grid h-7 w-7 place-items-center rounded-md text-text-soft hover:bg-surface-2 hover:text-text"
+          aria-label={t("cancel")}
+        >
+          <X size={13} />
+        </button>
+      </div>
+
+      <div className="space-y-2.5">
+        {overlay.kind === "text" && (
+          <input
+            value={overlay.text}
+            onChange={(event) => patch({ text: event.target.value })}
+            className="h-8 w-full rounded-lg border border-border bg-sidebar-header px-2 text-xs text-text outline-none focus:border-brand"
+            aria-label={t("text")}
+          />
+        )}
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+          <span className="text-[10px] font-semibold text-text-dim">{t("size")}</span>
+          <div className="flex items-center rounded-lg border border-border bg-sidebar-header">
+            <OverlayControlButton
+              label={t("zoomOut")}
+              onClick={() => overlay.kind === "text" ? patch({ size: Math.max(6, overlay.size - 2) }) : changeImageWidth(Math.max(5, size - 5))}
+            >
+              <Minus size={12} />
+            </OverlayControlButton>
+            <span className="min-w-12 text-center font-mono text-[10px] text-text">{size}{overlay.kind === "text" ? "pt" : "%"}</span>
+            <OverlayControlButton
+              label={t("zoomIn")}
+              onClick={() => overlay.kind === "text" ? patch({ size: Math.min(144, overlay.size + 2) }) : changeImageWidth(Math.min(90, size + 5))}
+            >
+              <Plus size={12} />
+            </OverlayControlButton>
+          </div>
+        </div>
+        {overlay.kind === "text" && (
+          <label className="flex items-center justify-between gap-2 text-[10px] font-semibold text-text-dim">
+            {t("color")}
+            <input
+              type="color"
+              value={overlay.color}
+              onChange={(event) => patch({ color: event.target.value })}
+              className="h-7 w-9 cursor-pointer rounded border-0 bg-transparent p-0"
+            />
+          </label>
+        )}
+        <OnPageRange
+          label={t("opacity")}
+          value={Math.round(overlay.opacity * 100)}
+          min={5}
+          max={100}
+          suffix="%"
+          onChange={(value) => patch({ opacity: value / 100 })}
+        />
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+          <span className="text-[10px] font-semibold text-text-dim">{t("angle")}</span>
+          <div className="flex items-center rounded-lg border border-border bg-sidebar-header">
+            <OverlayControlButton label={t("rotateLeft")} onClick={() => patch({ rotate: Math.max(-180, overlay.rotate - 15) })}>
+              <RotateCcw size={12} />
+            </OverlayControlButton>
+            <span className="min-w-12 text-center font-mono text-[10px] text-text">{Math.round(overlay.rotate)}°</span>
+            <OverlayControlButton label={t("rotateRight")} onClick={() => patch({ rotate: Math.min(180, overlay.rotate + 15) })}>
+              <RotateCcw size={12} className="-scale-x-100" />
+            </OverlayControlButton>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 pt-0.5">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="h-8 rounded-lg border border-border bg-sidebar-header text-[10px] font-semibold text-text-dim hover:text-text"
+          >
+            {t("cancel")}
+          </button>
+          <button
+            type="button"
+            disabled={overlay.kind === "text" && !overlay.text.trim()}
+            onClick={onSave}
+            className="flex h-8 items-center justify-center gap-1.5 rounded-lg bg-brand text-[10px] font-semibold text-accent-text hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Check size={12} /> {t("saveChanges")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OverlayControlButton({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button type="button" title={label} aria-label={label} onClick={onClick} className="grid h-7 w-7 place-items-center text-text-dim hover:bg-surface hover:text-brand">
+      {children}
+    </button>
+  );
+}
+
+function OnPageRange({
+  label,
+  value,
+  min,
+  max,
+  suffix,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  suffix: string;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="grid grid-cols-[3.5rem_1fr_2.4rem] items-center gap-2 text-[10px] font-semibold text-text-dim">
+      <span>{label}</span>
+      <input type="range" min={min} max={max} value={value} onChange={(event) => onChange(Number(event.target.value))} className="w-full accent-[var(--accent)]" />
+      <span className="text-right font-mono text-[9px] font-normal text-text">{value}{suffix}</span>
+    </label>
+  );
+}
+
+interface OverlayTransform {
+  id: string;
+  kind: "move" | "resize";
+  pointerId: number;
+  startX: number;
+  startY: number;
+  initial: Overlay;
+}
+
+function moveOverlay(overlay: Overlay, deltaX: number, deltaY: number): Overlay {
+  const maxX = overlay.kind === "image" ? 1 - overlay.width : 1;
+  const maxY = overlay.kind === "image" ? 1 - overlay.height : 1;
+  return {
+    ...overlay,
+    x: clamp(overlay.x + deltaX, 0, maxX),
+    y: clamp(overlay.y + deltaY, 0, maxY),
+  };
+}
+
+function resizeOverlay(overlay: Overlay, deltaX: number): Overlay {
+  if (overlay.kind === "text") {
+    return { ...overlay, size: clamp(overlay.size + deltaX * 595.28, 6, 144) };
+  }
+  const ratio = overlay.width > 0 ? overlay.height / overlay.width : 1;
+  const width = clamp(overlay.width + deltaX, 0.05, 0.9);
+  const height = Math.min(0.95, width * ratio);
+  return { ...overlay, width, height, x: Math.min(overlay.x, 1 - width), y: Math.min(overlay.y, 1 - height) };
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function editableChanges(overlay: Overlay): OverlayChanges {
+  const common = { x: overlay.x, y: overlay.y, opacity: overlay.opacity, rotate: overlay.rotate };
+  return overlay.kind === "text"
+    ? { ...common, text: overlay.text, size: overlay.size, color: overlay.color }
+    : { ...common, width: overlay.width, height: overlay.height };
 }
 
 function highlightTextLayer(

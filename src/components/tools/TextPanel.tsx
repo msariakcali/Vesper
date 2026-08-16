@@ -3,6 +3,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
+import { AppliedOverlays } from "./toolUi";
 import { useTranslation } from "../../i18n";
 
 export function TextPanel() {
@@ -32,6 +33,7 @@ export function TextPanel() {
       >
         {t("addText")}
       </Button>
+      <AppliedOverlays tool="text" />
     </div>
   );
 }

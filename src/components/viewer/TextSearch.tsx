@@ -113,7 +113,7 @@ export const TextSearch = forwardRef<HTMLInputElement, Props>(function TextSearc
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder={t("searchInText")}
-          className="h-7 w-32 rounded-lg border-0 bg-transparent pl-7 pr-6 text-[12px] text-text shadow-none sm:w-48"
+          className="h-7 w-20 min-w-0 rounded-lg border-0 bg-transparent pl-7 pr-6 text-[12px] text-text shadow-none sm:w-48"
           aria-label={t("searchInPdf")}
         />
         {busy && (

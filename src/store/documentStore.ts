@@ -8,6 +8,8 @@ import {
   pagesFromSource,
   type DocumentModel,
   type Overlay,
+  type OverlayChanges,
+  type OverlayTool,
   type PageRef,
   type SourceDocument,
 } from "../core/model/types";
@@ -47,6 +49,10 @@ export interface DocumentState {
   insertPages: (pages: PageRef[], atIndex: number) => void;
   addOverlay: (pageIds: string[], overlay: Overlay) => void;
   addOverlayPerPage: (entries: { pageId: string; overlay: Overlay }[]) => void;
+  updateOverlay: (pageId: string, overlayId: string, changes: OverlayChanges) => void;
+  updateOverlayGroup: (groupId: string, changes: OverlayChanges) => void;
+  removeOverlay: (pageId: string, overlayId: string) => void;
+  removeOverlaysByTool: (tool: OverlayTool) => void;
   markSaved: () => void;
 }
 
@@ -235,11 +241,12 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
       withHistory(state, (model) => {
         const target = new Set(pageIds);
         if (target.size === 0) return model;
+        const groupId = nextId("ovg");
         return {
           ...model,
           pages: model.pages.map((page) =>
             target.has(page.id)
-              ? { ...page, overlays: [...page.overlays, { ...overlay, id: nextId("ov") }] }
+              ? { ...page, overlays: [...page.overlays, { ...overlay, id: nextId("ov"), groupId }] }
               : page,
           ),
         };
@@ -251,15 +258,80 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
       withHistory(state, (model) => {
         if (entries.length === 0) return model;
         const byPage = new Map(entries.map((entry) => [entry.pageId, entry.overlay]));
+        const groupId = nextId("ovg");
         return {
           ...model,
           pages: model.pages.map((page) => {
             const overlay = byPage.get(page.id);
             return overlay
-              ? { ...page, overlays: [...page.overlays, { ...overlay, id: nextId("ov") }] }
+              ? { ...page, overlays: [...page.overlays, { ...overlay, id: nextId("ov"), groupId }] }
               : page;
           }),
         };
+      }),
+    ),
+
+  updateOverlay: (pageId, overlayId, changes) =>
+    set((state) =>
+      withHistory(state, (model) => {
+        let changed = false;
+        const pages = model.pages.map((page) => {
+          if (page.id !== pageId) return page;
+          const overlays = page.overlays.map((overlay) => {
+            if (overlay.id !== overlayId) return overlay;
+            changed = true;
+            return { ...overlay, ...changes } as Overlay;
+          });
+          return changed ? { ...page, overlays } : page;
+        });
+        return changed ? { ...model, pages } : model;
+      }),
+    ),
+
+  updateOverlayGroup: (groupId, changes) =>
+    set((state) =>
+      withHistory(state, (model) => {
+        let changed = false;
+        const pages = model.pages.map((page) => {
+          let pageChanged = false;
+          const overlays = page.overlays.map((overlay) => {
+            if (overlay.groupId !== groupId) return overlay;
+            changed = true;
+            pageChanged = true;
+            return { ...overlay, ...changes } as Overlay;
+          });
+          return pageChanged ? { ...page, overlays } : page;
+        });
+        return changed ? { ...model, pages } : model;
+      }),
+    ),
+
+  removeOverlay: (pageId, overlayId) =>
+    set((state) =>
+      withHistory(state, (model) => {
+        let changed = false;
+        const pages = model.pages.map((page) => {
+          if (page.id !== pageId) return page;
+          const overlays = page.overlays.filter((overlay) => overlay.id !== overlayId);
+          if (overlays.length === page.overlays.length) return page;
+          changed = true;
+          return { ...page, overlays };
+        });
+        return changed ? { ...model, pages } : model;
+      }),
+    ),
+
+  removeOverlaysByTool: (tool) =>
+    set((state) =>
+      withHistory(state, (model) => {
+        let changed = false;
+        const pages = model.pages.map((page) => {
+          const overlays = page.overlays.filter((overlay) => overlay.tool !== tool);
+          if (overlays.length === page.overlays.length) return page;
+          changed = true;
+          return { ...page, overlays };
+        });
+        return changed ? { ...model, pages } : model;
       }),
     ),
 

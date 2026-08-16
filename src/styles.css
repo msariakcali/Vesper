@@ -8,56 +8,184 @@
   font-display: swap;
 }
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
-:root {
-  color-scheme: light;
-  --bg: #f6f4f1;
-  --surface: #fffefd;
-  --surface-2: #f2efeb;
-  --surface-3: #e7e3de;
-  --sidebar-header: #fbfaf8;
-  --canvas-header: rgb(255 254 252 / 0.9);
-  --panel-active: #f8ecec;
-  --border: #ded9d2;
-  --text: #202326;
-  --text-dim: #565c62;
-  --text-soft: #858a8f;
-  --brand: #a23a3f;
-  --brand-strong: #862f34;
-  --accent: #a23a3f;
-  --accent-soft: #f8ecec;
-  --accent-text: #ffffff;
-  --danger: #b4232e;
-  --ok: #297657;
-  --topbar: rgb(255 254 252 / 0.92);
-  --shadow: 0 1px 2px rgb(44 35 31 / 0.04), 0 10px 26px rgb(44 35 31 / 0.055);
-  --shadow-float: 0 22px 54px rgb(44 35 31 / 0.14), 0 2px 8px rgb(44 35 31 / 0.08);
+/* Arayüz yazı tipleri kendi sunucumuzdan gelir: "dosyaların cihazından çıkmıyor"
+   sözü veren bir uygulama, font için üçüncü partiye istek atmamalı. */
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-normal-400-700-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #161415;
-  --surface: #201e1f;
-  --surface-2: #2a2728;
-  --surface-3: #3a3537;
-  --sidebar-header: #1b191a;
-  --canvas-header: rgb(27 25 26 / 0.92);
-  --panel-active: #3a2427;
-  --border: #3d383a;
-  --text: #f6f3ef;
-  --text-dim: #c2bdb8;
-  --text-soft: #8f8986;
-  --brand: #e1767b;
-  --brand-strong: #ed9296;
-  --accent: #e1767b;
-  --accent-soft: #3a2427;
-  --accent-text: #2a1517;
-  --danger: #ff8088;
-  --ok: #63c79a;
-  --topbar: rgb(27 25 26 / 0.94);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.28), 0 12px 30px rgb(0 0 0 / 0.22);
-  --shadow-float: 0 24px 64px rgb(0 0 0 / 0.48), 0 3px 10px rgb(0 0 0 / 0.28);
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-normal-400-700-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-italic-400-700-latin.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-italic-400-700-latin-ext.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-400-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-400-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-500-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-500-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-600-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-600-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-700-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("/fonts/plexsans-normal-700-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-400-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-400-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-500-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plexmono-normal-500-latin-ext.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ------------------------------------------------------------------
+   worldinpdf — deniz haritası paleti. Yalnızca açık (harita kağıdı /
+   buff) tema kullanılır. Vurgu rengi patinalı bakır turkuazı; tehlike
+   rengi haritalarda uyarıların basıldığı macenta. Pirinç yalnızca
+   marka mührü ve kılavuz çizgilerinde kullanılır.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --bg: #e7e1d4;
+  --surface: #fbf8f2;
+  --surface-2: #f1ece0;
+  --surface-3: #e0d8c6;
+  --sidebar-header: #f5f1e8;
+  --canvas-header: rgb(251 248 242 / 0.9);
+  --panel-active: #dcebe7;
+  --border: #d5ccb8;
+  --text: #0f2129;
+  --text-dim: #4b5c63;
+  --text-soft: #7c8a8c;
+  --brand: #0b6e6b;
+  --brand-strong: #075150;
+  --accent: #0b6e6b;
+  --accent-soft: #dcebe7;
+  --accent-text: #fbf8f2;
+  --brass: #a97b22;
+  --danger: #c21e63;
+  --ok: #1f7a5c;
+  --topbar: rgb(251 248 242 / 0.92);
+  --graticule: rgb(15 33 41 / 0.055);
+  --plate-ink: #0f2129;
+  --shadow: 0 1px 2px rgb(15 33 41 / 0.05), 0 10px 26px rgb(15 33 41 / 0.07);
+  --shadow-float: 0 22px 54px rgb(15 33 41 / 0.16), 0 2px 8px rgb(15 33 41 / 0.09);
 }
 
 @theme inline {
@@ -77,8 +205,13 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-text: var(--accent-text);
+  --color-brass: var(--brass);
   --color-danger: var(--danger);
   --color-ok: var(--ok);
+
+  --font-sans: "IBM Plex Sans", "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-display: "Bodoni Moda", "Bodoni MT", "Didot", "Times New Roman", serif;
 }
 
 html,
@@ -91,9 +224,9 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Segoe UI Variable", "Segoe UI", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "IBM Plex Sans", "Segoe UI Variable", "Segoe UI", ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 13px;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.003em;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-user-select: none;
@@ -118,18 +251,66 @@ input[type="radio"]:not(:disabled) {
   box-shadow: 0 1px 0 color-mix(in srgb, var(--surface), transparent 24%);
 }
 
-.brand-mark {
-  background: var(--brand);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 3px 8px color-mix(in srgb, var(--brand), transparent 72%);
-}
-
 .project-sidebar {
   box-shadow: 1px 0 0 rgb(18 25 38 / 0.02);
 }
 
+/* ---- Harita dili --------------------------------------------------
+   Grafikül: enlem/boylam ızgarası. Çalışma tuvalinin altında ve
+   kahraman görselin üstünde aynı adımla akar; sayfayı tek bir levha
+   gibi gösterir.
+   ------------------------------------------------------------------ */
+.graticule {
+  --grid-step: 4.5rem;
+  --grid-line: var(--graticule);
+  background-image:
+    repeating-linear-gradient(to right, var(--grid-line) 0 1px, transparent 1px var(--grid-step)),
+    repeating-linear-gradient(to bottom, var(--grid-line) 0 1px, transparent 1px var(--grid-step));
+}
+
+/* Harita kenarındaki dakika taksimatı. Sürükle-bırak levhasını
+   masaya iğnelenmiş bir haritaya benzeten işaret. */
+.tick-frame {
+  position: relative;
+  --tick: color-mix(in srgb, var(--brand), transparent 55%);
+}
+
+.tick-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to right, var(--tick) 0 1px, transparent 1px 11px) top / 100% 5px repeat-x,
+    repeating-linear-gradient(to right, var(--tick) 0 1px, transparent 1px 11px) bottom / 100% 5px repeat-x,
+    repeating-linear-gradient(to bottom, var(--tick) 0 1px, transparent 1px 11px) left / 5px 100% repeat-y,
+    repeating-linear-gradient(to bottom, var(--tick) 0 1px, transparent 1px 11px) right / 5px 100% repeat-y;
+  opacity: 0.75;
+  transition: opacity 200ms ease;
+}
+
 .workspace-canvas {
   background-color: var(--bg);
-  background-image: linear-gradient(to bottom, color-mix(in srgb, var(--surface), transparent 58%), transparent 9rem);
+  background-image:
+    linear-gradient(to bottom, color-mix(in srgb, var(--surface), transparent 58%), transparent 9rem),
+    repeating-linear-gradient(to right, var(--graticule) 0 1px, transparent 1px 4.5rem),
+    repeating-linear-gradient(to bottom, var(--graticule) 0 1px, transparent 1px 4.5rem);
+}
+
+.page-thumbnail.is-sorting,
+.page-thumbnail.is-sorting .page-paper,
+.page-thumbnail.is-sorting canvas {
+  transition: none !important;
+}
+
+.page-thumbnail.is-sorting .page-paper {
+  transform: none !important;
+  box-shadow: 0 2px 6px rgb(22 27 38 / 0.08);
+}
+
+.page-thumbnail.is-sorting .thumb-actions {
+  visibility: hidden;
+  opacity: 0 !important;
 }
 
 .tool-dock {
@@ -137,40 +318,144 @@ input[type="radio"]:not(:disabled) {
   transform-origin: left center;
 }
 
+/* ---- Açılış ekranı: levha sahnesi ---------------------------------
+   Kahraman alan, üretilmiş levhalar arasında yavaşça geçen bir
+   fotoğraf sahnesi. Görseller her temada koyu olduğu için sahne
+   içindeki yazı sabit açık renkte kalır.
+   ------------------------------------------------------------------ */
 .start-screen {
-  background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface), transparent 6%) 0, transparent 30rem);
+  background: var(--bg);
 }
 
 .start-header {
-  background: color-mix(in srgb, var(--surface), transparent 8%);
-  backdrop-filter: blur(18px);
+  background: color-mix(in srgb, var(--bg), transparent 20%);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+/* Levhalar her temada koyu. Sahnenin içindeki her şey, uygulamanın açık
+   temasında bile bu yerel koyu paleti kullansın diye jetonlar burada
+   yeniden tanımlanır — bileşenler değişmeden doğru renkleri alır. */
+.on-plate {
+  --text: #f0f6f5;
+  --text-dim: rgb(232 241 241 / 0.76);
+  --text-soft: rgb(232 241 241 / 0.55);
+  --border: rgb(232 241 241 / 0.18);
+  --surface: rgb(6 24 33 / 0.6);
+  --surface-2: rgb(232 241 241 / 0.09);
+  --brand: #3fd4c7;
+  --brand-strong: #6fe6db;
+  --accent-soft: rgb(63 212 199 / 0.14);
+  --accent-text: #04161c;
+  --brass: #dfb35f;
+  --ok: #4fd09a;
+}
+
+.plate-stage {
+  background: #04141b;
+  isolation: isolate;
+}
+
+.plate-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1600ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.plate-layer[data-active="true"] {
+  opacity: 1;
+}
+
+.plate-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.075);
+  transition: transform 14s linear;
+}
+
+.plate-layer[data-active="true"] img {
+  transform: scale(1);
+}
+
+/* Perde yalnızca yazının durduğu sol yarıyı kapatır; sağ taraf levhaya
+   bırakılır, yoksa görsel üretmenin anlamı kalmaz. */
+.plate-scrim {
+  background:
+    linear-gradient(
+      96deg,
+      rgb(4 20 27 / 0.92) 0%,
+      rgb(4 20 27 / 0.82) 34%,
+      rgb(4 20 27 / 0.5) 52%,
+      rgb(4 20 27 / 0.14) 74%,
+      rgb(4 20 27 / 0.3) 100%
+    ),
+    linear-gradient(to top, rgb(4 20 27 / 0.7) 0%, transparent 28%),
+    linear-gradient(to bottom, rgb(4 20 27 / 0.45) 0%, transparent 16%);
+}
+
+.plate-tick {
+  height: 2px;
+  background: rgb(232 241 241 / 0.28);
+  transition: background-color 300ms ease, width 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.plate-tick[data-active="true"] {
+  background: var(--brass);
 }
 
 .upload-stage {
-  outline: 1px solid transparent;
-  outline-offset: -8px;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease, border-color 160ms ease;
 }
 
 .upload-stage:hover,
 .upload-stage:focus-visible {
-  outline-color: color-mix(in srgb, var(--brand), transparent 70%);
+  transform: translateY(-3px);
+}
+
+.upload-stage:hover .tick-frame::after,
+.upload-stage:focus-visible .tick-frame::after {
+  opacity: 1;
+}
+
+/* Rota şeridi: aç → düzenle → indir gerçekten sıralı bir akış olduğu
+   için numara yerine haritadaki seyir hattı gibi çizildi. */
+.route-line {
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--brand), transparent 45%) 0 6px, transparent 6px 12px);
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.feature-tile img {
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 400ms ease;
+}
+
+.feature-tile:hover img {
+  transform: scale(1.05);
+  filter: saturate(1.15);
 }
 
 .rail-active-indicator {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand), transparent 82%);
 }
 
+/* Okuma modu: arkadaki çalışma alanı kapanmaz, bulanıklaşarak görünür kalır.
+   Hem kabuk hem kaydırma alanı yarı saydam — PDF dışındaki her nokta bu
+   bulanık dokuyu gösterir ve tıklanınca okuyucuyu kapatır. */
 .reader-scroll {
   overscroll-behavior: contain;
-  background: #181516;
+  background: rgb(15 33 41 / 0.42);
 }
 
 .reader-shell {
-  background: rgb(0 0 0 / 0.92);
+  background: rgb(15 33 41 / 0.58);
 }
 
 .reader-toolbar {
-  background: color-mix(in srgb, var(--surface), transparent 3%);
+  background: color-mix(in srgb, var(--surface), transparent 6%);
+  backdrop-filter: blur(20px);
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
 }
 

@@ -5,7 +5,7 @@ import { useDocumentStore } from "../../store/documentStore";
 import { useSelectionStore } from "../../store/selectionStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
-import { SegmentedButton } from "./toolUi";
+import { AppliedOverlays, SegmentedButton } from "./toolUi";
 import { useTranslation } from "../../i18n";
 
 type Tab = "draw" | "upload";
@@ -133,6 +133,7 @@ export function SignaturePanel() {
           {t("chooseImage")}
         </Button>
       )}
+      <AppliedOverlays tool="signature" />
     </div>
   );
 }

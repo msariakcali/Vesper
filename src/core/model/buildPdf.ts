@@ -93,6 +93,19 @@ export async function buildPdf(model: DocumentModel, pages: PageRef[]): Promise<
       const { width, height } = target.getSize();
       if (overlay.kind === "text") {
         const [red, green, blue] = hexToRgb01(overlay.color);
+        if (overlay.backgroundColor) {
+          const [backgroundRed, backgroundGreen, backgroundBlue] = hexToRgb01(overlay.backgroundColor);
+          const padding = overlay.backgroundPadding ?? 1;
+          const textWidth = font!.widthOfTextAtSize(overlay.text, overlay.size);
+          target.drawRectangle({
+            x: overlay.x * width - padding,
+            y: (1 - overlay.y) * height - overlay.size * 0.24 - padding,
+            width: textWidth + padding * 2,
+            height: overlay.size * 1.24 + padding * 2,
+            color: rgb(backgroundRed, backgroundGreen, backgroundBlue),
+            rotate: degrees(overlay.rotate),
+          });
+        }
         target.drawText(overlay.text, {
           x: overlay.x * width,
           y: (1 - overlay.y) * height,

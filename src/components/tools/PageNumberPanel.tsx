@@ -5,7 +5,7 @@ import { parsePageRange } from "../../core/ops/pageRange";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
-import { PageRangeInput, Section, SegmentedButton } from "./toolUi";
+import { AppliedOverlays, PageRangeInput, Section, SegmentedButton } from "./toolUi";
 import { useTranslation } from "../../i18n";
 
 type Position = `${"top" | "middle" | "bottom"}-${"left" | "center" | "right"}`;
@@ -53,6 +53,7 @@ export function PageNumberPanel() {
       const overlay: Overlay = {
         kind: "text",
         id: "template",
+        tool: "pageNumber",
         text,
         ...coords,
         size,
@@ -134,6 +135,7 @@ export function PageNumberPanel() {
       >
         {t("addPageNumbers")}
       </Button>
+      <AppliedOverlays tool="pageNumber" />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import type { Overlay } from "../../core/model/types";
 import { useDocumentStore } from "../../store/documentStore";
 import { useUiStore } from "../../store/uiStore";
 import { Button } from "../ui/Button";
-import { PageRangeInput, Section } from "./toolUi";
+import { AppliedOverlays, PageRangeInput, Section } from "./toolUi";
 import { useTranslation } from "../../i18n";
 
 export function WatermarkPanel() {
@@ -27,6 +27,7 @@ export function WatermarkPanel() {
     const overlay: Overlay = {
       kind: "text",
       id: "template",
+      tool: "watermark",
       text,
       x: Math.max(0.03, 0.5 - approximateWidth / 2),
       y: 0.5,
@@ -78,6 +79,7 @@ export function WatermarkPanel() {
       >
         {t("applyWatermark")}
       </Button>
+      <AppliedOverlays tool="watermark" />
     </div>
   );
 }

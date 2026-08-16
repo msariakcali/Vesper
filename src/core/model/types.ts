@@ -18,23 +18,51 @@ export interface SourceDocument {
   pageCount: number;
 }
 
+export type OverlayTool = "text" | "signature" | "watermark" | "pageNumber" | "image";
+
+/** Bir katmanın türünü/ham görselini değiştirmeden düzenlenebilen alanları. */
+export interface OverlayChanges {
+  text?: string;
+  x?: number;
+  y?: number;
+  size?: number;
+  color?: string;
+  backgroundColor?: string;
+  backgroundPadding?: number;
+  opacity?: number;
+  rotate?: number;
+  width?: number;
+  height?: number;
+}
+
+interface OverlayMeta {
+  id: string;
+  /** Öğeyi oluşturan araç; panel içi yönetim ve sayfa rozetleri için kullanılır. */
+  tool?: OverlayTool;
+  /** Tek işlemde birden fazla sayfaya eklenen öğeleri ilişkilendirir. */
+  groupId?: string;
+}
+
 /** Sayfa üzerine kaydederken uygulanacak katmanlar (Faz 5). */
-export type Overlay =
-  | {
+export type Overlay = OverlayMeta &
+  (
+    | {
       kind: "text";
-      id: string;
       text: string;
       /** Sayfa genişliğine oranla 0-1 arası konum (sol-üst köken). */
       x: number;
       y: number;
       size: number;
       color: string;
+      /** Kaynak PDF metninin üstünü örterek yapılan değişimlerde arka plan rengi. */
+      backgroundColor?: string;
+      /** Arka planın metinden taşma payı (PDF punto biriminde). */
+      backgroundPadding?: number;
       opacity: number;
       rotate: number;
     }
-  | {
+    | {
       kind: "image";
-      id: string;
       /** PNG/JPEG ham baytları. */
       data: Uint8Array;
       mime: "image/png" | "image/jpeg";
@@ -45,7 +73,8 @@ export type Overlay =
       height: number;
       opacity: number;
       rotate: number;
-    };
+    }
+  );
 
 /**
  * Düzenlenen belgedeki tek bir sayfa.
